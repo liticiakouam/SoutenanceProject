@@ -20,6 +20,7 @@ public class Appointment {
     private long id;
     private long idDisponibility;
     private long idReport;
+    private long idUser;
     private String pattern;
     private String document;
     private Date createdAt;

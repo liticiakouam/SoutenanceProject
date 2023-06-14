@@ -21,6 +21,7 @@ public class User {
     private String lastName;
     private String email;
     private String passWord;
+    private String document;
     private String address;
     private String details;
     private String image;
@@ -28,10 +29,10 @@ public class User {
     private Date createdAt;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "speciality_id", referencedColumnName = "id_speciality")
+    @JoinColumn(name = "speciality", referencedColumnName = "id_speciality")
     private Speciality speciality;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "city_id", referencedColumnName = "id_city")
+    @JoinColumn(name = "city", referencedColumnName = "id_city")
     private City city;
 }

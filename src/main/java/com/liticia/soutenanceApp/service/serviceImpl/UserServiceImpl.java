@@ -1,22 +1,38 @@
 package com.liticia.soutenanceApp.service.serviceImpl;
 
+import com.liticia.soutenanceApp.model.City;
+import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.UserRepository;
 import com.liticia.soutenanceApp.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
+
+    @Override
+    public Optional<User> findById(long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public List<User> searchUser(String city, String speciality, String keyword) {
+        return userRepository.searchUsers(city, speciality, keyword);
+    }
+
 }
