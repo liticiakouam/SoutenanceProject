@@ -14,7 +14,5 @@ public interface UserService {
     Page<User> findAll(Pageable pageable);
     Optional<User> findById(long id);
 
-    List<User> searchUser(City city, Speciality speciality, String keyword);
-
     List<User> searchUser(String city, String speciality, String keyword);
 }

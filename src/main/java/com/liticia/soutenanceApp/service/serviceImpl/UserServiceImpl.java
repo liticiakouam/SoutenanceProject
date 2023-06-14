@@ -31,10 +31,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> searchUser(City city, Speciality speciality, String keyword) {
-        return userRepository.findByFirstNameContainingOrLastNameContainingOrCityContainingOrSpecialityContaining(keyword, keyword, city, speciality);
-    }
-    @Override
     public List<User> searchUser(String city, String speciality, String keyword) {
         return userRepository.searchUsers(city, speciality, keyword);
     }

@@ -48,7 +48,7 @@ public class UserController {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
         Page<User> page = userService.findAll(pageable);
-        List <User> users = page.getContent();
+        List<User> users = page.getContent();
 
         List<City> cityList = cityService.findAll();
         List<Speciality> specialityList = specialityService.findAll();
@@ -70,20 +70,6 @@ public class UserController {
         return "agenda";
     }
 
-//    @GetMapping("/user/search")
-//    public String searchUser (@Param("keyword") String keyword, @Param("city") City city,  @Param("speciality") Speciality speciality,  Model model, RedirectAttributes redirectAttributes) {
-//        List<User> users = userService.searchUser(city, speciality, keyword);
-//        int userSize = users.size();
-//        if (userSize > 0) {
-//            model.addAttribute("userSearch", users);
-//            model.addAttribute("userSearch", userSize);
-//        } else {
-//            redirectAttributes.addFlashAttribute("error", "sorry, there are no user existing with this word : " );
-//            return "redirect:/users?pageNumber=1";
-//        }
-//
-//        return "users";
-//    }
     @GetMapping("/user/search")
     public String searchUser (@Param("keyword") String keyword, @Param("city") String city,  @Param("speciality") String speciality,  Model model, RedirectAttributes redirectAttributes) {
         List<User> users = userService.searchUser(city, speciality, keyword);
