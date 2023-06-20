@@ -1,7 +1,9 @@
 package com.liticia.soutenanceApp.controller;
 
+import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.model.City;
+import com.liticia.soutenanceApp.model.Schedule;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.security.SecurityUtils;
@@ -25,59 +27,46 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@WebMvcTest(controllers = {UserController.class},
+@WebMvcTest(controllers = {AvailabiltyController.class},
         excludeAutoConfiguration = {SecurityAutoConfiguration.class})
-public class UserControllerTest {
+public class AvailabilityControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
     @MockBean
     private UserService userService;
-
-    @MockBean
-    private SpecialityService specialityService;
-
-    @MockBean
-    private CityService cityService;
 
     @MockBean
     private AvailabilityService availabilityService;
 
     @Test
-    public void testShouldVerifyThatControllerReturnSearchUserResult() throws Exception {
-        List<User> users = Arrays.asList(
-                User.builder().firstName("liti").lastName("anzwe").speciality(Speciality.builder().id(1L).name("informatique").build()).city(City.builder().id(1L).name("doualq").build()).build(),
-                User.builder().firstName("momo").build()
-        );
+    public void testShouldSaveAvailability() throws Exception {
+        AvailabilityCreate availabilityCreate= AvailabilityCreate.builder().schedule(Schedule.AFTERNOON).build();
 
-        when(userService.searchUser("douala","informatique","liti")).thenReturn(users);
-
-        mockMvc.perform(get("/user/search?keyword=liti&city=1&speciality=1"))
+        doNothing().when(availabilityService).saveAvailabilities(availabilityCreate);
+        mockMvc.perform(post("/professional/availability/add"))
                 .andExpect(status().isFound())
-                .andExpect(view().name("redirect:/users?pageNumber=1"))
+                .andExpect(view().name("redirect:/professional/availability?startDate=2023-01-01"))
                 .andReturn();
     }
 
     @Test
     public void testShouldRetrieveAvailabilities() throws Exception {
-        User user = User.builder().id(1).speciality(Speciality.builder().name("info").build()).city(City.builder().name("buea").build()).build();
+        User user = User.builder().id(1).build();
         LocalDate startDate = LocalDate.now();
         AvailabilityResponse availabilityResponse = AvailabilityResponse.builder().nextStartDate(startDate.plusWeeks(1)).previousStartDate(startDate.minusWeeks(1)).build();
 
-        when(userService.findById(1)).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.ofNullable(user));
         when(availabilityService.getAvailabilities(startDate, user)).thenReturn(availabilityResponse);
-        mockMvc.perform(get("/user?userId=1&startDate=2023-06-20"))
+        mockMvc.perform(get("/professional/availability?startDate=2023-06-13"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("agenda"))
-                .andExpect(model().attributeExists("user"))
-                .andExpect(model().attributeExists("nextStartDate"))
-                .andExpect(model().attributeExists("previousStartDate"))
+                .andExpect(view().name("availability"))
                 .andReturn();
     }
 }

@@ -2,6 +2,7 @@ package com.liticia.soutenanceApp.service.serviceImpl;
 
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
+import com.liticia.soutenanceApp.exception.UnknownScheduleException;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.Schedule;
@@ -54,7 +55,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         availabilityRepository.saveAll(availabilities);
     }
 
-    private Pair<LocalTime, LocalTime> getSchedule(Schedule schedule) {
+    public Pair<LocalTime, LocalTime> getSchedule(Schedule schedule) {
         LocalTime startTime;
         LocalTime endTime;
         switch (schedule) {
@@ -70,12 +71,13 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 startTime = LocalTime.of(8, 0);
                 endTime = LocalTime.of(17, 0);
                 break;
-            default: throw new IllegalArgumentException(); //TODO
+            default: throw new UnknownScheduleException();
         }
         return Pair.of(startTime, endTime);
     }
 
-    private List<Pair<LocalTime, LocalTime>> generateTimes(LocalTime startTime, LocalTime endTime) {
+    @Override
+    public List<Pair<LocalTime, LocalTime>> generateTimes(LocalTime startTime, LocalTime endTime) {
         if (startTime.isAfter(endTime)) {
             //TODO create exception
             throw new IllegalArgumentException();
@@ -94,9 +96,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     }
 
     @Override
-    public AvailabilityResponse getAvailabilities(LocalDate startDate) {
+    public AvailabilityResponse getAvailabilities(LocalDate startDate, User user) {
+
         LocalDate endDate = startDate.plusDays(7);
-        List<Availability> availabilities = availabilityRepository.findAllByDateBetweenOrderByDate(startDate, endDate);
+        List<Availability> availabilities = availabilityRepository.findAllByUserAndDateBetweenOrderByDate(user, startDate, endDate);
         Map<LocalDate, List<Availability>> listMap = availabilities.stream().collect(Collectors.groupingBy(Availability::getDate));
 
         long[][] dates = new long[7][9];
@@ -128,9 +131,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         }
 
         return AvailabilityResponse.builder()
-                .previousStartDate(startDate.minusDays(7))
-                .nextStartDate(startDate.plusDays(7))
+                .previousStartDate(startDate.minusWeeks(1))
+                .nextStartDate(startDate.plusWeeks(1))
                 .availabilities(dates)
                 .build();
     }
+
 }
