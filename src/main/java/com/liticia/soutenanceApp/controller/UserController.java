@@ -1,5 +1,6 @@
 package com.liticia.soutenanceApp.controller;
 
+import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
@@ -14,10 +15,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -83,5 +87,11 @@ public class UserController {
         }
 
         return "users";
+    }
+
+    @GetMapping("/use")
+    public String show(){
+        userService.findUsers();
+        return "availability";
     }
 }

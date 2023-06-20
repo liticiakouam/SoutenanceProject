@@ -1,7 +1,5 @@
 package com.liticia.soutenanceApp.service.serviceImpl;
 
-import com.liticia.soutenanceApp.model.City;
-import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.UserRepository;
 import com.liticia.soutenanceApp.service.UserService;
@@ -22,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable, 3);
     }
 
     @Override
@@ -33,6 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> searchUser(String city, String speciality, String keyword) {
         return userRepository.searchUsers(city, speciality, keyword);
+    }
+
+    @Override
+    public List<User> findUsers() {
+        return null;
     }
 
 }
