@@ -1,5 +1,6 @@
 package com.liticia.soutenanceApp.repository;
 
+import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,32 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:mysql://localhost:3306/soutenanceProTest?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC\n"
 })
-public class UserRepositoryTest {
+public class AvailabilityRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private AvailabilityRepository availabilityRepository;
 
     @Test
-    void testShouldSearchUsers() {
-        List<User> searchResult = userRepository.searchUsers("douala",  "informatique", "liti");
+    void testShouldReturnAvailabilities() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(6);
+        User user = User.builder().id(1).build();
+        List<Availability> availabilities = availabilityRepository.findAllByUserAndDateBetweenOrderByDate(user, startDate, endDate);
 
-        assertEquals(5, searchResult.size());
-        assertEquals("abena@gmail.com", searchResult.get(0).getEmail());
-    }
-
-    @Test
-    void testShouldFindUsers() {
-        Pageable pageable = PageRequest.of(1, 2);
-        Page<User> users = userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,2);
-
-        assertEquals(1, users.getTotalPages());
-        assertEquals(1, users.getTotalElements());
-    }
-
-    @Test
-    void testShouldFindUserById() {
-        Optional<User> user = userRepository.findById(3L);
-        assertTrue(user.isPresent());
-        assertEquals(3, user.get().getId());
-        assertEquals("Douala", user.get().getCity().getName());
+        assertEquals(9, availabilities.size());
     }
 }

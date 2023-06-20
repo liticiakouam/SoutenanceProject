@@ -32,11 +32,6 @@ public class AvailabiltyController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping("/availability")
-//    public String availability(){
-//        return "availability";
-//    }
-
     @GetMapping("/availability")
     public String availability(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model){
         return findPaginated(startDate, model);
@@ -76,7 +71,6 @@ public class AvailabiltyController {
 
     @PostMapping("/availability/add")
     public String save(@ModelAttribute("availability") AvailabilityCreate availabilityCreate) throws ParseException {
-        LocalDate date = availabilityCreate.getDate();
         availabilityService.saveAvailabilities(availabilityCreate);
         return "redirect:/professional/availability?startDate=2023-01-01";
     }
