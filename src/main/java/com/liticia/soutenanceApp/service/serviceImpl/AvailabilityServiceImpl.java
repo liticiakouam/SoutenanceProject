@@ -94,9 +94,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     }
 
     @Override
-    public AvailabilityResponse getAvailabilities(LocalDate startDate) {
+    public AvailabilityResponse getAvailabilities(LocalDate startDate, User user) {
+
         LocalDate endDate = startDate.plusDays(7);
-        List<Availability> availabilities = availabilityRepository.findAllByDateBetweenOrderByDate(startDate, endDate);
+        List<Availability> availabilities = availabilityRepository.findAllByUserAndDateBetweenOrderByDate(user, startDate, endDate);
         Map<LocalDate, List<Availability>> listMap = availabilities.stream().collect(Collectors.groupingBy(Availability::getDate));
 
         long[][] dates = new long[7][9];
@@ -128,9 +129,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         }
 
         return AvailabilityResponse.builder()
-                .previousStartDate(startDate.minusDays(7))
-                .nextStartDate(startDate.plusDays(7))
+                .previousStartDate(startDate.minusWeeks(1))
+                .nextStartDate(startDate.plusWeeks(1))
                 .availabilities(dates)
                 .build();
     }
+
 }

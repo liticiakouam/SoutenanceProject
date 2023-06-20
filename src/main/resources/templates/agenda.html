@@ -170,9 +170,20 @@
             <div class="card">
               <div class="bd-example">
                 <table class="table">
-                  <a class="btn btn-primary btn-sm" href="motifrdv.html">HORAIRE</a>
+                  <div aria-label="...">
+                    <ul class="pagination pagination-sm d-flex justify-content-end">
+
+                      <li class="page-item active">
+                        <a th:href="@{'/user?userId=+${user.userId}+&startDate=' + ${previousStartDate}}" class="page-link" href="#" tabindex="-1">Previous</a>
+                      </li>
+                      <li class="page-item">
+                        <a th:href="@{'/user(userId=${user.userId})&startDate=' + ${nextStartDate}}"  class="page-link" href="#">Next</a>
+                      </li>
+                    </ul>
+                  </div>
                   <thead class="table-light">
                   <tr>
+                    <th scope="col">Date</th>
                     <th scope="col">Lundi</th>
                     <th scope="col">Mardi</th>
                     <th scope="col">Mercredi</th>
@@ -182,49 +193,36 @@
                     <th scope="col">Dimanche</th>
                   </tr>
                   <tr>
-                    <td>date</td>
-                    <td>date</td>
-                    <td>date</td>
-                    <td>date</td>
-                    <td>date</td>
-                    <td>date</td>
-                    <td>date</td>
+                    <td>Heure</td>
+                    <td th:each="day, i : ${fullWeek}" th:text="${#temporals.format(i.current, 'dd/MM/yyyy')}" style="font-weight:bolder; font-size:14px;"></td>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td></td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td></td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                  </tr>
-                  <tr>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td>--:--</td>
-                    <td></td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                  </tr>
-                  <tr>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td>08:10</td>
-                    <td></td>
-                    <td></td>
+                    <th scope="col">
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">O8 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">O9 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">10 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">11 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">12 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">13 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">14 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">15 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">16 : 00</a></div>
 
-                  </tr>
+                    </th>
+
+                    <th th:each="availability: ${availabilities}">
+                      <div class="" th:each="id : ${availability}">
+                        <li th:if="${id == 0}" class="btn btn-light btn-sm disabled" style="margin-top:5px;">--:--</li>
+                        <a th:unless="${id == 0}" class="btn btn-danger btn-sm" style="margin-top:5px;">disponible</a>
+                      </div>
+                    </th>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
