@@ -32,12 +32,12 @@ public class UserServiceImplTest {
         Pageable pageable = PageRequest.of(1, 2);
         Page<User> page = new PageImpl<>(users);
 
-        when(userRepository.findAllByOrderByCreatedAtDesc(pageable)).thenReturn(page);
+        when(userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable, 3)).thenReturn(page);
 
         Page<User> userList = userService.findAll(pageable);
         assertEquals(2, userList.getTotalElements());
         assertEquals(1, userList.getTotalPages());
-        verify(userRepository, times(1)).findAllByOrderByCreatedAtDesc(pageable);
+        verify(userRepository, times(1)).findAllByRolesIdOrderByCreatedAtDesc(pageable,3);
     }
 
     @Test

@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,6 +15,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
 
 </head>
 
@@ -32,7 +34,7 @@
 
     <hr class="sidebar-divider d-md-block">
 
-    <li class="nav-item active">
+    <li class="nav-item">
       <a class="nav-link" href="index.html">
         <i class="bi bi-house-fill"></i>
         <span>Accueil</span></a>
@@ -40,18 +42,10 @@
 
     <hr class="sidebar-divider">
 
-    <li class="nav-item">
+    <li class="nav-item active">
       <a class="nav-link" href="rdv.html">
         <i class="bi bi-calendar2-check-fill"></i>
-        <span>Mes Rendez-vous</span></a>
-    </li>
-    <hr class="sidebar-divider">
-
-    <li class="nav-item">
-      <a class="nav-link " href="professionnel.html">
-        <i class="bi bi-person-badge-fill"></i>
-        <span>Professionnels</span>
-      </a>
+        <span>Mes Disponibilités</span></a>
     </li>
 
     <hr class="sidebar-divider">
@@ -115,6 +109,8 @@
               </form>
             </div>
           </li>
+
+
           <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
@@ -127,99 +123,75 @@
 
       </nav>
 
-      <div class="container">
-        <div class="card">
-          <div class="card-body">
-            <div th:if="${error}" class="mx-auto float-end alert alert-danger alert-dismissible fade show pt-3" role="alert">
-              <span th:text="${error}"></span>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-            <h5 class="text-primary">Professionnels</h5>
-            <form class="row pt-4" enctype="multipart/form-data" th:action="@{/user/search}" method="GET">
-                <div class="col-md-1 pt-1">
-                  <h6 class="text-dark" style="font-weight: bold; font-size:20px;">Filtre</h6>
-                </div>
-                <div class="col-md-3">
-                  <input type="text" minlength="3" name="keyword" th:value="${keyword}" class="form-control" placeholder="Entrer le nom">
-                </div>
-                <div class="col-md-3">
-                  <select class="form-control" name="city" th:value="${city}">
-                    <option value="">Select a city</option>
-                    <option th:each="city : ${cities}"
-                            th:value="${city.id}"
-                            th:text="${city.name}"
-                    >
-                  </select>
-                </div>
-              <div class="col-md-3">
-                <select class="form-control" name="speciality" th:value="${speciality}">
-                  <option value="">Select a speciality </option>
-                  <option th:each="speciality : ${specialities}"
-                          th:value="${speciality.id}"
-                          th:text="${speciality.name}"
-                  >
-                </select>
-              </div>
-                <div class="col-md-2">
-                  <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i> Chercher</button>
-                </div>
-            </form>
-
-            <div th:if="${userSize > 0}">
-              <div class="row">
-                <div class="col-xl-3 pt-3" th:each="user : ${userSearch}">
-                  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                    <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                         height="100px">
-                    <div class="card-body d-flex flex-column align-items-center">
-                      <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                      <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                      <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                      <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{/user(userId=${user.id})}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                        rdv</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row ">
-              <div class="col-xl-3 pt-3" th:each="user : ${users}">
-                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                  <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                       height="100px" src="">
-                  <div class="card-body d-flex flex-column align-items-center">
-                    <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                    <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                    <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                    <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{/user(userId=${user.id})}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                      rdv</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="Page navigation example pt-3" th:if = "${totalPages > 1}" >
-              <ul class="pagination pagination-sm">
-                <li class="page-item">
-                  <a th:if="${currentPage - 1 != 0}" th:href="@{'/users?pageNumber=' + ${currentPage - 1}}" class="page-link">Previous</a>
-                  <span class="page-link" th:unless="${currentPage - 1 != 0}">Previous</span>
-                </li>
-                <li th:each="i: ${#numbers.sequence(1, totalPages)}" class="page-item ">
-                  <a th:if="${currentPage != i}" th:href="@{'/users?pageNumber=' + ${i}}" class="page-link" href="#">[[${i}]]</a>
-                  <a th:unless="${currentPage != i}" class="page-link" href="#">[[${i}]]</a>
-                </li>
-                <li class="page-item mr-2">
-                  <a th:if="${currentPage < totalPages}" th:href="@{'/users?pageNumber=' + ${currentPage + 1}}" class="page-link">Next</a>
-                  <span class="page-link" th:unless="${currentPage < totalPages}">Next</span>
-                </li>
-              </ul>
-            </div>
+      <div class="container-fluid"><br>
+        <div class="row ">
+          <div class="col-md-6">
+            <h4 class="text-primary" style="font-weight: bold;">Mes Disponibilités</h4>
           </div>
+          <div class="col-md-6 d-flex justify-content-end">
+            <a href="dispo copy.html" class="btn btn-primary" th:href="@{/professional/availabilityShowAdd}"> Ajouter</a>
+          </div>
+        </div>
+        <div class="row pt-4">
+              <div aria-label="...">
+                <ul class="pagination pagination-sm d-flex justify-content-end">
+
+                  <li class="page-item active">
+                    <a th:href="@{'/professional/availability?startDate=' + ${startDate.minusWeeks(1)}}" class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+                  <li class="page-item">
+                    <a th:href="@{'/professional/availability?startDate=' + ${startDate.plusWeeks(1)}}"  class="page-link" href="#">Next</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="bd-example">
+                <table class="table table-success table-striped">
+                  <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Lundi</th>
+                    <th scope="col">Mardi</th>
+                    <th scope="col">Mercredi</th>
+                    <th scope="col">Jeudi</th>
+                    <th scope="col">Vendredi</th>
+                    <th scope="col">Samedi</th>
+                    <th scope="col">Dimanche</th>
+                  </tr>
+                  <tr>
+                    <td>Heure</td>
+                    <td th:each="day, i : ${fullWeek}" th:text="${#temporals.format(i.current, 'dd/MM/yyyy')}" style="font-weight:bolder; font-size:14px;"></td>
+                  </tr>
+
+                  </thead>
+                  <tbody>
+                      <th scope="col">
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">O8 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">O9 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">10 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">11 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">12 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">13 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">14 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">15 : 00</a></div>
+                        <div><a class="btn btn-primary btn-sm disabled" style="margin-top:5px;">16 : 00</a></div>
+
+                      </th>
+
+                      <th th:each="availability, i : ${availabilities}">
+                          <div class="" th:each="id : ${availability}">
+                               <li th:if="${id == 0}" class="btn btn-light btn-sm disabled" style="margin-top:5px;">indisponible</li>
+                                <a th:unless="${id == 0}" class="btn btn-danger btn-sm" style="margin-top:5px;">disponible</a>
+                          </div>
+                      </th>
+                  </tbody>
+                </table>
+              </div>
+            </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
 </body>
 
@@ -1359,6 +1331,4 @@ body {
   }
 
 </style>
-
-
 </html>

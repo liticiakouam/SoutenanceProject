@@ -36,7 +36,7 @@ public class UserRepositoryTest {
     @Test
     void testShouldFindUsers() {
         Pageable pageable = PageRequest.of(1, 2);
-        Page<User> users = userRepository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<User> users = userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,3);
 
         assertEquals(3, users.getTotalPages());
         assertEquals(5, users.getTotalElements());
