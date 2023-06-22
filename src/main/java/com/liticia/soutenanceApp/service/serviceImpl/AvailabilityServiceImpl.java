@@ -137,4 +137,9 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 .build();
     }
 
+    @Override
+    public Optional<Availability> findById(long id) {
+        return availabilityRepository.findById(id);
+    }
+
 }

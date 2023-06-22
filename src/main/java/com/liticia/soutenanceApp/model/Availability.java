@@ -22,7 +22,7 @@ public class Availability {
     private long id;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user", referencedColumnName = "id_user")
+    @JoinColumn(name = "user", referencedColumnName = "id")
     private User user;
 
     private LocalDate date;

@@ -15,7 +15,6 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_user")
     private long id;
     private String firstName;
     private String lastName;
@@ -29,16 +28,16 @@ public class User {
     private Date createdAt;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "speciality", referencedColumnName = "id_speciality")
+    @JoinColumn(name = "speciality", referencedColumnName = "id")
     private Speciality speciality;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "city", referencedColumnName = "id_city")
+    @JoinColumn(name = "city", referencedColumnName = "id")
     private City city;
 
     @ManyToMany
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_role"))
+            joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_role", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 }

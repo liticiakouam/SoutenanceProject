@@ -118,13 +118,17 @@
 
 
           <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
               <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+            </a>
           </li>
 
         </ul>
 
       </nav>
+
 
       <div class="container-fluid"><br>
         <div class="row">
@@ -174,10 +178,10 @@
                     <ul class="pagination pagination-sm d-flex justify-content-end">
 
                       <li class="page-item active">
-                        <a th:href="@{'/user?userId=+${user.userId}+&startDate=' + ${previousStartDate}}" class="page-link" href="#" tabindex="-1">Previous</a>
+                        <a th:href="@{'/user(userId=${user.id})&startDate=' + ${previousStartDate}}" class="page-link" href="#" tabindex="-1">Previous</a>
                       </li>
                       <li class="page-item">
-                        <a th:href="@{'/user(userId=${user.userId})&startDate=' + ${nextStartDate}}"  class="page-link" href="#">Next</a>
+                        <a th:href="@{'/user(userId=${user.id})&startDate=' + ${nextStartDate}}"  class="page-link" href="#">Next</a>
                       </li>
                     </ul>
                   </div>
@@ -214,7 +218,7 @@
                     <th th:each="availability: ${availabilities}">
                       <div class="" th:each="id : ${availability}">
                         <li th:if="${id == 0}" class="btn btn-light btn-sm disabled" style="margin-top:5px;">--:--</li>
-                        <a th:unless="${id == 0}" class="btn btn-danger btn-sm" style="margin-top:5px;">disponible</a>
+                        <a  th:unless="${id == 0}" th:href="@{/availabilityId(id=${id})}" class="btn btn-danger btn-sm" style="margin-top:5px;">disponible</a>
                       </div>
                     </th>
                   </tbody>

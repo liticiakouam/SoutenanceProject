@@ -15,7 +15,6 @@ public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_city")
     private long id;
     private String name;
     private Date createdAt;

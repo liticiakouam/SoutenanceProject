@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
     List<Availability> findAllByUserAndDateBetweenOrderByDate(User user, LocalDate startDate, LocalDate endDate);
-    List<Availability> findByUser(User user);
 }

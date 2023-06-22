@@ -114,10 +114,4 @@ public class UserController {
 
         return "users";
     }
-
-    @GetMapping("/use")
-    public String show(){
-        userService.findUsers();
-        return "availability";
-    }
 }
