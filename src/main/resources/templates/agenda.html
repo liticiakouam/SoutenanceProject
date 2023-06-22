@@ -146,7 +146,7 @@
                 <div class="col ms-4">
                   <h6>Localisation :</h6>
                 </div>
-                <div class="col me-2">
+                <div class="col">
                   <h6 class="text-primary text-center" th:text="${user.city.name} +' '+ ${user.address}"></h6>
                 </div>
               </div>
@@ -154,15 +154,15 @@
                 <div class="col ms-4">
                   <h6>Adresse Email : </h6>
                 </div>
-                <div class="col me-2">
+                <div class="col">
                   <h6 class="text-primary text-center" th:text="${user.email}"></h6>
                 </div>
               </div>
               <div class="row">
-                <div class="col ms-3">
-                  <h6 class="ms-2">Téléphone : </h6>
+                <div class="col ms-4">
+                  <h6>Téléphone : </h6>
                 </div>
-                <div class="col me-4">
+                <div class="col">
                   <h6 class="text-center text-primary pb-3" th:text="${user.phone}"></h6>
                 </div>
               </div>
@@ -215,7 +215,7 @@
 
                     </th>
 
-                    <th th:each="availability: ${availabilities}">
+                    <th th:each="availability, i: ${availabilities}">
                       <div class="" th:each="id : ${availability}">
                         <li th:if="${id == 0}" class="btn btn-light btn-sm disabled" style="margin-top:5px;">--:--</li>
                         <a  th:unless="${id == 0}" th:href="@{/availabilityId(id=${id})}" class="btn btn-danger btn-sm" style="margin-top:5px;">disponible</a>

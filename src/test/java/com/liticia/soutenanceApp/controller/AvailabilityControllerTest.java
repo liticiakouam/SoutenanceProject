@@ -2,10 +2,7 @@ package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
-import com.liticia.soutenanceApp.model.City;
-import com.liticia.soutenanceApp.model.Schedule;
-import com.liticia.soutenanceApp.model.Speciality;
-import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.CityService;
@@ -67,6 +64,17 @@ public class AvailabilityControllerTest {
         mockMvc.perform(get("/professional/availability?startDate=2023-06-13"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("availability"))
+                .andReturn();
+    }
+
+    @Test
+    public void testShouldGetAvailabilityId() throws Exception {
+        Availability availability = Availability.builder().id(1).user(User.builder().speciality(Speciality.builder().name("info").build()).build()).build();
+
+        when(availabilityService.findById(1L)).thenReturn(Optional.ofNullable(availability));
+        mockMvc.perform(get("/availabilityId?id=1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("motifrdv"))
                 .andReturn();
     }
 }

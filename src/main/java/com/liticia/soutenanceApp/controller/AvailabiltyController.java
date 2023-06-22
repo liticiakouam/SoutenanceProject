@@ -76,4 +76,12 @@ public class AvailabiltyController {
         return "redirect:/professional/availability?startDate=2023-01-01";
     }
 
+    @GetMapping("/availabilityId")
+    public String findAvailability(@RequestParam("id") long id, Model model) {
+        Optional<Availability> optionalAvailability = availabilityService.findById(id);
+        model.addAttribute("availability", optionalAvailability.get());
+        model.addAttribute("appointment", new AppointmentCreate());
+        return "motifrdv";
+    }
+
 }

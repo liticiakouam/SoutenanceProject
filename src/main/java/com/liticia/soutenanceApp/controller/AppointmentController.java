@@ -38,54 +38,15 @@ import static com.liticia.soutenanceApp.utils.Week.getFullWeek;
 
 @Controller
 public class AppointmentController {
-
     @Autowired
     private AppointmentService appointmentService;
-    @Autowired
-    private AvailabilityService availabilityService;
-    @Autowired
-    private UserService userService;
-
-    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/document";
-
-    @GetMapping("/availabilityId")
-    public String findAvailability(@RequestParam("id") long id, Model model) {
-        Optional<Availability> optionalAvailability = availabilityService.findById(id);
-        model.addAttribute("availability", optionalAvailability.get());
-        model.addAttribute("appointment", new AppointmentCreate());
-        return "motifrdv";
-    }
-
 
     @PostMapping("/appointment/add")
     public String save(@ModelAttribute("appointment") AppointmentCreate appointmentCreate,
                        @RequestParam("productImage")MultipartFile file,
                        @RequestParam("document")String document, @RequestParam("id") long id) throws IOException {
-        Optional<Availability> optionalAvailability = availabilityService.findById(id);
-        Optional<User> optionalUser = userService.findById(SecurityUtils.getCurrentUserId());
-        Optional<User> optionalUserPro = userService.findById(optionalAvailability.get().getUser().getId());
-
-        Appointment appointment = new Appointment();
-        appointment.setAvailability(optionalAvailability.get());
-        appointment.setUserCustomer(optionalUser.get());
-        appointment.setUserPro(optionalUserPro.get());
-        appointment.setPattern(appointmentCreate.getPattern());
-        appointment.setDescription(appointmentCreate.getDescription());
-        appointment.setCreatedAt(Instant.now());
-
-        String documentUUID;
-        if (!file.isEmpty()) {
-            documentUUID = file.getOriginalFilename();
-            Path fileNameAndPath = Paths.get(uploadDir, documentUUID);
-            Files.write(fileNameAndPath, file.getBytes());
-        } else {
-            documentUUID = document;
-        }
-        appointment.setDocument(documentUUID);
-
-        appointmentService.save(appointment);
+        appointmentService.save(appointmentCreate, file, document, id);
         return "motifrdv";
     }
-
 
 }
