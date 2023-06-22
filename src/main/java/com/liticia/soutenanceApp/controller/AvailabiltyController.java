@@ -1,8 +1,10 @@
 package com.liticia.soutenanceApp.controller;
 
+import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
+import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
@@ -25,14 +27,13 @@ import java.util.*;
 import static com.liticia.soutenanceApp.utils.Week.getFullWeek;
 
 @Controller
-@RequestMapping("/professional")
 public class AvailabiltyController {
     @Autowired
     private AvailabilityService availabilityService;
     @Autowired
     private UserService userService;
 
-    @GetMapping("/availability")
+    @GetMapping("/professional/availability")
     public String availability(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model){
         return findPaginated(startDate, model);
     }
@@ -64,15 +65,23 @@ public class AvailabiltyController {
         return "availability";
     }
 
-    @GetMapping("/availabilityShowAdd")
+    @GetMapping("/professional/availabilityShowAdd")
     public String showAddForm(@ModelAttribute("availability") AvailabilityCreate availabilityCreate){
         return "addAvailability";
     }
 
-    @PostMapping("/availability/add")
+    @PostMapping("/professional/availability/add")
     public String save(@ModelAttribute("availability") AvailabilityCreate availabilityCreate) throws ParseException {
         availabilityService.saveAvailabilities(availabilityCreate);
         return "redirect:/professional/availability?startDate=2023-01-01";
+    }
+
+    @GetMapping("/availabilityId")
+    public String findAvailability(@RequestParam("id") long id, Model model) {
+        Optional<Availability> optionalAvailability = availabilityService.findById(id);
+        model.addAttribute("availability", optionalAvailability.get());
+        model.addAttribute("appointment", new AppointmentCreate());
+        return "motifrdv";
     }
 
 }

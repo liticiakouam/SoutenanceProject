@@ -15,7 +15,6 @@ public class Speciality {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_speciality")
     private long id;
     private String name;
     private Date createdAt;

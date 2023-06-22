@@ -1,5 +1,6 @@
 package com.liticia.soutenanceApp.repository;
 
+import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,28 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:mysql://localhost:3306/soutenanceProTest?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC\n"
 })
-public class UserRepositoryTest {
+public class AppointmentRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private AppointmentRepository appointmentRepository;
+
 
     @Test
-    void testShouldSearchUsers() {
-        List<User> searchResult = userRepository.searchUsers("douala",  "informatique", "liti");
-
-        assertEquals(0, searchResult.size());
-    }
-
-    @Test
-    void testShouldFindUsers() {
-        Pageable pageable = PageRequest.of(1, 2);
-        Page<User> users = userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,2);
-
-        assertEquals(0, users.getTotalPages());
-    }
-
-    @Test
-    void testShouldFindUserById() {
-        Optional<User> user = userRepository.findById(3L);
-        assertTrue(user.isEmpty());
+    void testShouldFindAppointmentByAvailabityId() {
+        List<Appointment> appointments = appointmentRepository.findAppointmentByAvailabilityId(1L);
+        assertEquals(0, appointments.size());
     }
 }

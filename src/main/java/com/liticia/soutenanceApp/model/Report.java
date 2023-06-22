@@ -15,7 +15,6 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_report")
     private long id;
     private String name;
     private String note;
