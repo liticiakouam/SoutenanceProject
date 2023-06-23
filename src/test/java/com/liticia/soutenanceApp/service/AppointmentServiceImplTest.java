@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -57,6 +58,13 @@ public class AppointmentServiceImplTest {
         verify(userRepository, times(2)).findById(SecurityUtils.getCurrentUserId());
         verify(userRepository, times(2)).findById(2L);
         verify(availabilityRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testShouldFindByUserCustomerAndCreatedAt() {
+        Instant date = Instant.now();
+        User user = User.builder().id(2).build();
+        Optional<Appointment> appointment = appointmentService.findByUserCustomerAndCreatedAt(user, date);
     }
 
 }

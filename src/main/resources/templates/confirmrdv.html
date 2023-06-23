@@ -15,61 +15,61 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
+  <link rel="stylesheet" th:href="@{style.css}">
 </head>
 
 <body>
+  <div id="wrapper">
 
-<div id="wrapper">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-      <div class="sidebar-brand-icon rotate-n-15">
-        <i class="bi bi-emoji-smile-fill"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
-    </a>
-
-    <hr class="sidebar-divider d-md-block">
-
-    <li class="nav-item active">
-      <a class="nav-link" href="index.html">
-        <i class="bi bi-house-fill"></i>
-        <span>Accueil</span></a>
-    </li>
-
-    <hr class="sidebar-divider">
-
-    <li class="nav-item">
-      <a class="nav-link" href="rdv.html">
-        <i class="bi bi-calendar2-check-fill"></i>
-        <span>Mes Rendez-vous</span></a>
-    </li>
-    <hr class="sidebar-divider">
-
-    <li class="nav-item">
-      <a class="nav-link " href="professionnel.html">
-        <i class="bi bi-person-badge-fill"></i>
-        <span>Professionnels</span>
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="bi bi-emoji-smile-fill"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
       </a>
-    </li>
 
-    <hr class="sidebar-divider">
+      <hr class="sidebar-divider d-md-block">
 
-    <li class="nav-item">
-      <a class="nav-link" href="profile.html">
-        <i class="bi bi-person-fill"></i>
-        <span>Profil</span></a>
-    </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="index.html">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
 
-    <hr class="sidebar-divider">
+      <hr class="sidebar-divider">
 
-    <li class="nav-item">
-      <a class="nav-link" href="login.html">
-        <i class="bi bi-box-arrow-up-right"></i>
-        <span>Se deconnecter</span></a>
-    </li>
-  </ul>
+      <li class="nav-item">
+        <a class="nav-link" href="rdv.html">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link " href="professionnel.html">
+          <i class="bi bi-person-badge-fill"></i>
+          <span>Professionnels</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">
+          <i class="bi bi-person-fill"></i>
+          <span>Profil</span></a>
+      </li>
+
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" href="login.html">
+          <i class="bi bi-box-arrow-up-right"></i>
+          <span>Se deconnecter</span></a>
+      </li>
+    </ul>
 
   <div id="content-wrapper" class="d-flex flex-column">
 
@@ -115,6 +115,8 @@
               </form>
             </div>
           </li>
+
+
           <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
@@ -128,99 +130,59 @@
       </nav>
 
       <div class="container">
-        <div class="card">
-          <div class="card-body">
-            <div th:if="${error}" class="mx-auto float-end alert alert-danger alert-dismissible fade show pt-3" role="alert">
-              <span th:text="${error}"></span>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <h3 class="text-dark text-center" style="font-weight: bold; font-style: italic;">Confirmez votre
+          rendez-vous</h3>
+        <div class="row justify-content-center">
+          <div class="card shadow col-xl-8 col-lg-12 col-md-8 mt-4">
+            <h4 class="text-primary text-center p-2" style="font-weight: bold;">Detail du rendez-vous
+            </h4>
+
+            <div class="row flex-column">
+              <div class="col-6 align-self-center">
+                <div class="d-flex">
+                  <img th:src="@{${'/userImages/' + appointment.userPro.image}}" alt="profile"
+                       class="shadow rounded-circle m-2 mt-2" width="60px" height="60px" />
+
+                  <div class="mt-2 mb-2 p-2">
+                    <h6 class="text-dark"><strong th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></strong></h6>
+                    <h6 class="text-dark"><strong th:text="${appointment.userPro.speciality.name}"></strong></h6>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <h5 class="text-primary">Professionnels</h5>
-            <form class="row pt-4" enctype="multipart/form-data" th:action="@{/user/search}" method="GET">
-                <div class="col-md-1 pt-1">
-                  <h6 class="text-dark" style="font-weight: bold; font-size:20px;">Filtre</h6>
-                </div>
-                <div class="col-md-3">
-                  <input type="text" minlength="3" name="keyword" th:value="${keyword}" class="form-control" placeholder="Entrer le nom">
-                </div>
-                <div class="col-md-3">
-                  <select class="form-control" name="city" th:value="${city}">
-                    <option value="">Select a city</option>
-                    <option th:each="city : ${cities}"
-                            th:value="${city.id}"
-                            th:text="${city.name}"
-                    >
-                  </select>
-                </div>
-              <div class="col-md-3">
-                <select class="form-control" name="speciality" th:value="${speciality}">
-                  <option value="">Select a speciality </option>
-                  <option th:each="speciality : ${specialities}"
-                          th:value="${speciality.id}"
-                          th:text="${speciality.name}"
-                  >
-                </select>
+            <div class="row flex-column justify-content-center">
+              <div class="col-6 align-self-center">
+                <h6 class="text-dark">Raison de la visite : <strong th:text="${appointment.pattern}"></strong></h6>
+                <h6 class="text-dark">Description : <strong th:text="${appointment.description}"></strong></h6>
+                <h6 class="text-dark">Heure du rendez-vous : <strong th:text="${appointment.availability.date} +'   '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></strong></h6>
+                <h6 class="text-dark">Document : <strong th:text="${appointment.document}">Infimiere</strong></h6>
               </div>
-                <div class="col-md-2">
-                  <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i> Chercher</button>
-                </div>
+            </div><br>
+
+            <form  class="row justify-content-between">
+              <div class="col-6">
+                <button class="btn btn-primary" type="submit"> Confirmer</button>
+
+              </div>
+              <div class="col-4">
+                <button class="btn btn-primary" type="reset"> Annuler</button>
+
+              </div>
             </form>
+            <br>
 
-            <div th:if="${userSize > 0}">
-              <div class="row">
-                <div class="col-xl-3 pt-3" th:each="user : ${userSearch}">
-                  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                    <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                         height="100px">
-                    <div class="card-body d-flex flex-column align-items-center">
-                      <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                      <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                      <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                      <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{/user(userId=${user.id})&startDate=2023-01-01}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                        rdv</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row ">
-              <div class="col-xl-3 pt-3" th:each="user : ${users}">
-                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                  <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                       height="100px" src="">
-                  <div class="card-body d-flex flex-column align-items-center">
-                    <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                    <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                    <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                    <a class="btn btn-outline-primary rounded-pill btn-sm" th:with="user=${user.id}" th:href="@{/user?userId=${user}&startDate=2023-06-20}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                      rdv</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="Page navigation example pt-3" th:if = "${totalPages > 1}" >
-              <ul class="pagination pagination-sm">
-                <li class="page-item">
-                  <a th:if="${currentPage - 1 != 0}" th:href="@{'/users?pageNumber=' + ${currentPage - 1}}" class="page-link">Previous</a>
-                  <span class="page-link" th:unless="${currentPage - 1 != 0}">Previous</span>
-                </li>
-                <li th:each="i: ${#numbers.sequence(1, totalPages)}" class="page-item ">
-                  <a th:if="${currentPage != i}" th:href="@{'/users?pageNumber=' + ${i}}" class="page-link" href="#">[[${i}]]</a>
-                  <a th:unless="${currentPage != i}" class="page-link" href="#">[[${i}]]</a>
-                </li>
-                <li class="page-item mr-2">
-                  <a th:if="${currentPage < totalPages}" th:href="@{'/users?pageNumber=' + ${currentPage + 1}}" class="page-link">Next</a>
-                  <span class="page-link" th:unless="${currentPage < totalPages}">Next</span>
-                </li>
-              </ul>
-            </div>
           </div>
+
+
         </div>
       </div>
-    </div>
+
   </div>
+
 </div>
+</div>
+
 </body>
 
 <style>
@@ -1359,6 +1321,4 @@ body {
   }
 
 </style>
-
-
 </html>

@@ -1,0 +1,21 @@
+spring.datasource.url=jdbc:mysql://localhost:3306/testwtm?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+spring.jpa.hibernate.ddl-auto=update
+
+
+
+
+
+
+
+
+
+
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(properties = {
+        "spring.datasource.url=jdbc:mysql://localhost:3306/testwtm?createDatabaseIfExist=true&useSSL=false&serverTimezone=UTC\n"
+})
