@@ -1,0 +1,16 @@
+APPLICATION DE GESTION DU SUIVIE ACADEMIQUE
+
+FONCTIONNALITES
+Etudiant :
+?	Se connecté à l’aide de son matricule et mot de passe étudiant
+?	Visualisé les catégories d’effet académique disponible
+?	Choisir une catégorie pour voir le document
+?	Téléchargé chaque document au format PDF
+?	Visualisé son profil avec ces informations
+
+Chargé de la scolarité :
+?	S’authentifié
+?	Ajouté les catégories des effets
+?	Rendre disponible les effets académiques de chaque étudiant 
+?	Mettre à jour les documents
+?	Télécharger les documents

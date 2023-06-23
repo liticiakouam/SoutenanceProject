@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +27,16 @@ public class AppointmentRepositoryTest {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-
     @Test
     void testShouldFindAppointmentByAvailabityId() {
         List<Appointment> appointments = appointmentRepository.findAppointmentByAvailabilityId(1L);
         assertEquals(0, appointments.size());
+    }
+
+    @Test
+    void testShouldFindByUserCustomerAndCreatedAt() {
+        Instant date = Instant.now();
+        User user = User.builder().id(2).build();
+        appointmentRepository.findByUserCustomerAndCreatedAt(user, date);
     }
 }

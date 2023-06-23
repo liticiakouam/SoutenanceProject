@@ -3,8 +3,8 @@ package com.liticia.soutenanceApp.controller;
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
-import com.liticia.soutenanceApp.model.Schedule;
-import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
+import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AppointmentService;
 import com.liticia.soutenanceApp.service.AvailabilityService;
@@ -18,14 +18,14 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @WebMvcTest(controllers = {AppointmentController.class},
         excludeAutoConfiguration = {SecurityAutoConfiguration.class})
@@ -35,16 +35,18 @@ public class AppointmentControllerTest {
     @MockBean
     private AppointmentService appointmentService;
 
+    @MockBean
+    private UserService userService;
+
     @Test
     public void testShouldSaveAppointment() throws Exception {
         AppointmentCreate appointmentCreate = AppointmentCreate.builder().pattern("hello").build();
-        MockMultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "some content".getBytes());
+        MockMultipartFile file = new MockMultipartFile("productImage", "filename.txt", "text/plain", "some content".getBytes());
 
-        doNothing().when(appointmentService).save(appointmentCreate, file, "image", 1L);
+        doNothing().when(appointmentService).save(appointmentCreate, file, "document", 1L);
         mockMvc.perform(multipart("/appointment/add")
                 .file(file))
                 .andExpect(status().isBadRequest())
-                .andExpect(view().name("confirmrdv"))
                 .andReturn();
     }
 

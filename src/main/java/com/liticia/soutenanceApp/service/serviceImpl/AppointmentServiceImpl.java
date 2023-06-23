@@ -71,4 +71,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentRepository.save(appointment);
     }
+
+    @Override
+    public Optional<Appointment> findByUserCustomerAndCreatedAt(User user, Instant dateTime) {
+        return appointmentRepository.findByUserCustomerAndCreatedAt(user, dateTime);
+    }
 }

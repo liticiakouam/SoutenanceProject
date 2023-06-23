@@ -3,6 +3,7 @@ package com.liticia.soutenanceApp.controller;
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
+import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.Availability;
@@ -41,12 +42,29 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/appointment/add")
     public String save(@ModelAttribute("appointment") AppointmentCreate appointmentCreate,
                        @RequestParam("productImage")MultipartFile file,
                        @RequestParam("document")String document, @RequestParam("id") long id) throws IOException {
         appointmentService.save(appointmentCreate, file, document, id);
-        return "motifrdv";
+        return "redirect:/appointment/info";
+    }
+
+    @GetMapping("/appointment/info")
+    public String findAppointment(Model model) {
+        Instant date = Instant.now();
+        Optional<User> userOptional = userService.findById(SecurityUtils.getCurrentUserId());
+        Optional<Appointment> optionalAppointment = appointmentService.findByUserCustomerAndCreatedAt(userOptional.get(), date);
+
+        if (optionalAppointment.isEmpty()) {
+            throw new AppointmenNotFoundException();
+        }
+
+        model.addAttribute("appointment", optionalAppointment.get());
+        return "confirmrdv";
     }
 
 }

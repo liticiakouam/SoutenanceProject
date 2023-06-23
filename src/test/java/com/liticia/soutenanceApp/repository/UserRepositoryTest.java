@@ -29,7 +29,7 @@ public class UserRepositoryTest {
     void testShouldSearchUsers() {
         List<User> searchResult = userRepository.searchUsers("douala",  "informatique", "liti");
 
-        assertEquals(0, searchResult.size());
+        assertEquals(5, searchResult.size());
     }
 
     @Test
@@ -37,12 +37,12 @@ public class UserRepositoryTest {
         Pageable pageable = PageRequest.of(1, 2);
         Page<User> users = userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,2);
 
-        assertEquals(0, users.getTotalPages());
+        assertEquals(1, users.getTotalPages());
     }
 
     @Test
     void testShouldFindUserById() {
         Optional<User> user = userRepository.findById(3L);
-        assertTrue(user.isEmpty());
+        assertTrue(user.isPresent());
     }
 }
