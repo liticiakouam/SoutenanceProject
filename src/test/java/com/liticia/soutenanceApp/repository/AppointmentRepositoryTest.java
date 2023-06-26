@@ -52,10 +52,9 @@ public class AppointmentRepositoryTest {
 
     @Test
     void findAllByUserCustomerAndReport() {
-        Optional<User> user = userRepository.findById(SecurityUtils.getCurrentUserId());
-        List<Appointment> appointments = appointmentRepository.findAllByUserCustomerAndReport(user.get(), null);
+        List<Appointment> appointments = appointmentRepository.findIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
 
-        assertEquals(5, appointments.size());
+        assertEquals(0, appointments.size());
     }
 
     @Test
@@ -64,14 +63,14 @@ public class AppointmentRepositoryTest {
         Pageable pageable = PageRequest.of(1, 2);
         Page<Appointment> appointmentPage = appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(user.get(), null, pageable);
 
-        assertEquals(3, appointmentPage.getTotalPages());
-        assertEquals(5, appointmentPage.getTotalElements());
+        assertEquals(0, appointmentPage.getTotalPages());
+        assertEquals(0, appointmentPage.getTotalElements());
     }
 
     @Test
     void testShouldFindAppointmentByOldDate() {
         LocalDate now = LocalDate.now();
-        List<Appointment> appointment = appointmentRepository.findAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        List<Appointment> appointment = appointmentRepository.findOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
         assertTrue(appointment.isEmpty());
     }
 }

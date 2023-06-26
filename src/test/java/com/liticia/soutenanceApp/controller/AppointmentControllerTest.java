@@ -73,18 +73,38 @@ public class AppointmentControllerTest {
     @Test
     void testShouldFindAppointmentByOldDate() throws Exception {
         List<Appointment> list = Arrays.asList(
-                Appointment.builder().id(1).document("pdf").build(),
-                Appointment.builder().id(2).build(),
-                Appointment.builder().id(3).build()
+                Appointment.builder().id(1).report(Report.builder().note("fe").build()).userPro(User.builder().firstName("hello").speciality(Speciality.builder().name("info").build()).build()).availability(Availability.builder().build()).document("pdf").build()
         );
-        LocalDate now = LocalDate.now();
-
         when(appointmentService.findAppointmentByOldDate()).thenReturn(list);
 
         mockMvc.perform(get("/appointment/passer"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rdvPasser"))
                 .andExpect(model().attributeExists("appointments"))
+                .andReturn();
+    }
+
+    @Test
+    void testShouldFindAppointmentToComeByDate() throws Exception {
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).report(Report.builder().note("fe").build()).userPro(User.builder().firstName("hello").speciality(Speciality.builder().name("info").build()).build()).availability(Availability.builder().build()).document("pdf").build()
+        );
+
+        when(appointmentService.findAppointmentToComeByDate()).thenReturn(list);
+        mockMvc.perform(get("/appointment/toCome"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("rdvAvenir"))
+                .andExpect(model().attributeExists("appointments"))
+                .andReturn();
+    }
+
+    @Test
+    void testShouldDeleteAppointment() throws Exception {
+
+        doNothing().when(appointmentService).deleteAppointment(1);
+        mockMvc.perform(get("/appointment/deleted/1"))
+                .andExpect(status().isFound())
+                .andExpect(view().name("redirect:/appointment/toCome"))
                 .andReturn();
     }
 }
