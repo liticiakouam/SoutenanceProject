@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Date;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -16,8 +17,7 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String name;
     private String note;
     private String levelOfVisibility;
-    private Date createdAt;
+    private Instant createdAt;
 }

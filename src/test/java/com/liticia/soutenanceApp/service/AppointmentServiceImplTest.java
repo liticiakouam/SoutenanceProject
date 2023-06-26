@@ -15,6 +15,10 @@ import com.liticia.soutenanceApp.service.serviceImpl.AppointmentServiceImpl;
 import com.liticia.soutenanceApp.service.serviceImpl.AvailabilityServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AppointmentServiceImplTest {
@@ -61,10 +66,60 @@ public class AppointmentServiceImplTest {
     }
 
     @Test
-    void testShouldFindByUserCustomerAndCreatedAt() {
+    void testShouldFindAppointmentByUserCustomerAndCreatedAt() {
         Instant date = Instant.now();
         User user = User.builder().id(2).build();
-        Optional<Appointment> appointment = appointmentService.findByUserCustomerAndCreatedAt(user, date);
+        Appointment optionalAppointment = Appointment.builder().id(1).build();
+        when(userRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(appointmentRepository.findByUserCustomerAndCreatedAt(user, date)).thenReturn(Optional.of(optionalAppointment));
+
+       appointmentService.findByUserCustomerAndCreatedAt();
+    }
+
+    @Test
+    void testShouldFindAppointmentByReportAndUser() {
+        User user = User.builder().id(1).build();
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).document("pdf").build(),
+                Appointment.builder().id(2).build(),
+                Appointment.builder().id(3).build()
+        );
+        when(userRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(appointmentRepository.findAllByUserCustomerAndReport(user, null)).thenReturn(list);
+
+        List<Appointment> appointments = appointmentService.findAllByReportAndUser();
+        assertEquals(3, appointments.size());
+        assertEquals(2, appointments.get(1).getId());
+    }
+
+    @Test
+    void testShouldFindAppointmentByReportAndUserAndPageable() {
+        User user = User.builder().id(1).build();
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).document("pdf").build(),
+                Appointment.builder().id(2).build(),
+                Appointment.builder().id(3).build()
+        );
+        Pageable pageable = PageRequest.of(1, 2);
+        Page<Appointment> page = new PageImpl<>(list);
+        when(userRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(user, null, pageable)).thenReturn(page);
+
+        Page<Appointment> appointmentPage = appointmentService.findPageByReportAndUser(pageable);
+        assertEquals(3, appointmentPage.getTotalElements());
+        assertEquals(1, appointmentPage.getTotalPages());
+    }
+
+    @Test
+    void testShouldFindAppointmentById() {
+        User user = User.builder().id(1).build();
+        Appointment appointmentBuild = Appointment.builder().id(1).document("pdf").build();
+
+        when(userRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointmentBuild));
+
+        Optional<Appointment> appointment = appointmentService.findById(1L);
+        assertTrue(appointment.isPresent());
     }
 
 }

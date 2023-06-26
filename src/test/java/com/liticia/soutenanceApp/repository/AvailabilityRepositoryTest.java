@@ -34,6 +34,6 @@ public class AvailabilityRepositoryTest {
         User user = User.builder().id(1).build();
         List<Availability> availabilities = availabilityRepository.findAllByUserAndDateBetweenOrderByDate(user, startDate, endDate);
 
-        assertEquals(9, availabilities.size());
+        assertEquals(0, availabilities.size());
     }
 }

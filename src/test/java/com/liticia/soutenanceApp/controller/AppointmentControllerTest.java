@@ -14,12 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -47,6 +53,19 @@ public class AppointmentControllerTest {
         mockMvc.perform(multipart("/appointment/add")
                 .file(file))
                 .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    public void testShouldFindAppointmentById() throws Exception {
+        Appointment appointment = Appointment.builder().id(1).document("pdf").build();
+
+        when(appointmentService.findById(1L)).thenReturn(Optional.of(appointment));
+
+        mockMvc.perform(get("/appointment/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("rdv"))
+                .andExpect(model().attributeExists("appointment"))
                 .andReturn();
     }
 

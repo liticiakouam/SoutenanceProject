@@ -20,4 +20,5 @@ public class AppointmentCreate {
     private String description;
 
     private String document;
+    private String report;
 }
