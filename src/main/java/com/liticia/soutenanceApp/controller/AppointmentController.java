@@ -4,7 +4,6 @@ import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.ReportCreate;
 import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.model.Appointment;
-import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.service.AppointmentService;
 import com.liticia.soutenanceApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,12 +59,17 @@ public class AppointmentController {
         List<Appointment> appointments = page.getContent();
         List<Appointment> appointmentSize = appointmentService.findAllByReportAndUser();
 
+        List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
+
+
         model.addAttribute("currentPage", pageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("appointments", appointments);
         model.addAttribute("appointmentSize", appointmentSize.size());
+        model.addAttribute("appointmentPasserSize", appointmentPasser.size());
         model.addAttribute("report", new ReportCreate());
+
         return "rdv";
     }
 
@@ -74,6 +78,18 @@ public class AppointmentController {
         Optional<Appointment> appointment = appointmentService.findById(id);
         model.addAttribute("appointment", appointment);
         return "rdv";
+    }
+
+    @GetMapping("/appointment/passer")
+    public String findByOldAppointmentByDate(Model model) {
+        List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
+        List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
+
+        model.addAttribute("appointments", appointments);
+        model.addAttribute("appointmentSize", appointments.size());
+        model.addAttribute("appointmentToComplet", appointmentToComplete.size());
+
+        return "rdvPasser";
     }
 
 }

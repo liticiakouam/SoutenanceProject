@@ -29,6 +29,10 @@ public class Appointment {
     private Report report;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "reportPro", referencedColumnName = "id")
+    private Report reportPro;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "userPro", referencedColumnName = "id")
     private User userPro;
 

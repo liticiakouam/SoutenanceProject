@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,4 +107,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Optional<Appointment> findById(long id) {
         return appointmentRepository.findById(id);
     }
+
+    @Override
+    public List<Appointment> findAppointmentByOldDate() {
+        LocalDate now = LocalDate.now();
+        return appointmentRepository.findAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+    }
+
 }

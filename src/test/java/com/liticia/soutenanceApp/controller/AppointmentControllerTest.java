@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -69,4 +70,21 @@ public class AppointmentControllerTest {
                 .andReturn();
     }
 
+    @Test
+    void testShouldFindAppointmentByOldDate() throws Exception {
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).document("pdf").build(),
+                Appointment.builder().id(2).build(),
+                Appointment.builder().id(3).build()
+        );
+        LocalDate now = LocalDate.now();
+
+        when(appointmentService.findAppointmentByOldDate()).thenReturn(list);
+
+        mockMvc.perform(get("/appointment/passer"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("rdvPasser"))
+                .andExpect(model().attributeExists("appointments"))
+                .andReturn();
+    }
 }
