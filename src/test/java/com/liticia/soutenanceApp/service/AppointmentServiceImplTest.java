@@ -3,10 +3,7 @@ package com.liticia.soutenanceApp.service;
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
-import com.liticia.soutenanceApp.model.Appointment;
-import com.liticia.soutenanceApp.model.Availability;
-import com.liticia.soutenanceApp.model.Schedule;
-import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.repository.AppointmentRepository;
 import com.liticia.soutenanceApp.repository.AvailabilityRepository;
 import com.liticia.soutenanceApp.repository.UserRepository;
@@ -120,6 +117,21 @@ public class AppointmentServiceImplTest {
 
         Optional<Appointment> appointment = appointmentService.findById(1L);
         assertTrue(appointment.isPresent());
+    }
+
+    @Test
+    void testShouldFindAppointmentByOldDate() {
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).report(Report.builder().note("fe").build()).document("pdf").build(),
+                Appointment.builder().id(2).report(Report.builder().note("fe").build()).build(),
+                Appointment.builder().id(3).report(Report.builder().note("fe").build()).build()
+        );
+        LocalDate now = LocalDate.now();
+
+        when(appointmentRepository.findAppointmentByDate(now, SecurityUtils.getCurrentUserId())).thenReturn(list);
+
+        List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
+        assertEquals(3, appointments.size());
     }
 
 }

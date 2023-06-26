@@ -31,7 +31,6 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.save(report);
 
         Appointment appointment = new Appointment();
-        Optional<Appointment> appointmentById = appointmentRepository.findById(id);
         appointment.setReport(report);
         appointment.setId(id);
         appointmentRepository.save(appointment);

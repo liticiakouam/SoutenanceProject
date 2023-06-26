@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class AppointmentRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    void testShouldFindAppointmentByAvailabityId() {
+    void testShouldFindAppointmentByAvailabilityId() {
         List<Appointment> appointments = appointmentRepository.findAppointmentByAvailabilityId(1L);
         assertEquals(0, appointments.size());
     }
@@ -65,5 +66,12 @@ public class AppointmentRepositoryTest {
 
         assertEquals(3, appointmentPage.getTotalPages());
         assertEquals(5, appointmentPage.getTotalElements());
+    }
+
+    @Test
+    void testShouldFindAppointmentByOldDate() {
+        LocalDate now = LocalDate.now();
+        List<Appointment> appointment = appointmentRepository.findAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        assertTrue(appointment.isEmpty());
     }
 }

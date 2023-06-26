@@ -20,4 +20,7 @@ public interface AppointmentService {
     List<Appointment> findAllByReportAndUser();
 
     Optional<Appointment> findById(long id);
+
+    List<Appointment> findAppointmentByOldDate();
+
 }
