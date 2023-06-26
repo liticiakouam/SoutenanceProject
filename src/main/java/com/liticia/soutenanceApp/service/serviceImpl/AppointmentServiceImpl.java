@@ -2,6 +2,7 @@ package com.liticia.soutenanceApp.service.serviceImpl;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.exception.AvailabilityException;
+import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.User;
@@ -10,6 +11,8 @@ import com.liticia.soutenanceApp.repository.AvailabilityRepository;
 import com.liticia.soutenanceApp.repository.UserRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AppointmentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,11 +26,11 @@ import java.util.Optional;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
-    private AppointmentRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private AvailabilityRepository availabilityRepository;
+    private final AvailabilityRepository availabilityRepository;
 
     public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/document";
 
@@ -73,7 +76,34 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Optional<Appointment> findByUserCustomerAndCreatedAt(User user, Instant dateTime) {
-        return appointmentRepository.findByUserCustomerAndCreatedAt(user, dateTime);
+    public Optional<Appointment> findByUserCustomerAndCreatedAt() {
+        Instant date = Instant.now();
+        Optional<User> userOptional = userRepository.findById(SecurityUtils.getCurrentUserId());
+        return appointmentRepository.findByUserCustomerAndCreatedAt(userOptional.get(), date);
+    }
+
+    @Override
+    public Page<Appointment> findPageByReportAndUser(Pageable pageable) {
+        Optional<User> userOptional = userRepository.findById(SecurityUtils.getCurrentUserId());
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        return appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(userOptional.get(), null, pageable);
+    }
+
+    @Override
+    public List<Appointment> findAllByReportAndUser() {
+        Optional<User> userOptional = userRepository.findById(SecurityUtils.getCurrentUserId());
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        return appointmentRepository.findAllByUserCustomerAndReport(userOptional.get(), null);
+    }
+
+    @Override
+    public Optional<Appointment> findById(long id) {
+        return appointmentRepository.findById(id);
     }
 }

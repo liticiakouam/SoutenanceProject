@@ -2,6 +2,7 @@ package com.liticia.soutenanceApp.repository;
 
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.security.SecurityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,8 +16,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -26,6 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AppointmentRepositoryTest {
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void testShouldFindAppointmentByAvailabityId() {
@@ -38,5 +41,29 @@ public class AppointmentRepositoryTest {
         Instant date = Instant.now();
         User user = User.builder().id(2).build();
         appointmentRepository.findByUserCustomerAndCreatedAt(user, date);
+    }
+
+    @Test
+    void testShouldFindById() {
+        Optional<Appointment> appointment = appointmentRepository.findById(1L);
+        assertTrue(appointment.isEmpty());
+    }
+
+    @Test
+    void findAllByUserCustomerAndReport() {
+        Optional<User> user = userRepository.findById(SecurityUtils.getCurrentUserId());
+        List<Appointment> appointments = appointmentRepository.findAllByUserCustomerAndReport(user.get(), null);
+
+        assertEquals(5, appointments.size());
+    }
+
+    @Test
+    void findPageableByUserCustomerAndReport() {
+        Optional<User> user = userRepository.findById(SecurityUtils.getCurrentUserId());
+        Pageable pageable = PageRequest.of(1, 2);
+        Page<Appointment> appointmentPage = appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(user.get(), null, pageable);
+
+        assertEquals(3, appointmentPage.getTotalPages());
+        assertEquals(5, appointmentPage.getTotalElements());
     }
 }

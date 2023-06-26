@@ -15,61 +15,61 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
+  <link rel="stylesheet" th:href="@{style.css}">
 </head>
 
 <body>
+  <div id="wrapper">
 
-<div id="wrapper">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-      <div class="sidebar-brand-icon rotate-n-15">
-        <i class="bi bi-emoji-smile-fill"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
-    </a>
-
-    <hr class="sidebar-divider d-md-block">
-
-    <li class="nav-item active">
-      <a class="nav-link" href="index.html">
-        <i class="bi bi-house-fill"></i>
-        <span>Accueil</span></a>
-    </li>
-
-    <hr class="sidebar-divider">
-
-    <li class="nav-item">
-      <a class="nav-link" href="rdv.html">
-        <i class="bi bi-calendar2-check-fill"></i>
-        <span>Mes Rendez-vous</span></a>
-    </li>
-    <hr class="sidebar-divider">
-
-    <li class="nav-item">
-      <a class="nav-link " href="professionnel.html">
-        <i class="bi bi-person-badge-fill"></i>
-        <span>Professionnels</span>
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="bi bi-emoji-smile-fill"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
       </a>
-    </li>
 
-    <hr class="sidebar-divider">
+      <hr class="sidebar-divider d-md-block">
 
-    <li class="nav-item">
-      <a class="nav-link" href="profile.html">
-        <i class="bi bi-person-fill"></i>
-        <span>Profil</span></a>
-    </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="index.html">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
 
-    <hr class="sidebar-divider">
+      <hr class="sidebar-divider">
 
-    <li class="nav-item">
-      <a class="nav-link" href="login.html">
-        <i class="bi bi-box-arrow-up-right"></i>
-        <span>Se deconnecter</span></a>
-    </li>
-  </ul>
+      <li class="nav-item">
+        <a class="nav-link" href="rdv.html">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link " href="professionnel.html">
+          <i class="bi bi-person-badge-fill"></i>
+          <span>Professionnels</span>
+        </a>
+      </li>
+
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">
+          <i class="bi bi-person-fill"></i>
+          <span>Profil</span></a>
+      </li>
+
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" href="login.html">
+          <i class="bi bi-box-arrow-up-right"></i>
+          <span>Se deconnecter</span></a>
+      </li>
+    </ul>
 
   <div id="content-wrapper" class="d-flex flex-column">
 
@@ -115,6 +115,8 @@
               </form>
             </div>
           </li>
+
+
           <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
@@ -127,100 +129,282 @@
 
       </nav>
 
-      <div class="container">
-        <div class="card">
+      <div class="container-fluid">
+        <div class="d-flex ">
+          <h5 class="p-2 text-dark" style="font-size:23px; font-weight: bold;">Prochain Rdv</h5>
+          <div class="mb-2 ml-auto p-2 btn btn-primary">Note</div>
+        </div>
+        <div class="card ">
           <div class="card-body">
-            <div th:if="${error}" class="mx-auto float-end alert alert-danger alert-dismissible fade show pt-3" role="alert">
-              <span th:text="${error}"></span>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <table class="table table-responsive">
+              <thead style="background-color: blue;">
+              <tr class="text-white">
+                <th scope="col">Raison du rdv</th>
+                <th scope="col">Nom du Professionnel</th>
+                <th scope="col">Date et heure</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+        <div class="d-flex mb-2 mt-4">
+          <h5 class="p-2 text-dark" style="font-size:26px; font-weight: bold;">Mes rendez-vous</h5>
+        </div>
+
+        <div class="card shadow">
+          <div class="card-header">
+            <ul class=" d-flex nav nav-tabs card-header-tabs ">
+              <li class="nav-item">
+                <a class="nav-link active text-primary" data-bs-toggle="tab" data-bs-target="#rdv-complete">A
+                  COMPLETER (<span th:text="${appointmentSize}"></span>)
+                </a>
+              </li>
+              <li class="ml-auto center nav-item">
+                <a class="nav-link text-secondary" data-bs-toggle="tab" data-bs-target="#rdvAvenir">A VENIR</a>
+              </li>
+              <li class=" ml-auto nav-item">
+                <a class="nav-link text-secondary" data-bs-toggle="tab" data-bs-target="#rdvPasse">PASSES</a>
+              </li>
+
+            </ul>
+          </div>
+          <div class="card-body">
+
+            <div class="tab-content pt-2">
+              <div th:if="${appointmentSize > 0}" class="tab-pane fade show active rdv-complete" id="rdv-complete">
+                <table class="table table-hover">
+                  <thead style="background-color: rgb(85, 85, 247);">
+                  <tr class="text-white">
+                    <th scope="col">Raison du rdv</th>
+                    <th scope="col">Nom du Professionnel</th>
+                    <th scope="col">Date et heure</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="appointment : ${appointments}">
+                    <td th:text="${appointment.pattern}"></td>
+                    <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                    <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
+                    <td>
+                      <a type="button" th:href="@{/appointment/{id}(id=${appointment.id})}" class="btn bg-gradient-primary btn-sm text-white" data-bs-toggle="modal" data-bs-target="#basicModal">Rediger une note</a>
+
+                      <div class="modal fade" id="basicModal" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title text-primary">Ajouter Une Note</h5>
+                              <a  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+                            </div>
+                            <form th:action="@{/report/add/{id}(id=${appointment.id})}" method="POST" th:object="${report}">
+                              <div class="modal-body">
+                                <div class="a">
+                                  <label class="text-dark"><strong>Niveau de visibiliter</strong><p>(public c'est à dire que la note sera visible par le professionnel)</p></label>
+                                </div>
+                                <div class="form-check form-check-inline col-auto ">
+                                  <input class="form-check-input" type="radio" id="inlineCheckbox1" th:field="*{levelOfVisibility}" value="PRIVE">
+                                  <label class="text-dark" for="inlineCheckbox1">Privée</label>
+                                </div>
+                                <div class="form-check form-check-inline col-auto">
+                                  <input class="form-check-input" type="radio" id="inlineCheckbox2" th:field="*{levelOfVisibility}" value="PUBLIC">
+                                  <label class="text-dark" for="inlineCheckbox2">Public</label>
+                                </div>
+                                <div class="mt-4">
+                                  <label class="text-dark"><strong>Note</strong></label>
+                                  <textarea class="form-control" id="exampleFormControlTextarea1" minlength="10" rows="4" th:field="*{note}" required></textarea>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                <div class="Page navigation example pt-3" th:if = "${totalPages > 1}" >
+                  <ul class="pagination pagination-sm">
+                    <li class="page-item">
+                      <a th:if="${currentPage - 1 != 0}" th:href="@{'/appointment/toComplete?pageNumber=' + ${currentPage - 1}}" class="page-link"><<</a>
+                      <span class="page-link" th:unless="${currentPage - 1 != 0}"><<</span>
+                    </li>
+                    <li th:each="i: ${#numbers.sequence(1, totalPages)}" class="page-item ">
+                      <a th:if="${currentPage != i}" th:href="@{'/appointment/toComplete?pageNumber=' + ${i}}" class="page-link" href="#">[[${i}]]</a>
+                      <a th:unless="${currentPage != i}" class="page-link" href="#">[[${i}]]</a>
+                    </li>
+                    <li class="page-item mr-2">
+                      <a th:if="${currentPage < totalPages}" th:href="@{'/appointment/toComplete?pageNumber=' + ${currentPage + 1}}" class="page-link">>></a>
+                      <span class="page-link" th:unless="${currentPage < totalPages}">>></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div th:unless="${appointmentSize > 0}" class="tab-pane fade show active rdv-complete" id="rdv-complete">
+                <h3 class="text-dark text-center">Vous n'avez aucun rendez-vous à completer</h3>
+              </div>
+              <div class="tab-pane fade rdvAvenir pt-3" id="rdvAvenir">
+                <table class="table table-hover">
+                  <thead style="background-color: rgb(85, 85, 247);">
+                  <tr class="text-white">
+                    <th scope="col">Raison du rdv</th>
+                    <th scope="col">Nom du Professionnel</th>
+                    <th scope="col">Specialite</th>
+                    <th scope="col">Date et heure</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <a href="" class="btn btn-info btn-sm">Details</a>
+                      <a href="" class="btn btn-danger btn-sm">Annuler</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <a href="" class="btn btn-info btn-sm">Details</a>
+                      <a href="" class="btn btn-danger btn-sm">Annuler</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <a href="" class="btn btn-info btn-sm">Details</a>
+                      <a href="" class="btn btn-danger btn-sm">Annuler</a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+                <nav aria-label="...">
+                  <ul class="pagination pagination-sm">
+
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+
+              <div class="tab-pane fade rdvPasse pt-3" id="rdvPasse">
+                <table class="table table-hover">
+                  <thead style="background-color: rgb(85, 85, 247);">
+                  <tr class="text-white">
+                    <th scope="col">Raison du rdv</th>
+                    <th scope="col">Nom du Professionnel</th>
+                    <th scope="col">Specialite</th>
+                    <th scope="col">Date et heure</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <!-- <a href="" class="btn btn-info btn-sm">Details</a> -->
+                      <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <!-- <a href="" class="btn btn-info btn-sm">Details</a> -->
+                      <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <!-- <a href="" class="btn btn-info btn-sm">Details</a> -->
+                      <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <!-- <a href="" class="btn btn-info btn-sm">Details</a> -->
+                      <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Brandon Jacob</td>
+                    <td>IU454E</td>
+                    <td>IU454E</td>
+                    <td>disabled</td>
+                    <td>
+                      <!-- <a href="" class="btn btn-info btn-sm">Details</a> -->
+                      <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+                <nav aria-label="...">
+                  <ul class="pagination pagination-sm">
+
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
 
-            <h5 class="text-primary">Professionnels</h5>
-            <form class="row pt-4" enctype="multipart/form-data" th:action="@{/user/search}" method="GET">
-                <div class="col-md-1 pt-1">
-                  <h6 class="text-dark" style="font-weight: bold; font-size:20px;">Filtre</h6>
-                </div>
-                <div class="col-md-3">
-                  <input type="text" minlength="3" name="keyword" th:value="${keyword}" class="form-control" placeholder="Entrer le nom">
-                </div>
-                <div class="col-md-3">
-                  <select class="form-control" name="city" th:value="${city}">
-                    <option value="">Select a city</option>
-                    <option th:each="city : ${cities}"
-                            th:value="${city.id}"
-                            th:text="${city.name}"
-                    >
-                  </select>
-                </div>
-              <div class="col-md-3">
-                <select class="form-control" name="speciality" th:value="${speciality}">
-                  <option value="">Select a speciality </option>
-                  <option th:each="speciality : ${specialities}"
-                          th:value="${speciality.id}"
-                          th:text="${speciality.name}"
-                  >
-                </select>
-              </div>
-                <div class="col-md-2">
-                  <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i> Chercher</button>
-                </div>
-            </form>
-
-            <div th:if="${userSize > 0}">
-              <div class="row">
-                <div class="col-xl-3 pt-3" th:each="user : ${userSearch}">
-                  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                    <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                         height="100px">
-                    <div class="card-body d-flex flex-column align-items-center">
-                      <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                      <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                      <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                      <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{/user(userId=${user.id})&startDate=2023-01-01}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                        rdv</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-xl-3 pt-3" th:each="user : ${users}">
-                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                  <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                       height="100px" src="">
-                  <div class="card-body d-flex flex-column align-items-center">
-                    <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                    <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                    <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                    <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{'/user?userId(userId=${user.id})' +&startDate=2023-06-20}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                      rdv</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="Page navigation example pt-3" th:if = "${totalPages > 1}" >
-              <ul class="pagination pagination-sm">
-                <li class="page-item">
-                  <a th:if="${currentPage - 1 != 0}" th:href="@{'/users?pageNumber=' + ${currentPage - 1}}" class="page-link">Previous</a>
-                  <span class="page-link" th:unless="${currentPage - 1 != 0}">Previous</span>
-                </li>
-                <li th:each="i: ${#numbers.sequence(1, totalPages)}" class="page-item ">
-                  <a th:if="${currentPage != i}" th:href="@{'/users?pageNumber=' + ${i}}" class="page-link" href="#">[[${i}]]</a>
-                  <a th:unless="${currentPage != i}" class="page-link" href="#">[[${i}]]</a>
-                </li>
-                <li class="page-item mr-2">
-                  <a th:if="${currentPage < totalPages}" th:href="@{'/users?pageNumber=' + ${currentPage + 1}}" class="page-link">Next</a>
-                  <span class="page-link" th:unless="${currentPage < totalPages}">Next</span>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
+
 </div>
+</div>
+
 </body>
 
 <style>
@@ -1359,6 +1543,4 @@ body {
   }
 
 </style>
-
-
 </html>
