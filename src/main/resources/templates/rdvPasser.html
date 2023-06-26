@@ -168,7 +168,7 @@
                 </a>
               </li>
               <li class="ml-auto center nav-item">
-                <a class="nav-link text-secondary" data-bs-toggle="tab" data-bs-target="#rdvAvenir">A VENIR </a>
+                <a class="nav-link text-secondary" th:href="@{/appointment/toCome}">A VENIR(<span th:text="${appointmentToCome}"></span>)</a>
               </li>
               <li class=" ml-auto nav-item">
                 <a class="nav-link text-primary active" data-bs-toggle="tab" data-bs-target="#rdvPasse">PASSES (<span th:text="${appointmentSize}"></span>)</a>
@@ -179,66 +179,6 @@
           <div class="card-body">
 
             <div class="tab-content pt-2">
-
-              <div class="tab-pane fade rdvAvenir pt-3" id="rdvAvenir">
-                <table class="table table-hover">
-                  <thead style="background-color: rgb(85, 85, 247);">
-                  <tr class="text-white">
-                    <th scope="col">Raison du rdv</th>
-                    <th scope="col">Nom du Professionnel</th>
-                    <th scope="col">Specialite</th>
-                    <th scope="col">Date et heure</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td>Brandon Jacob</td>
-                    <td>IU454E</td>
-                    <td>IU454E</td>
-                    <td>disabled</td>
-                    <td>
-                      <a href="" class="btn btn-info btn-sm">Details</a>
-                      <a href="" class="btn btn-danger btn-sm">Annuler</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Brandon Jacob</td>
-                    <td>IU454E</td>
-                    <td>IU454E</td>
-                    <td>disabled</td>
-                    <td>
-                      <a href="" class="btn btn-info btn-sm">Details</a>
-                      <a href="" class="btn btn-danger btn-sm">Annuler</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Brandon Jacob</td>
-                    <td>IU454E</td>
-                    <td>IU454E</td>
-                    <td>disabled</td>
-                    <td>
-                      <a href="" class="btn btn-info btn-sm">Details</a>
-                      <a href="" class="btn btn-danger btn-sm">Annuler</a>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-                <nav aria-label="...">
-                  <ul class="pagination pagination-sm">
-
-                    <li class="page-item disabled">
-                      <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
 
               <div th:if="${appointmentSize > 0}" class="tab-pane fade show active rdvPasse pt-3" id="rdvPasse">
                 <table class="table table-hover">

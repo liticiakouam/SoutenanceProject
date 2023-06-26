@@ -1,22 +1,18 @@
 package com.liticia.soutenanceApp.service;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
-import com.liticia.soutenanceApp.dto.AvailabilityCreate;
-import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.repository.AppointmentRepository;
 import com.liticia.soutenanceApp.repository.AvailabilityRepository;
 import com.liticia.soutenanceApp.repository.UserRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.serviceImpl.AppointmentServiceImpl;
-import com.liticia.soutenanceApp.service.serviceImpl.AvailabilityServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.util.Pair;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +20,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -57,8 +52,8 @@ public class AppointmentServiceImplTest {
 
         appointmentService.save(appointmentCreate, file, "image", 1L);
 
-        verify(userRepository, times(2)).findById(SecurityUtils.getCurrentUserId());
-        verify(userRepository, times(2)).findById(2L);
+        verify(userRepository, times(1)).findById(SecurityUtils.getCurrentUserId());
+        verify(userRepository, times(1)).findById(2L);
         verify(availabilityRepository, times(1)).findById(1L);
     }
 
@@ -82,7 +77,7 @@ public class AppointmentServiceImplTest {
                 Appointment.builder().id(3).build()
         );
         when(userRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
-        when(appointmentRepository.findAllByUserCustomerAndReport(user, null)).thenReturn(list);
+        when(appointmentRepository.findIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         assertEquals(3, appointments.size());
@@ -128,10 +123,36 @@ public class AppointmentServiceImplTest {
         );
         LocalDate now = LocalDate.now();
 
-        when(appointmentRepository.findAppointmentByDate(now, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findOldAppointmentByDate(now, SecurityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
         assertEquals(3, appointments.size());
+    }
+
+    @Test
+    void testShouldFindAppointmentToComeByDate() {
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).report(Report.builder().note("fe").build()).document("pdf").build(),
+                Appointment.builder().id(2).report(Report.builder().note("fe").build()).build(),
+                Appointment.builder().id(3).report(Report.builder().note("fe").build()).build()
+        );
+        LocalDate now = LocalDate.now();
+        LocalDate localDate = now.plusDays(2);
+
+        when(appointmentRepository.findAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+
+        List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
+        assertEquals(3, appointments.size());
+    }
+
+    @Test
+    void testShouldDeleteAppointment() {
+        Appointment appointmentBuild = Appointment.builder().id(1).document("pdf").build();
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointmentBuild));
+        when(appointmentRepository.save(appointmentBuild)).thenReturn(appointmentBuild);
+
+        appointmentService.deleteAppointment(1);
     }
 
 }

@@ -95,12 +95,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> findAllByReportAndUser() {
-        Optional<User> userOptional = userRepository.findById(SecurityUtils.getCurrentUserId());
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        return appointmentRepository.findAllByUserCustomerAndReport(userOptional.get(), null);
+        return appointmentRepository.findIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
     }
 
     @Override
@@ -111,7 +106,24 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> findAppointmentByOldDate() {
         LocalDate now = LocalDate.now();
-        return appointmentRepository.findAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        return appointmentRepository.findOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
     }
+
+    @Override
+    public List<Appointment> findAppointmentToComeByDate() {
+        LocalDate now = LocalDate.now();
+        LocalDate localDate = now.plusDays(2);
+        return appointmentRepository.findAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId());
+    }
+
+    @Override
+    public void deleteAppointment(long id) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findById(id);
+        Appointment appointment = optionalAppointment.get();
+        appointment.setDeleted(!appointment.isDeleted());
+
+        appointmentRepository.save(appointment);
+    }
+
 
 }

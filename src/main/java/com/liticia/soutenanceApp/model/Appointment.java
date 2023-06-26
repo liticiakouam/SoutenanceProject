@@ -48,4 +48,6 @@ public class Appointment {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Instant createdAt;
+
+    private boolean deleted = false;
 }

@@ -48,26 +48,15 @@ public class AppointmentController {
     }
 
     @GetMapping("/appointment/toComplete")
-    public String findIncompletedAppointment(@RequestParam("pageNumber") int pageNumber,
-                                                      Model model
-    ) {
-
-        int pageSize = 1;
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-
-        Page<Appointment> page = appointmentService.findPageByReportAndUser(pageable);
-        List<Appointment> appointments = page.getContent();
-        List<Appointment> appointmentSize = appointmentService.findAllByReportAndUser();
-
+    public String findIncompletedAppointment(Model model) {
+        List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
+        List<Appointment> appointmentToCome = appointmentService.findAppointmentToComeByDate();
 
-
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("appointments", appointments);
-        model.addAttribute("appointmentSize", appointmentSize.size());
+        model.addAttribute("appointmentSize", appointments.size());
         model.addAttribute("appointmentPasserSize", appointmentPasser.size());
+        model.addAttribute("appointmentToCome", appointmentToCome.size());
         model.addAttribute("report", new ReportCreate());
 
         return "rdv";
@@ -84,12 +73,34 @@ public class AppointmentController {
     public String findByOldAppointmentByDate(Model model) {
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
         List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
+        List<Appointment> appointmentToCome = appointmentService.findAppointmentToComeByDate();
 
         model.addAttribute("appointments", appointments);
         model.addAttribute("appointmentSize", appointments.size());
         model.addAttribute("appointmentToComplet", appointmentToComplete.size());
+        model.addAttribute("appointmentToCome", appointmentToCome.size());
 
         return "rdvPasser";
+    }
+
+    @GetMapping("/appointment/toCome")
+    public String findAppointmentToComeByDate(Model model) {
+        List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
+        List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
+        List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
+
+        model.addAttribute("appointments", appointments);
+        model.addAttribute("appointmentSize", appointments.size());
+        model.addAttribute("appointmentToComplet", appointmentToComplete.size());
+        model.addAttribute("appointmentPasser", appointmentPasser.size());
+
+        return "rdvAvenir";
+    }
+
+    @GetMapping("appointment/deleted/{id}")
+    public String deleteAppointment(@PathVariable int id) {
+        appointmentService.deleteAppointment(id);
+        return "redirect:/appointment/toCome";
     }
 
 }
