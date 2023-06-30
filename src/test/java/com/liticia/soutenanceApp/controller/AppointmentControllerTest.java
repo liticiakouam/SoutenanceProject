@@ -2,8 +2,7 @@ package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.model.*;
-import com.liticia.soutenanceApp.service.AppointmentService;
-import com.liticia.soutenanceApp.service.ProfessionnalService;
+import com.liticia.soutenanceApp.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -33,6 +32,15 @@ public class AppointmentControllerTest {
     @MockBean
     private ProfessionnalService professionnalService;
 
+    @MockBean
+    private AvailabilityService availabilityService;
+
+    @MockBean
+    private RoleService roleService;
+
+    @MockBean
+    private UserService userService;
+
     @Test
     public void testShouldSaveAppointment() throws Exception {
         AppointmentCreate appointmentCreate = AppointmentCreate.builder().pattern("hello").build();
@@ -48,7 +56,11 @@ public class AppointmentControllerTest {
     @Test
     public void testShouldFindAppointmentById() throws Exception {
         Appointment appointment = Appointment.builder().id(1).document("pdf").build();
+        User user = User.builder().id(1).speciality(Speciality.builder().name("info").build()).city(City.builder().name("buea").build()).build();
+        Role role = Role.builder().id(2).build();
 
+        when(userService.findById()).thenReturn(Optional.of(user));
+        when(roleService.findByUsersId()).thenReturn(Optional.of(role));
         when(appointmentService.findById(1L)).thenReturn(Optional.of(appointment));
 
         mockMvc.perform(get("/appointment/1"))
@@ -61,13 +73,35 @@ public class AppointmentControllerTest {
     @Test
     void testShouldFindAppointmentByOldDate() throws Exception {
         List<Appointment> list = Arrays.asList(
-                Appointment.builder().id(1).report(Report.builder().note("fe").build()).userPro(User.builder().firstName("hello").speciality(Speciality.builder().name("info").build()).build()).availability(Availability.builder().build()).document("pdf").build()
+                Appointment.builder().id(1).report(Report.builder().note("fe").build()).userPro(User.builder().firstName("hello").speciality(Speciality.builder().name("info").build()).build()).availability(Availability.builder().build()).reportPro(Report.builder().build()).document("pdf").build()
         );
-        when(appointmentService.findAppointmentByOldDate()).thenReturn(list);
+        User user = User.builder().id(1).speciality(Speciality.builder().name("info").build()).city(City.builder().name("buea").build()).build();
+        Role role = Role.builder().id(2).build();
 
+        when(userService.findById()).thenReturn(Optional.of(user));
+        when(roleService.findByUsersId()).thenReturn(Optional.of(role));
+        when(appointmentService.findAppointmentByOldDate()).thenReturn(list);
         mockMvc.perform(get("/appointment/passer"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rdvPasser"))
+                .andExpect(model().attributeExists("appointments"))
+                .andReturn();
+    }
+
+    @Test
+    void testShouldFindIncompletedAppointment() throws Exception {
+        List<Appointment> list = Arrays.asList(
+                Appointment.builder().id(1).report(Report.builder().note("fe").build()).userPro(User.builder().firstName("hello").speciality(Speciality.builder().name("info").build()).build()).availability(Availability.builder().build()).reportPro(Report.builder().build()).document("pdf").build()
+        );
+        User user = User.builder().id(1).speciality(Speciality.builder().name("info").build()).city(City.builder().name("buea").build()).build();
+        Role role = Role.builder().id(2).build();
+
+        when(userService.findById()).thenReturn(Optional.of(user));
+        when(roleService.findByUsersId()).thenReturn(Optional.of(role));
+        when(appointmentService.findAllByReportAndUser()).thenReturn(list);
+        mockMvc.perform(get("/appointment/toComplete"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("rdv"))
                 .andExpect(model().attributeExists("appointments"))
                 .andReturn();
     }
@@ -77,7 +111,10 @@ public class AppointmentControllerTest {
         List<Appointment> list = Arrays.asList(
                 Appointment.builder().id(1).report(Report.builder().note("fe").build()).userPro(User.builder().firstName("hello").speciality(Speciality.builder().name("info").build()).build()).availability(Availability.builder().build()).document("pdf").build()
         );
-
+        User user = User.builder().id(1).speciality(Speciality.builder().name("info").build()).city(City.builder().name("buea").build()).build();
+        Role role = Role.builder().id(2).build();
+        when(userService.findById()).thenReturn(Optional.of(user));
+        when(roleService.findByUsersId()).thenReturn(Optional.of(role));
         when(appointmentService.findAppointmentToComeByDate()).thenReturn(list);
         mockMvc.perform(get("/appointment/toCome"))
                 .andExpect(status().isOk())

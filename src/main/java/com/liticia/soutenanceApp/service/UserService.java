@@ -1,6 +1,5 @@
 package com.liticia.soutenanceApp.service;
 
-import com.liticia.soutenanceApp.model.Role;
 import com.liticia.soutenanceApp.model.User;
 
 import java.util.Optional;

@@ -34,6 +34,16 @@ public class AvailabilityRepositoryTest {
         User user = User.builder().id(1).build();
         List<Availability> availabilities = availabilityRepository.findAllByUserAndDateBetweenOrderByDate(user, startDate, endDate);
 
+        assertEquals(11, availabilities.size());
+    }
+
+    @Test
+    void testShouldReturnNullAvailabilities() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(6);
+        User user = User.builder().id(100).build();
+        List<Availability> availabilities = availabilityRepository.findAllByUserAndDateBetweenOrderByDate(user, startDate, endDate);
+
         assertEquals(0, availabilities.size());
     }
 }

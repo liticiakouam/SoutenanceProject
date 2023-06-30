@@ -6,6 +6,8 @@ import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.ProfessionnalService;
+import com.liticia.soutenanceApp.service.RoleService;
+import com.liticia.soutenanceApp.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.doNothing;
@@ -30,6 +34,12 @@ public class AvailabilityControllerTest {
 
     @MockBean
     private ProfessionnalService professionnalService;
+
+    @MockBean
+    private RoleService roleService;
+
+    @MockBean
+    private UserService userService;
 
     @MockBean
     private AvailabilityService availabilityService;
@@ -49,9 +59,10 @@ public class AvailabilityControllerTest {
     public void testShouldRetrieveAvailabilities() throws Exception {
         User user = User.builder().id(1).build();
         LocalDate startDate = LocalDate.now();
-        AvailabilityResponse availabilityResponse = AvailabilityResponse.builder().nextStartDate(startDate.plusWeeks(1)).previousStartDate(startDate.minusWeeks(1)).build();
+        long[][] availabilities = new long[7][9];
+        AvailabilityResponse availabilityResponse = AvailabilityResponse.builder().availabilities(availabilities).nextStartDate(startDate.plusWeeks(1)).previousStartDate(startDate.minusWeeks(1)).build();
 
-        when(professionnalService.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.ofNullable(user));
+        when(professionnalService.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
         when(availabilityService.getAvailabilities(startDate, user)).thenReturn(availabilityResponse);
         mockMvc.perform(get("/professional/availability?startDate=2023-06-13"))
                 .andExpect(status().isOk())
@@ -62,7 +73,10 @@ public class AvailabilityControllerTest {
     @Test
     public void testShouldGetAvailabilityId() throws Exception {
         Availability availability = Availability.builder().id(1).user(User.builder().speciality(Speciality.builder().name("info").build()).build()).build();
-
+        User user = User.builder().id(1).speciality(Speciality.builder().name("info").build()).city(City.builder().name("buea").build()).build();
+        Role role = Role.builder().id(2).build();
+        when(userService.findById()).thenReturn(Optional.of(user));
+        when(roleService.findByUsersId()).thenReturn(Optional.of(role));
         when(availabilityService.findById(1L)).thenReturn(Optional.ofNullable(availability));
         mockMvc.perform(get("/availabilityId?id=1"))
                 .andExpect(status().isOk())

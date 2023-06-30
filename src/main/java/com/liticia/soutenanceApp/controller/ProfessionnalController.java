@@ -1,9 +1,7 @@
 package com.liticia.soutenanceApp.controller;
 
-import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
-import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
