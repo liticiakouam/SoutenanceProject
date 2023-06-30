@@ -21,16 +21,31 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Optional<Appointment> findByUserCustomerAndCreatedAt(User user, Instant dateTime);
 
     @Query("select a from Appointment a where a.availability.date < :now AND a.userCustomer.id=:userId AND a.report = null ORDER BY a.createdAt DESC")
-    List<Appointment> findIncompletedAppointementByDate(LocalDate now, long userId);
+    List<Appointment> findUserCustomerIncompletedAppointementByDate(LocalDate now, long userId);
+    @Query("select a from Appointment a where a.availability.date < :now AND a.userPro.id=:userId AND a.reportPro = null ORDER BY a.createdAt DESC")
+    List<Appointment> findUserProIncompletedAppointementByDate(LocalDate now, long userId);
 
     Page<Appointment> findAllByUserCustomerAndReportOrderByCreatedAtDesc(User user, Report report, Pageable pageable);
 
-    @Query("select a from Appointment a where a.availability.date < :now AND a.userCustomer.id=:userId AND a.report != null AND a.deleted = false ORDER BY a.createdAt DESC")
-    List<Appointment> findOldAppointmentByDate(LocalDate now, long userId);
+    @Query("select a from Appointment a where a.availability.date < :now AND a.userCustomer.id=:userId AND a.report != null AND a.reportPro != null AND a.deleted = false ORDER BY a.createdAt DESC")
+    List<Appointment> findUserCustomerOldAppointmentByDate(LocalDate now, long userId);
+
+    @Query("select a from Appointment a where a.availability.date < :now AND a.userPro.id=:userId AND a.reportPro != null AND a.report != null AND a.deleted = false ORDER BY a.createdAt DESC")
+    List<Appointment> findUserProOldAppointmentByDate(LocalDate now, long userId);
 
     @Query("select a from Appointment a where a.availability.date > :now AND a.userCustomer.id=:userId AND a.report = null AND a.deleted = false ORDER BY a.createdAt DESC")
-    List<Appointment> findAppointmentToComeByDate(LocalDate now, long userId);
+    List<Appointment> findUserCustomerAppointmentToComeByDate(LocalDate now, long userId);
+
+    @Query("select a from Appointment a where a.availability.date > :now AND a.userPro.id=:userId AND a.report = null AND a.deleted = false ORDER BY a.createdAt DESC")
+    List<Appointment> findUserProAppointmentToComeByDate(LocalDate now, long userId);
+
+    @Query("select a from Appointment a where a.availability.date BETWEEN :now AND :nextDays AND a.userCustomer.id=:userId AND a.report = null AND a.deleted = false ORDER BY a.createdAt DESC")
+    List<Appointment> findUserCustomerRecentAppointmentByDate(LocalDate now, LocalDate nextDays, long userId);
+
+    @Query("select a from Appointment a where a.availability.date BETWEEN :now AND :nextDays AND a.userPro.id=:userId AND a.reportPro = null AND a.deleted = false ORDER BY a.createdAt DESC")
+    List<Appointment> findUserProRecentAppointmentByDate(LocalDate now, LocalDate nextDays, long userId);
 
     @Query("select a from Appointment a where a.availability.date < :now AND a.report != null AND a.deleted = false ORDER BY a.createdAt DESC")
     Page<Appointment> findAppointmentByDateOrderBy(LocalDate now, Pageable pageable);
+
 }

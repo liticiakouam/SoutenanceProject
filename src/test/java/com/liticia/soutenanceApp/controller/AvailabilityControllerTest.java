@@ -5,23 +5,15 @@ import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
-import com.liticia.soutenanceApp.service.CityService;
-import com.liticia.soutenanceApp.service.SpecialityService;
-import com.liticia.soutenanceApp.service.UserService;
+import com.liticia.soutenanceApp.service.ProfessionnalService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.doNothing;
@@ -37,7 +29,7 @@ public class AvailabilityControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private ProfessionnalService professionnalService;
 
     @MockBean
     private AvailabilityService availabilityService;
@@ -59,7 +51,7 @@ public class AvailabilityControllerTest {
         LocalDate startDate = LocalDate.now();
         AvailabilityResponse availabilityResponse = AvailabilityResponse.builder().nextStartDate(startDate.plusWeeks(1)).previousStartDate(startDate.minusWeeks(1)).build();
 
-        when(userService.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.ofNullable(user));
+        when(professionnalService.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.ofNullable(user));
         when(availabilityService.getAvailabilities(startDate, user)).thenReturn(availabilityResponse);
         mockMvc.perform(get("/professional/availability?startDate=2023-06-13"))
                 .andExpect(status().isOk())

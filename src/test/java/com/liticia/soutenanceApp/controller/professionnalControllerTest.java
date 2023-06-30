@@ -4,20 +4,15 @@ import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
-import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.CityService;
+import com.liticia.soutenanceApp.service.ProfessionnalService;
 import com.liticia.soutenanceApp.service.SpecialityService;
-import com.liticia.soutenanceApp.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -25,20 +20,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@WebMvcTest(controllers = {UserController.class},
+@WebMvcTest(controllers = {ProfessionnalController.class},
         excludeAutoConfiguration = {SecurityAutoConfiguration.class})
-public class UserControllerTest {
+public class professionnalControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private UserService userService;
+    private ProfessionnalService professionnalService;
 
     @MockBean
     private SpecialityService specialityService;
@@ -56,7 +48,7 @@ public class UserControllerTest {
                 User.builder().firstName("momo").build()
         );
 
-        when(userService.searchUser("douala","informatique","liti")).thenReturn(users);
+        when(professionnalService.searchUser("douala","informatique","liti")).thenReturn(users);
 
         mockMvc.perform(get("/user/search?keyword=liti&city=1&speciality=1"))
                 .andExpect(status().isFound())
@@ -70,7 +62,7 @@ public class UserControllerTest {
         LocalDate startDate = LocalDate.now();
         AvailabilityResponse availabilityResponse = AvailabilityResponse.builder().nextStartDate(startDate.plusWeeks(1)).previousStartDate(startDate.minusWeeks(1)).build();
 
-        when(userService.findById(1)).thenReturn(Optional.ofNullable(user));
+        when(professionnalService.findById(1)).thenReturn(Optional.ofNullable(user));
         when(availabilityService.getAvailabilities(startDate, user)).thenReturn(availabilityResponse);
         mockMvc.perform(get("/user?userId=1&startDate=2023-06-20"))
                 .andExpect(status().isOk())

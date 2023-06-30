@@ -3,7 +3,10 @@ package com.liticia.soutenanceApp.service;
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.model.Availability;
+import com.liticia.soutenanceApp.model.Schedule;
 import com.liticia.soutenanceApp.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 
 import java.text.ParseException;
@@ -15,9 +18,12 @@ import java.util.Optional;
 public interface AvailabilityService {
     void saveAvailabilities(AvailabilityCreate availabilityCreate) throws ParseException;
 
+    Pair<LocalTime, LocalTime> getSchedule(Schedule schedule);
+
     List<Pair<LocalTime, LocalTime>> generateTimes(LocalTime startTime, LocalTime endTime);
 
     AvailabilityResponse getAvailabilities(LocalDate startDate, User user);
 
     Optional<Availability> findById(long id);
+
 }

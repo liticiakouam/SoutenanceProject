@@ -8,31 +8,31 @@ import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.Schedule;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.AvailabilityRepository;
-import com.liticia.soutenanceApp.repository.UserRepository;
+import com.liticia.soutenanceApp.repository.ProfessionnalRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class AvailabilityServiceImpl implements AvailabilityService {
     private final AvailabilityRepository availabilityRepository;
-    private final UserRepository userRepository;
+    private final ProfessionnalRepository professionnalRepository;
 
-    public AvailabilityServiceImpl(AvailabilityRepository availabilityRepository, UserRepository userRepository) {
+    public AvailabilityServiceImpl(AvailabilityRepository availabilityRepository, ProfessionnalRepository professionnalRepository) {
         this.availabilityRepository = availabilityRepository;
-        this.userRepository = userRepository;
+        this.professionnalRepository = professionnalRepository;
     }
 
     @Override
     public void saveAvailabilities(AvailabilityCreate availabilityCreate) {
-        Optional<User> optionalUser = userRepository.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> optionalUser = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
         if(optionalUser.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -55,6 +55,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         availabilityRepository.saveAll(availabilities);
     }
 
+    @Override
     public Pair<LocalTime, LocalTime> getSchedule(Schedule schedule) {
         LocalTime startTime;
         LocalTime endTime;

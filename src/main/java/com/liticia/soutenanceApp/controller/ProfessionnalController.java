@@ -1,14 +1,16 @@
 package com.liticia.soutenanceApp.controller;
 
+import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
+import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.CityService;
 import com.liticia.soutenanceApp.service.SpecialityService;
-import com.liticia.soutenanceApp.service.UserService;
+import com.liticia.soutenanceApp.service.ProfessionnalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,13 +27,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.liticia.soutenanceApp.utils.StartDayOfWeek.getStartOfWeekDay;
 import static com.liticia.soutenanceApp.utils.Week.getFullWeek;
 
 @Controller
-public class UserController {
+public class ProfessionnalController {
 
     @Autowired
-    private UserService userService;
+    private ProfessionnalService professionnalService;
 
     @Autowired
     private SpecialityService specialityService;
@@ -57,7 +60,7 @@ public class UserController {
         int pageSize = 4;
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
-        Page<User> page = userService.findAll(pageable);
+        Page<User> page = professionnalService.findAll(pageable);
         List<User> users = page.getContent();
 
         List<City> cityList = cityService.findAll();
@@ -74,44 +77,46 @@ public class UserController {
 
     @GetMapping("/user")
     public String getProAvailabilities(@RequestParam("userId") long userId, @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model) {
-        Optional<User> optionalUser = userService.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException();
+
+        try {
+            Optional<User> optionalUser = professionnalService.findById(userId);
+            if (optionalUser.isEmpty()) {
+                throw new UserNotFoundException();
+            }
+            LocalDate date = LocalDate.now();
+            LocalDate startDayOfWeek = getStartOfWeekDay(date);
+            if (startDate.isBefore(startDayOfWeek)) {
+                startDate = startDayOfWeek;
+            }
+
+            AvailabilityResponse availabilities = availabilityService.getAvailabilities(startDate, optionalUser.get());
+            long[][] availabilityArray = availabilities.getAvailabilities();
+            List<LocalDate> fullWeek = getFullWeek(startDate);
+
+            model.addAttribute("user", optionalUser.get());
+            model.addAttribute("availabilities", availabilityArray);
+            model.addAttribute("fullWeek", fullWeek);
+            model.addAttribute("startDate", startDate);
+        } catch (UserNotFoundException ex) {
+            return "serverError";
         }
-
-        LocalDate startDayOfWeek = LocalDate.now();
-
-        if (startDate.isBefore(startDayOfWeek)) {
-            startDate = startDayOfWeek;
-        }
-
-        AvailabilityResponse availabilities = availabilityService.getAvailabilities(startDate, optionalUser.get());
-        long[][] availabilityArray = availabilities.getAvailabilities();
-        LocalDate nextStartDate = availabilities.getNextStartDate();
-        LocalDate previousStartDate = availabilities.getPreviousStartDate();
-        List<LocalDate> fullWeek = getFullWeek(startDate);
-
-        model.addAttribute("user", optionalUser.get());
-        model.addAttribute("availabilities", availabilityArray);
-        model.addAttribute("nextStartDate", nextStartDate);
-        model.addAttribute("previousStartDate", previousStartDate);
-        model.addAttribute("fullWeek", fullWeek);
 
         return "agenda";
     }
 
     @GetMapping("/user/search")
     public String searchUser (@Param("keyword") String keyword, @Param("city") String city,  @Param("speciality") String speciality,  Model model, RedirectAttributes redirectAttributes) {
-        List<User> users = userService.searchUser(city, speciality, keyword);
+        List<User> users = professionnalService.searchUser(city, speciality, keyword);
         int userSize = users.size();
         if (userSize > 0) {
             model.addAttribute("userSearch", users);
             model.addAttribute("userSize", userSize);
         } else {
-            redirectAttributes.addFlashAttribute("error", "sorry, there are no user existing with this word : " );
+            redirectAttributes.addFlashAttribute("error", "Désolé, aucun utilisateur ne correspond à la recherche effectué" );
             return "redirect:/users?pageNumber=1";
         }
 
         return "users";
     }
+
 }

@@ -1,8 +1,8 @@
 package com.liticia.soutenanceApp.service;
 
 import com.liticia.soutenanceApp.model.User;
-import com.liticia.soutenanceApp.repository.UserRepository;
-import com.liticia.soutenanceApp.service.serviceImpl.UserServiceImpl;
+import com.liticia.soutenanceApp.repository.ProfessionnalRepository;
+import com.liticia.soutenanceApp.service.serviceImpl.ProfessionnalServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class UserServiceImplTest {
-    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+public class ProfessionnalServiceImplTest {
+    private final ProfessionnalRepository professionnalRepository = Mockito.mock(ProfessionnalRepository.class);
 
-    private final UserService userService = new UserServiceImpl(userRepository);
+    private final ProfessionnalService professionnalService = new ProfessionnalServiceImpl(professionnalRepository);
 
     @Test
     void testShouldReturnUsers() {
@@ -32,12 +32,12 @@ public class UserServiceImplTest {
         Pageable pageable = PageRequest.of(1, 2);
         Page<User> page = new PageImpl<>(users);
 
-        when(userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable, 3)).thenReturn(page);
+        when(professionnalRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable, 3)).thenReturn(page);
 
-        Page<User> userList = userService.findAll(pageable);
+        Page<User> userList = professionnalService.findAll(pageable);
         assertEquals(2, userList.getTotalElements());
         assertEquals(1, userList.getTotalPages());
-        verify(userRepository, times(1)).findAllByRolesIdOrderByCreatedAtDesc(pageable,3);
+        verify(professionnalRepository, times(1)).findAllByRolesIdOrderByCreatedAtDesc(pageable,3);
     }
 
     @Test
@@ -46,21 +46,21 @@ public class UserServiceImplTest {
                 User.builder().firstName("liti").lastName("anzwe").build(),
                 User.builder().firstName("liti").build()
         );
-        when(userRepository.searchUsers("douala","informatique","liti")).thenReturn(users);
+        when(professionnalRepository.searchUsers("douala","informatique","liti")).thenReturn(users);
 
-        List<User> searchUser = userService.searchUser("douala","informatique","liti");
+        List<User> searchUser = professionnalService.searchUser("douala","informatique","liti");
         assertEquals(2, searchUser.size());
-        verify(userRepository, times(1)).searchUsers("douala","informatique","liti");
+        verify(professionnalRepository, times(1)).searchUsers("douala","informatique","liti");
     }
 
     @Test
     void testShouldFindUserById() {
         User user = User.builder().firstName("liti").build();
-        when(userRepository.findById(3L)).thenReturn(Optional.ofNullable(user));
+        when(professionnalRepository.findById(3L)).thenReturn(Optional.ofNullable(user));
 
-        Optional<User> optionalUser = userService.findById(3L);
+        Optional<User> optionalUser = professionnalService.findById(3L);
         assertTrue(optionalUser.isPresent());
         assertEquals("liti", optionalUser.get().getFirstName());
-        verify(userRepository, times(1)).findById(3L);
+        verify(professionnalRepository, times(1)).findById(3L);
     }
 }
