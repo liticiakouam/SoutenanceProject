@@ -7,10 +7,7 @@ import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
-import com.liticia.soutenanceApp.service.AvailabilityService;
-import com.liticia.soutenanceApp.service.CityService;
-import com.liticia.soutenanceApp.service.SpecialityService;
-import com.liticia.soutenanceApp.service.ProfessionnalService;
+import com.liticia.soutenanceApp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +42,12 @@ public class ProfessionnalController {
     @Autowired
     private AvailabilityService availabilityService;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/users")
     public String getUsers(
             @RequestParam("pageNumber") int pageNumber,
@@ -65,11 +68,15 @@ public class ProfessionnalController {
 
         List<City> cityList = cityService.findAll();
         List<Speciality> specialityList = specialityService.findAll();
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
 
         model.addAttribute("currentPage", pageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("users", users);
+        model.addAttribute("user", user);
+        model.addAttribute("roleId", roleId);
         model.addAttribute("cities", cityList);
         model.addAttribute("specialities", specialityList);
         return "users";
@@ -93,7 +100,9 @@ public class ProfessionnalController {
             long[][] availabilityArray = availabilities.getAvailabilities();
             List<LocalDate> fullWeek = getFullWeek(startDate);
 
+            User user = userService.findById().get();
             model.addAttribute("user", optionalUser.get());
+            model.addAttribute("userAuth", user);
             model.addAttribute("availabilities", availabilityArray);
             model.addAttribute("fullWeek", fullWeek);
             model.addAttribute("startDate", startDate);
@@ -107,8 +116,11 @@ public class ProfessionnalController {
     @GetMapping("/user/search")
     public String searchUser (@Param("keyword") String keyword, @Param("city") String city,  @Param("speciality") String speciality,  Model model, RedirectAttributes redirectAttributes) {
         List<User> users = professionnalService.searchUser(city, speciality, keyword);
+        User user = userService.findById().get();
+
         int userSize = users.size();
         if (userSize > 0) {
+            model.addAttribute("user", user);
             model.addAttribute("userSearch", users);
             model.addAttribute("userSize", userSize);
         } else {

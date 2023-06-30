@@ -55,7 +55,7 @@
       <hr class="sidebar-divider">
 
       <li class="nav-item">
-        <a class="nav-link" href="profile.html">
+        <a class="nav-link" th:href="@{/user/profile}">
           <i class="bi bi-person-fill"></i>
           <span>Profile</span></a>
       </li>
@@ -77,8 +77,9 @@
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                  aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
+                <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"
+                     height="70px" src="userImages/logo.png">
               </a>
             </li>
           </ul>

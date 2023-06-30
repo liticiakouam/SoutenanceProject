@@ -2,15 +2,11 @@ package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.ReportCreate;
-import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.exception.AvailabilityException;
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.Availability;
-import com.liticia.soutenanceApp.model.Role;
-import com.liticia.soutenanceApp.service.AppointmentService;
-import com.liticia.soutenanceApp.service.AvailabilityService;
-import com.liticia.soutenanceApp.service.ProfessionnalService;
-import com.liticia.soutenanceApp.service.UserService;
+import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +27,9 @@ public class AppointmentController {
     private ProfessionnalService professionnalService;
     @Autowired
     private AvailabilityService availabilityService;
+    @Autowired
+    private RoleService roleService;
+
     @Autowired
     private UserService userService;
 
@@ -54,6 +53,11 @@ public class AppointmentController {
     @GetMapping("/appointment/info")
     public String findAppointment(Model model) {
         Optional<Appointment> optionalAppointment = appointmentService.findByUserCustomerAndCreatedAt();
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
+
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("user", user);
         model.addAttribute("appointment", optionalAppointment.get());
         return "confirmrdv";
     }
@@ -64,8 +68,10 @@ public class AppointmentController {
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
         List<Appointment> appointmentToCome = appointmentService.findAppointmentToComeByDate();
         List<Appointment> appointmentNext = appointmentService.findRecentAppointmentDate();
-        long roleId = userService.findByUsersId().get().getId();
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
 
+        model.addAttribute("user", user);
         model.addAttribute("appointments", appointments);
         model.addAttribute("roleId", roleId);
         model.addAttribute("appointmentNext", appointmentNext);
@@ -81,6 +87,9 @@ public class AppointmentController {
     @GetMapping("/appointment/{id}")
     public String findById(@PathVariable(value = "id") long id, Model model) {
         Optional<Appointment> appointment = appointmentService.findById(id);
+        User user = userService.findById().get();
+
+        model.addAttribute("user", user);
         model.addAttribute("appointment", appointment);
         return "rdv";
     }
@@ -91,8 +100,10 @@ public class AppointmentController {
         List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentToCome = appointmentService.findAppointmentToComeByDate();
         List<Appointment> appointmentNext = appointmentService.findRecentAppointmentDate();
-        long roleId = userService.findByUsersId().get().getId();
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
 
+        model.addAttribute("user", user);
         model.addAttribute("appointments", appointments);
         model.addAttribute("roleId", roleId);
         model.addAttribute("appointmentSize", appointments.size());
@@ -110,8 +121,10 @@ public class AppointmentController {
         List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
         List<Appointment> appointmentNext = appointmentService.findRecentAppointmentDate();
-        long roleId = userService.findByUsersId().get().getId();
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
 
+        model.addAttribute("user", user);
         model.addAttribute("appointments", appointments);
         model.addAttribute("roleId", roleId);
         model.addAttribute("appointmentNext", appointmentNext);
