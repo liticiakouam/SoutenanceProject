@@ -52,7 +52,7 @@ public class AppointmentRepositoryTest {
 
     @Test
     void findAllByUserCustomerAndReport() {
-        List<Appointment> appointments = appointmentRepository.findIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
+        List<Appointment> appointments = appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
 
         assertEquals(0, appointments.size());
     }
@@ -70,7 +70,7 @@ public class AppointmentRepositoryTest {
     @Test
     void testShouldFindAppointmentByOldDate() {
         LocalDate now = LocalDate.now();
-        List<Appointment> appointment = appointmentRepository.findOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        List<Appointment> appointment = appointmentRepository.findUserCustomerOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
         assertTrue(appointment.isEmpty());
     }
 }

@@ -33,7 +33,7 @@ public class AppointmentServiceImplTest {
     private final AvailabilityRepository availabilityRepository = Mockito.mock(AvailabilityRepository.class);
     private final AppointmentRepository appointmentRepository = Mockito.mock(AppointmentRepository.class);
 
-    private final AppointmentService appointmentService = new AppointmentServiceImpl(appointmentRepository, professionnalRepository, availabilityRepository);
+    private final AppointmentService appointmentService = new AppointmentServiceImpl(appointmentRepository, professionnalRepository, availabilityRepository, roleRepository);
 
 
     @Test
@@ -104,7 +104,7 @@ public class AppointmentServiceImplTest {
                 Appointment.builder().id(3).build()
         );
         when(professionnalRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
-        when(appointmentRepository.findIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         assertEquals(3, appointments.size());
@@ -150,7 +150,7 @@ public class AppointmentServiceImplTest {
         );
         LocalDate now = LocalDate.now();
 
-        when(appointmentRepository.findOldAppointmentByDate(now, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserCustomerOldAppointmentByDate(now, SecurityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
         assertEquals(3, appointments.size());
@@ -166,7 +166,7 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
 
-        when(appointmentRepository.findAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserCustomerAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(3, appointments.size());

@@ -1,5 +1,6 @@
 package com.liticia.soutenanceApp.repository;
 
+import com.liticia.soutenanceApp.model.Role;
 import com.liticia.soutenanceApp.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProfessionnalRepository extends JpaRepository<User, Long> {
-    Page<User> findAllByRolesIdOrderByCreatedAtDesc(Pageable pageable, long id);
-
-    @Query("select u from User u where u.city.name=:city or u.speciality.name=:speciality or u.lastName=:keyword or u.firstName=:keyword")
-    List<User> searchUsers(String city, String speciality, String keyword);
-
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    Optional<Role> findByUsersId(Long id);
 }

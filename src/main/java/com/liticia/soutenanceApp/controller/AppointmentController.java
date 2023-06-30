@@ -6,9 +6,11 @@ import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.exception.AvailabilityException;
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.Availability;
+import com.liticia.soutenanceApp.model.Role;
 import com.liticia.soutenanceApp.service.AppointmentService;
 import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.ProfessionnalService;
+import com.liticia.soutenanceApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +31,8 @@ public class AppointmentController {
     private ProfessionnalService professionnalService;
     @Autowired
     private AvailabilityService availabilityService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/appointment/add")
     public String save(@ModelAttribute("appointment") AppointmentCreate appointmentCreate,
@@ -60,8 +64,10 @@ public class AppointmentController {
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
         List<Appointment> appointmentToCome = appointmentService.findAppointmentToComeByDate();
         List<Appointment> appointmentNext = appointmentService.findRecentAppointmentDate();
+        long roleId = userService.findByUsersId().get().getId();
 
         model.addAttribute("appointments", appointments);
+        model.addAttribute("roleId", roleId);
         model.addAttribute("appointmentNext", appointmentNext);
         model.addAttribute("appointmentNextSize", appointmentNext.size());
         model.addAttribute("appointmentSize", appointments.size());
@@ -85,8 +91,10 @@ public class AppointmentController {
         List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentToCome = appointmentService.findAppointmentToComeByDate();
         List<Appointment> appointmentNext = appointmentService.findRecentAppointmentDate();
+        long roleId = userService.findByUsersId().get().getId();
 
         model.addAttribute("appointments", appointments);
+        model.addAttribute("roleId", roleId);
         model.addAttribute("appointmentSize", appointments.size());
         model.addAttribute("appointmentNext", appointmentNext);
         model.addAttribute("appointmentNextSize", appointmentNext.size());
@@ -102,8 +110,10 @@ public class AppointmentController {
         List<Appointment> appointmentToComplete = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
         List<Appointment> appointmentNext = appointmentService.findRecentAppointmentDate();
+        long roleId = userService.findByUsersId().get().getId();
 
         model.addAttribute("appointments", appointments);
+        model.addAttribute("roleId", roleId);
         model.addAttribute("appointmentNext", appointmentNext);
         model.addAttribute("appointmentNextSize", appointmentNext.size());
         model.addAttribute("appointmentSize", appointments.size());

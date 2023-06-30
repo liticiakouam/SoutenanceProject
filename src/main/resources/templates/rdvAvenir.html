@@ -94,23 +94,22 @@
           <div class="card ">
             <div class="card-body">
               <table class="table table-responsive">
-                <thead style="background-color: blue;">
-                <tr class="text-white">
+                <thead>
+                <tr>
                   <th scope="col">Raison du rdv</th>
-                  <th scope="col">Nom du Professionnel</th>
+                  <th scope="col">Nom de l'hote</th>
                   <th scope="col">Date et heure</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="appointment : ${appointmentNext}">
-                  <td th:text="${appointment.pattern}"></td>
-                  <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
-                  <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
-                </tr>
-
+                  <tr th:each="appointment : ${appointmentNext}">
+                    <td th:text="${appointment.pattern}"></td>
+                    <td th:if="${roleId == 2}" th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                    <td th:unless="${roleId == 2}" th:text="${appointment.userCustomer.firstName} +' '+ ${appointment.userCustomer.lastName}"></td>
+                    <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
+                  </tr>
                 </tbody>
               </table>
-
             </div>
           </div>
         </div>
@@ -123,7 +122,7 @@
           <div class="card-header">
             <ul class=" d-flex nav nav-tabs card-header-tabs ">
               <li class="nav-item">
-                <a class="nav-link text-secondary" th:href="@{/appointment/toComplete?pageNumber=1}">A
+                <a class="nav-link text-secondary" th:href="@{/appointment/toComplete}">A
                   COMPLETER (<span th:text="${appointmentToComplet}"></span>)
                 </a>
               </li>
@@ -145,8 +144,8 @@
                   <thead style="background-color: rgb(85, 85, 247);">
                   <tr class="text-white">
                     <th scope="col">Raison du rdv</th>
-                    <th scope="col">Nom du Professionnel</th>
-                    <th scope="col">Specialite</th>
+                    <th scope="col">Nom de l'hote</th>
+                    <th scope="col" th:if="${roleId == 2}">Specialite</th>
                     <th scope="col">Date et heure</th>
                     <th scope="col">Action</th>
                   </tr>
@@ -154,8 +153,9 @@
                   <tbody>
                     <tr th:each="appointment : ${appointments}">
                     <td th:text="${appointment.pattern}"></td>
-                    <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
-                    <td th:text="${appointment.userPro.speciality.name}"></td>
+                      <td th:if="${roleId == 2}" th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                      <td th:unless="${roleId == 2}" th:text="${appointment.userCustomer.firstName} +' '+ ${appointment.userCustomer.lastName}"></td>
+                    <td th:if="${roleId == 2}" th:text="${appointment.userPro.speciality.name}"></td>
                     <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
                     <td>
                       <a type="button" th:href="@{/appointment/{id}(id=${appointment.id})}" data-bs-toggle="modal" data-bs-target="#largeModal" class="btn btn-info btn-sm">Details</a>

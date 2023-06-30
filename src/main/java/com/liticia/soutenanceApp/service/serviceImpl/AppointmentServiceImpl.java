@@ -5,10 +5,12 @@ import com.liticia.soutenanceApp.exception.AvailabilityException;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.Availability;
+import com.liticia.soutenanceApp.model.Role;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.AppointmentRepository;
 import com.liticia.soutenanceApp.repository.AvailabilityRepository;
 import com.liticia.soutenanceApp.repository.ProfessionnalRepository;
+import com.liticia.soutenanceApp.repository.RoleRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AppointmentService;
 import org.springframework.data.domain.Page;
@@ -32,13 +34,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final ProfessionnalRepository professionnalRepository;
 
     private final AvailabilityRepository availabilityRepository;
+    private final RoleRepository roleRepository;
 
     public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/document";
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, ProfessionnalRepository professionnalRepository, AvailabilityRepository availabilityRepository) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, ProfessionnalRepository professionnalRepository, AvailabilityRepository availabilityRepository, RoleRepository roleRepository) {
         this.appointmentRepository = appointmentRepository;
         this.professionnalRepository = professionnalRepository;
         this.availabilityRepository = availabilityRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -99,7 +103,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> findAllByReportAndUser() {
-        return appointmentRepository.findIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
+        Role role = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get();
+        if (role.getId() == 2) {
+            return appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
+        }
+        return appointmentRepository.findUserProIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
     }
 
     @Override
@@ -110,14 +118,22 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> findAppointmentByOldDate() {
         LocalDate now = LocalDate.now();
-        return appointmentRepository.findOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        Role role = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get();
+        if (role.getId() == 2) {
+            return appointmentRepository.findUserCustomerOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        }
+        return appointmentRepository.findUserProOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
     }
 
     @Override
     public List<Appointment> findAppointmentToComeByDate() {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
-        return appointmentRepository.findAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId());
+        Role role = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get();
+        if (role.getId() == 2) {
+            return appointmentRepository.findUserCustomerAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId());
+        }
+        return appointmentRepository.findUserProAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId());
     }
 
     @Override
@@ -132,8 +148,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> findRecentAppointmentDate() {
         LocalDate now = LocalDate.now();
-        LocalDate localDate = now.plusDays(3);
-        return appointmentRepository.findRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId());
+        LocalDate localDate = now.plusDays(2);
+        Role role = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get();
+        if (role.getId() == 2) {
+            return appointmentRepository.findUserCustomerRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId());
+        }
+        return appointmentRepository.findUserProRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId());
     }
 
 }

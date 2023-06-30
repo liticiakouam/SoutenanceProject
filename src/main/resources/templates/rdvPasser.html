@@ -88,15 +88,15 @@
       <div class="container-fluid">
         <div th:if="${appointmentNextSize > 0}">
           <div class="d-flex ">
-            <h5 class="p-2 text-dark" style="font-size:23px; font-weight: bold;">Prochain Rdv</h5>
+            <h5 class="p-2 text-dark">Prochain Rdv</h5>
           </div>
           <div class="card ">
             <div class="card-body">
               <table class="table table-responsive">
-                <thead style="background-color: blue;">
-                <tr class="text-white">
+                <thead>
+                <tr>
                   <th scope="col">Raison du rdv</th>
-                  <th scope="col">Nom du Professionnel</th>
+                  <th scope="col">Nom de l'hote</th>
                   <th scope="col">Date et heure</th>
                 </tr>
                 </thead>
@@ -122,12 +122,12 @@
           <div class="card-header">
             <ul class=" d-flex nav nav-tabs card-header-tabs ">
               <li class="nav-item">
-                <a class="nav-link text-secondary" th:href="@{/appointment/toComplete?pageNumber=1}">A
+                <a class="nav-link text-secondary" th:href="@{/appointment/toComplete}">A
                   COMPLETER (<span th:text="${appointmentToComplet}"></span>)
                 </a>
               </li>
               <li class="ml-auto center nav-item">
-                <a class="nav-link text-secondary" th:href="@{/appointment/toCome}">A VENIR(<span th:text="${appointmentToCome}"></span>)</a>
+                <a class="nav-link text-secondary" th:href="@{/appointment/toCome}">A VENIR (<span th:text="${appointmentToCome}"></span>)</a>
               </li>
               <li class=" ml-auto nav-item">
                 <a class="nav-link text-primary active" data-bs-toggle="tab" data-bs-target="#rdvPasse">PASSEES (<span th:text="${appointmentSize}"></span>)</a>
@@ -145,17 +145,25 @@
                   <tr class="text-white">
                     <th scope="col">Raison du rdv</th>
                     <th scope="col">Mes Notes</th>
-                    <th scope="col">Nom du Professionnel</th>
-                    <th scope="col">Specialite</th>
+                    <th scope="col">Nom de l'hote</th>
+                    <th scope="col">Notes de l'hote</th>
+                    <th scope="col" th:if="${roleId == 2}">Specialite</th>
                     <th scope="col">Date et heure</th>
                   </tr>
                   </thead>
                   <tbody>
                     <tr th:each="appointment : ${appointments}">
                       <td th:text="${appointment.pattern}"></td>
-<!--                      <td th:text="${appointment.reportPro.note}"></td>-->
-                      <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
-                      <td th:text="${appointment.userPro.speciality.name}"></td>
+                      <td th:if="${roleId == 2}" th:text="${appointment.report.note}"></td>
+                      <td th:unless="${roleId == 2}" th:text="${appointment.reportPro.note}"></td>
+
+                      <td th:if="${roleId == 2}" th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                      <td th:unless="${roleId == 2}" th:text="${appointment.userCustomer.firstName} +' '+ ${appointment.userCustomer.lastName}"></td>
+
+                      <td th:if="${roleId == 2}" th:text="${appointment.reportPro.note}"></td>
+                      <td th:unless="${roleId == 2}" th:text="${appointment.report.note}"></td>
+
+                      <td th:if="${roleId == 2}" th:text="${appointment.userPro.speciality.name}"></td>
                       <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
                     </tr>
                   </tbody>
