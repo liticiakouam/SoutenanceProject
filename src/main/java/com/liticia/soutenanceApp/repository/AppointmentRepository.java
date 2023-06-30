@@ -45,7 +45,4 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("select a from Appointment a where a.availability.date BETWEEN :now AND :nextDays AND a.userPro.id=:userId AND a.reportPro = null AND a.deleted = false ORDER BY a.createdAt DESC")
     List<Appointment> findUserProRecentAppointmentByDate(LocalDate now, LocalDate nextDays, long userId);
 
-    @Query("select a from Appointment a where a.availability.date < :now AND a.report != null AND a.deleted = false ORDER BY a.createdAt DESC")
-    Page<Appointment> findAppointmentByDateOrderBy(LocalDate now, Pageable pageable);
-
 }

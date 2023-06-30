@@ -33,6 +33,13 @@ public class ProfessionnalRepositoryTest {
     }
 
     @Test
+    void testShouldSearchUsersAndReturnNull() {
+        List<User> searchResult = professionnalRepository.searchUsers("doual",  "inf", "abeka");
+
+        assertEquals(0, searchResult.size());
+    }
+
+    @Test
     void testShouldFindUsers() {
         Pageable pageable = PageRequest.of(1, 2);
         Page<User> users = professionnalRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,2);
@@ -41,8 +48,22 @@ public class ProfessionnalRepositoryTest {
     }
 
     @Test
+    void testShouldFindUsersAndReturnNull() {
+        Pageable pageable = PageRequest.of(1, 2);
+        Page<User> users = professionnalRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,100);
+
+        assertEquals(0, users.getTotalPages());
+    }
+
+    @Test
     void testShouldFindUserById() {
         Optional<User> user = professionnalRepository.findById(3L);
         assertTrue(user.isPresent());
+    }
+
+    @Test
+    void testShouldFindUserByIdAndReturnNull() {
+        Optional<User> user = professionnalRepository.findById(100L);
+        assertTrue(user.isEmpty());
     }
 }

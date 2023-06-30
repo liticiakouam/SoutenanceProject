@@ -32,29 +32,66 @@ public class AppointmentRepositoryTest {
     private ProfessionnalRepository professionnalRepository;
 
     @Test
-    void testShouldFindAppointmentByAvailabilityId() {
+    void testShouldFindAppointmentByAvailabilityIdReturnNull() {
         List<Appointment> appointments = appointmentRepository.findAppointmentByAvailabilityId(1L);
         assertEquals(0, appointments.size());
+    }
+    @Test
+    void testShouldFindAppointmentByAvailabilityId() {
+        List<Appointment> appointments = appointmentRepository.findAppointmentByAvailabilityId(73L);
+        assertEquals(1, appointments.size());
     }
 
     @Test
     void testShouldFindByUserCustomerAndCreatedAt() {
         Instant date = Instant.now();
         User user = User.builder().id(2).build();
-        appointmentRepository.findByUserCustomerAndCreatedAt(user, date);
+        Optional<Appointment> optionalAppointment = appointmentRepository.findByUserCustomerAndCreatedAt(user, date);
+
+        assertTrue(optionalAppointment.isEmpty());
     }
 
     @Test
-    void testShouldFindById() {
+    void testShouldFindByIdAndReturnNull() {
         Optional<Appointment> appointment = appointmentRepository.findById(1L);
         assertTrue(appointment.isEmpty());
     }
 
     @Test
-    void findAllByUserCustomerAndReport() {
+    void testShouldFindById() {
+        Optional<Appointment> appointment = appointmentRepository.findById(115L);
+        assertTrue(appointment.isPresent());
+
+        assertEquals(115, appointment.get().getId());
+    }
+
+    @Test
+    void findAllByUserCustomerIncompletedAppointment() {
         List<Appointment> appointments = appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
 
+        assertEquals(1, appointments.size());
+    }
+
+    @Test
+    void findAllByUserCustomerIncompletedAppointmentReturnNull() {
+        List<Appointment> appointments = appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), 1L);
+
         assertEquals(0, appointments.size());
+    }
+
+
+    @Test
+    void findAllByUserProIncompletedAppointmentReturnNull() {
+        List<Appointment> appointments = appointmentRepository.findUserProIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
+
+        assertEquals(0, appointments.size());
+    }
+
+    @Test
+    void findAllByUserProIncompletedAppointment() {
+        List<Appointment> appointments = appointmentRepository.findUserProIncompletedAppointementByDate(LocalDate.now(), 1L);
+
+        assertEquals(1, appointments.size());
     }
 
     @Test
@@ -63,14 +100,97 @@ public class AppointmentRepositoryTest {
         Pageable pageable = PageRequest.of(1, 2);
         Page<Appointment> appointmentPage = appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(user.get(), null, pageable);
 
-        assertEquals(0, appointmentPage.getTotalPages());
-        assertEquals(0, appointmentPage.getTotalElements());
+        assertEquals(3, appointmentPage.getTotalPages());
+        assertEquals(5, appointmentPage.getTotalElements());
     }
 
     @Test
-    void testShouldFindAppointmentByOldDate() {
+    void testShouldFindUserCustomerAppointmentByOldDate() {
         LocalDate now = LocalDate.now();
-        List<Appointment> appointment = appointmentRepository.findUserCustomerOldAppointmentByDate(now, SecurityUtils.getCurrentUserId());
+        List<Appointment> appointment = appointmentRepository.findUserCustomerOldAppointmentByDate(now, 5L);
+        assertFalse(appointment.isEmpty());
+        assertEquals(1, appointment.size());
+    }
+
+    @Test
+    void testShouldFindUserCustomerAppointmentByOldDateReturnNull() {
+        LocalDate now = LocalDate.now();
+        List<Appointment> appointment = appointmentRepository.findUserCustomerOldAppointmentByDate(now, 1L);
+        assertTrue(appointment.isEmpty());
+    }
+
+    @Test
+    void testShouldFindUserProAppointmentByOldDate() {
+        LocalDate now = LocalDate.now();
+        List<Appointment> appointment = appointmentRepository.findUserProOldAppointmentByDate(now, 1L);
+        assertFalse(appointment.isEmpty());
+        assertEquals(1, appointment.size());
+    }
+
+    @Test
+    void testShouldFindUserProAppointmentByOldDateReturnNull() {
+        LocalDate now = LocalDate.now();
+        List<Appointment> appointment = appointmentRepository.findUserProOldAppointmentByDate(now, 5L);
+        assertTrue(appointment.isEmpty());
+    }
+
+    @Test
+    void testShouldFindUserCustomerBeComingAppointment() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserCustomerAppointmentToComeByDate(now, 5L);
+        assertFalse(appointment.isEmpty());
+        assertEquals(2, appointment.size());
+    }
+
+    @Test
+    void testShouldFindUserCustomerBeComingAppointmentAndReturnNull() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserCustomerAppointmentToComeByDate(now, 7L);
+        assertTrue(appointment.isEmpty());
+    }
+
+    @Test
+    void testShouldFindUserProBeComingAppointment() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserProAppointmentToComeByDate(now, 1L);
+        assertFalse(appointment.isEmpty());
+        assertEquals(1, appointment.size());
+    }
+
+    @Test
+    void testShouldFindUserProBeComingAppointmentAndReturnNull() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserProAppointmentToComeByDate(now, 7L);
+        assertTrue(appointment.isEmpty());
+    }
+
+    @Test
+    void testShouldFindUserCustomerRecentAppointment() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserCustomerRecentAppointmentByDate(LocalDate.now(), now,  5L);
+        assertFalse(appointment.isEmpty());
+        assertEquals(2, appointment.size());
+    }
+
+    @Test
+    void testShouldFindUserCustomerRecentAppointmentAndReturnNull() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserCustomerRecentAppointmentByDate(now, LocalDate.now(), 7L);
+        assertTrue(appointment.isEmpty());
+    }
+
+    @Test
+    void testShouldFindUserProRecentAppointment() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserProRecentAppointmentByDate(LocalDate.now(), now,  1L);
+        assertFalse(appointment.isEmpty());
+        assertEquals(2, appointment.size());
+    }
+
+    @Test
+    void testShouldFindUserProRecentAppointmentAndReturnNull() {
+        LocalDate now = LocalDate.now().plusDays(2);
+        List<Appointment> appointment = appointmentRepository.findUserProRecentAppointmentByDate(now, LocalDate.now(), 7L);
         assertTrue(appointment.isEmpty());
     }
 }

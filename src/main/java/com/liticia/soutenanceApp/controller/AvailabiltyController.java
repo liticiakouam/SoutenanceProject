@@ -9,6 +9,8 @@ import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.ProfessionnalService;
+import com.liticia.soutenanceApp.service.RoleService;
+import com.liticia.soutenanceApp.service.UserService;
 import com.liticia.soutenanceApp.utils.StartDayOfWeek;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +31,11 @@ public class AvailabiltyController {
     private AvailabilityService availabilityService;
     @Autowired
     private ProfessionnalService professionnalService;
+
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/professional/availability")
     public String availability(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model){
@@ -54,7 +61,11 @@ public class AvailabiltyController {
         AvailabilityResponse availabilities = availabilityService.getAvailabilities(startDate, optionalUser.get());
         long[][] availabilityArray = availabilities.getAvailabilities();
         List<LocalDate> fullWeek = getFullWeek(startDate);
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
 
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("user", user);
         model.addAttribute("availabilities", availabilityArray);
         model.addAttribute("fullWeek", fullWeek);
         model.addAttribute("startDate", startDate);
@@ -63,7 +74,13 @@ public class AvailabiltyController {
     }
 
     @GetMapping("/professional/availabilityShowAdd")
-    public String showAddForm(@ModelAttribute("availability") AvailabilityCreate availabilityCreate){
+    public String showAddForm(AvailabilityCreate availabilityCreate, Model model) throws ParseException {
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
+
+        model.addAttribute("user", user);
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("availability", availabilityCreate);
         return "addAvailability";
     }
 
@@ -76,6 +93,11 @@ public class AvailabiltyController {
     @GetMapping("/availabilityId")
     public String findAvailability(@RequestParam("id") long id, Model model) {
         Optional<Availability> optionalAvailability = availabilityService.findById(id);
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
+
+        model.addAttribute("user", user);
+        model.addAttribute("roleId", roleId);
         model.addAttribute("availability", optionalAvailability.get());
         model.addAttribute("appointment", new AppointmentCreate());
         return "motifrdv";

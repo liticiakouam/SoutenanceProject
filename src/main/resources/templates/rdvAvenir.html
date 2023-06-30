@@ -29,9 +29,9 @@
         <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
       </a>
 
-      <hr class="sidebar-divider d-md-block">
+      <hr th:if="${roleId == 2}" class="sidebar-divider d-md-block">
 
-      <li class="nav-item active">
+      <li th:if="${roleId == 2}" class="nav-item active">
         <a class="nav-link" th:href="@{/users?pageNumber=1}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
@@ -44,9 +44,9 @@
           <i class="bi bi-calendar2-check-fill"></i>
           <span>Mes Rendez-vous</span></a>
       </li>
-      <hr class="sidebar-divider">
+      <hr th:if="${roleId == 3}"  class="sidebar-divider">
 
-      <li class="nav-item">
+      <li th:if="${roleId == 3}" class="nav-item">
         <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
           <i class="bi bi-person-badge-fill"></i>
           <span>Mes Disponibilités</span>
@@ -56,7 +56,7 @@
       <hr class="sidebar-divider">
 
       <li class="nav-item">
-        <a class="nav-link" href="profile.html">
+        <a class="nav-link" th:href="@{/user/profile}">
           <i class="bi bi-person-fill"></i>
           <span>Profile</span></a>
       </li>
@@ -78,8 +78,10 @@
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                  aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
+                <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"
+                     height="70px" src="userImages/logo.png">
+              </a>
               </a>
             </li>
           </ul>
