@@ -29,7 +29,7 @@ public class AppointmentRepositoryTest {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private ProfessionnalRepository professionnalRepository;
 
     @Test
     void testShouldFindAppointmentByAvailabilityId() {
@@ -59,7 +59,7 @@ public class AppointmentRepositoryTest {
 
     @Test
     void findPageableByUserCustomerAndReport() {
-        Optional<User> user = userRepository.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> user = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
         Pageable pageable = PageRequest.of(1, 2);
         Page<Appointment> appointmentPage = appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(user.get(), null, pageable);
 

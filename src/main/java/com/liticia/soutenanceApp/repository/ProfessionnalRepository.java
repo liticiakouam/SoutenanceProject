@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface ProfessionnalRepository extends JpaRepository<User, Long> {
     Page<User> findAllByRolesIdOrderByCreatedAtDesc(Pageable pageable, long id);
 
     @Query("select u from User u where u.city.name=:city or u.speciality.name=:speciality or u.lastName=:keyword or u.firstName=:keyword")

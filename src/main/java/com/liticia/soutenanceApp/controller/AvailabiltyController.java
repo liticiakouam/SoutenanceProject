@@ -3,18 +3,14 @@ package com.liticia.soutenanceApp.controller;
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
+import com.liticia.soutenanceApp.exception.AvailabilityException;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
-import com.liticia.soutenanceApp.model.Availability;
-import com.liticia.soutenanceApp.model.City;
-import com.liticia.soutenanceApp.model.Speciality;
-import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
-import com.liticia.soutenanceApp.service.UserService;
+import com.liticia.soutenanceApp.service.ProfessionnalService;
+import com.liticia.soutenanceApp.utils.StartDayOfWeek;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +20,7 @@ import java.text.ParseException;
 import java.time.*;
 import java.util.*;
 
+import static com.liticia.soutenanceApp.utils.StartDayOfWeek.getStartOfWeekDay;
 import static com.liticia.soutenanceApp.utils.Week.getFullWeek;
 
 @Controller
@@ -31,7 +28,7 @@ public class AvailabiltyController {
     @Autowired
     private AvailabilityService availabilityService;
     @Autowired
-    private UserService userService;
+    private ProfessionnalService professionnalService;
 
     @GetMapping("/professional/availability")
     public String availability(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model){
@@ -43,13 +40,13 @@ public class AvailabiltyController {
                                  Model model
     ) {
 
-        LocalDate startDayOfWeek = LocalDate.now();
-
-        if (startDate.isBefore(startDayOfWeek)) {
-            startDate = startDayOfWeek;
+        LocalDate date = LocalDate.now();
+        LocalDate startOfWeek = getStartOfWeekDay(date);
+        if (startDate.isBefore(startOfWeek)) {
+            startDate = startOfWeek;
         }
 
-        Optional<User> optionalUser = userService.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> optionalUser = professionnalService.findById(SecurityUtils.getCurrentUserId());
         if(optionalUser.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -83,5 +80,6 @@ public class AvailabiltyController {
         model.addAttribute("appointment", new AppointmentCreate());
         return "motifrdv";
     }
+
 
 }

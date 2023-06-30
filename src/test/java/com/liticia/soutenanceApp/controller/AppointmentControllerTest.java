@@ -1,29 +1,17 @@
 package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
-import com.liticia.soutenanceApp.dto.AvailabilityCreate;
-import com.liticia.soutenanceApp.dto.AvailabilityResponse;
-import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.model.*;
-import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AppointmentService;
-import com.liticia.soutenanceApp.service.AvailabilityService;
-import com.liticia.soutenanceApp.service.UserService;
+import com.liticia.soutenanceApp.service.ProfessionnalService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +31,7 @@ public class AppointmentControllerTest {
     private AppointmentService appointmentService;
 
     @MockBean
-    private UserService userService;
+    private ProfessionnalService professionnalService;
 
     @Test
     public void testShouldSaveAppointment() throws Exception {

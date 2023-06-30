@@ -20,7 +20,6 @@
 
 <body>
   <div id="wrapper">
-
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -33,7 +32,7 @@
       <hr class="sidebar-divider d-md-block">
 
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" th:href="@{/users?pageNumber=1}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
       </li>
@@ -41,16 +40,16 @@
       <hr class="sidebar-divider">
 
       <li class="nav-item">
-        <a class="nav-link" href="rdv.html">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
           <i class="bi bi-calendar2-check-fill"></i>
           <span>Mes Rendez-vous</span></a>
       </li>
       <hr class="sidebar-divider">
 
       <li class="nav-item">
-        <a class="nav-link " href="professionnel.html">
+        <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
           <i class="bi bi-person-badge-fill"></i>
-          <span>Professionnels</span>
+          <span>Mes Disponibilités</span>
         </a>
       </li>
 
@@ -59,7 +58,7 @@
       <li class="nav-item">
         <a class="nav-link" href="profile.html">
           <i class="bi bi-person-fill"></i>
-          <span>Profil</span></a>
+          <span>Profile</span></a>
       </li>
 
       <hr class="sidebar-divider">
@@ -71,73 +70,36 @@
       </li>
     </ul>
 
-  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content-wrapper" class="d-flex flex-column">
 
-    <div id="content">
-
-      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-          <i class="fa fa-bars"></i>
-        </button>
-
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-          <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button">
-                <i class="bi bi-search"></i>
-              </button>
-            </div>
-          </div>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-
-          <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-search fa-fw"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                 aria-labelledby="searchDropdown">
-              <form class="form-inline mr-auto w-100 navbar-search">
-                <div class="input-group">
-                  <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                         aria-label="Search" aria-describedby="basic-addon2">
-                  <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                      <i class="fas fa-search fa-sm"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </li>
+      <div id="content">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                 aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+              </a>
+            </li>
+          </ul>
+        </nav>
 
 
-          <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-              <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-              <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="container">
+        <div class="container">
         <h3 class="text-dark text-center" style="font-weight: bold; font-style: italic;">Enregistrement Des Informations</h3>
+          <div th:if="${message}" class="mx-auto align items-center row col-lg-10 alert alert-danger alert-dismissible fade show pt-3" role="alert">
+            <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
         <div class="row justify-content-center">
           <div class="card shadow col-xl-10 col-lg-12 col-md-9 mt-4">
 
             <div class="row">
-
               <div class="col-md-4 mr-auto">
                 <div class="d-flex p-2">
                   <img th:src="@{${'/userImages/' + availability.user.image}}"  alt="profile" class="shadow rounded-circle m-2"
-                       width="60px" height="60px" />
+                       width="60px" height="60px"  src=""/>
 
                   <div class="mt-2 mb-2 p-2">
                     <h5 class="text-dark" th:text="${availability.user.firstName} +' '+ ${availability.user.lastName}" style="font-weight:bold"></h5>
@@ -156,11 +118,11 @@
                 <form action="/appointment/add" method="POST" th:object="${appointment}" enctype="multipart/form-data">
                   <div class="form-group col-md-10">
                     <label class="text-dark">Raison de la visite</label>
-                    <input th:field="*{pattern}" type="text" class="form-control">
+                    <input th:field="*{pattern}" type="text" class="form-control" required>
                   </div>
                   <div class="form-group col-md-10 mt-2">
                     <label class="text-dark">Description de la visite</label>
-                    <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
                   </div>
                   <div class="form-group col-md-10 mt-2">
                     <label class="text-dark">Document</label>

@@ -31,25 +31,25 @@
 
       <hr class="sidebar-divider d-md-block">
 
-      <li class="nav-item">
-        <a class="nav-link" href="index.html">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/users?pageNumber=1}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
       </li>
 
       <hr class="sidebar-divider">
 
-      <li class="nav-item active">
-        <a class="nav-link" href="rdv.html">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
           <i class="bi bi-calendar2-check-fill"></i>
           <span>Mes Rendez-vous</span></a>
       </li>
       <hr class="sidebar-divider">
 
       <li class="nav-item">
-        <a class="nav-link " href="professionnel.html">
+        <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
           <i class="bi bi-person-badge-fill"></i>
-          <span>Professionnels</span>
+          <span>Mes Disponibilités</span>
         </a>
       </li>
 
@@ -58,7 +58,7 @@
       <li class="nav-item">
         <a class="nav-link" href="profile.html">
           <i class="bi bi-person-fill"></i>
-          <span>Profil</span></a>
+          <span>Profile</span></a>
       </li>
 
       <hr class="sidebar-divider">
@@ -70,88 +70,48 @@
       </li>
     </ul>
 
-  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content-wrapper" class="d-flex flex-column">
 
-    <div id="content">
+      <div id="content">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                 aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-          <i class="fa fa-bars"></i>
-        </button>
-
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-          <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button">
-                <i class="bi bi-search"></i>
-              </button>
-            </div>
+        <div class="container-fluid">
+        <div th:if="${appointmentNextSize > 0}">
+          <div class="d-flex ">
+            <h5 class="p-2 text-dark" style="font-size:23px; font-weight: bold;">Prochain Rdv</h5>
           </div>
-        </form>
+          <div class="card ">
+            <div class="card-body">
+              <table class="table table-responsive">
+                <thead style="background-color: blue;">
+                <tr class="text-white">
+                  <th scope="col">Raison du rdv</th>
+                  <th scope="col">Nom du Professionnel</th>
+                  <th scope="col">Date et heure</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="appointment : ${appointmentNext}">
+                  <td th:text="${appointment.pattern}"></td>
+                  <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                  <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
+                </tr>
 
-        <ul class="navbar-nav ml-auto">
+                </tbody>
+              </table>
 
-          <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-search fa-fw"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                 aria-labelledby="searchDropdown">
-              <form class="form-inline mr-auto w-100 navbar-search">
-                <div class="input-group">
-                  <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                         aria-label="Search" aria-describedby="basic-addon2">
-                  <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                      <i class="fas fa-search fa-sm"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
             </div>
-          </li>
-
-
-          <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-              <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-              <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
-            </a>
-          </li>
-
-        </ul>
-
-      </nav>
-
-      <div class="container-fluid">
-        <div class="d-flex ">
-          <h5 class="p-2 text-dark" style="font-size:23px; font-weight: bold;">Prochain Rdv</h5>
-          <div class="mb-2 ml-auto p-2 btn btn-primary">Note</div>
-        </div>
-        <div class="card ">
-          <div class="card-body">
-            <table class="table table-responsive">
-              <thead style="background-color: blue;">
-              <tr class="text-white">
-                <th scope="col">Raison du rdv</th>
-                <th scope="col">Nom du Professionnel</th>
-                <th scope="col">Date et heure</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-              </tr>
-              </tbody>
-            </table>
-
           </div>
         </div>
 
@@ -171,7 +131,7 @@
                 <a class="nav-link text-primary active" data-bs-toggle="tab" data-bs-target="#rdvAvenir">A VENIR (<span th:text="${appointmentSize}"></span>)</a>
               </li>
               <li class=" ml-auto nav-item">
-                <a class="nav-link text-secondary" th:href="@{/appointment/passer}">PASSES (<span th:text="${appointmentPasser}"></span>)</a>
+                <a class="nav-link text-secondary" th:href="@{/appointment/passer}">PASSEES (<span th:text="${appointmentPasser}"></span>)</a>
               </li>
 
             </ul>
@@ -255,8 +215,8 @@
                                 programmé le <strong th:text="${appointment.availability.date}"></strong> à <strong th:text="${appointment.availability.startTime}"></strong> ?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                <a type="button" th:href="@{/appointment/deleted/{id}(id=${appointment.id})}" class="btn btn-danger">Annuler</a>
+                              <a type="button" th:href="@{/appointment/deleted/{id}(id=${appointment.id})}" class="btn btn-danger">Annuler</a>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                             </div>
                           </div>
                         </div>

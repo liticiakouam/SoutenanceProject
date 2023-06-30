@@ -27,4 +27,7 @@ public interface AppointmentService {
     List<Appointment> findAppointmentToComeByDate();
 
     void deleteAppointment(long id);
+
+    List<Appointment> findRecentAppointmentDate();
+
 }

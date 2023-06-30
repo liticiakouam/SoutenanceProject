@@ -20,6 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Optional<Appointment> findByUserCustomerAndCreatedAt(User user, Instant dateTime);
 
+//    @Query("select a from Appointment a where a.availability.date < :now AND a.userCustomer.id=:userId or a.userPro.id=:userId AND a.report = null or a.reportPro = null ORDER BY a.createdAt DESC")
     @Query("select a from Appointment a where a.availability.date < :now AND a.userCustomer.id=:userId AND a.report = null ORDER BY a.createdAt DESC")
     List<Appointment> findIncompletedAppointementByDate(LocalDate now, long userId);
 
@@ -31,6 +32,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("select a from Appointment a where a.availability.date > :now AND a.userCustomer.id=:userId AND a.report = null AND a.deleted = false ORDER BY a.createdAt DESC")
     List<Appointment> findAppointmentToComeByDate(LocalDate now, long userId);
 
+    @Query("select a from Appointment a where a.availability.date BETWEEN :now AND :nextDays AND a.userCustomer.id=:userId AND a.report = null AND a.deleted = false ORDER BY a.createdAt DESC")
+    List<Appointment> findRecentAppointmentByDate(LocalDate now, LocalDate nextDays, long userId);
+
     @Query("select a from Appointment a where a.availability.date < :now AND a.report != null AND a.deleted = false ORDER BY a.createdAt DESC")
     Page<Appointment> findAppointmentByDateOrderBy(LocalDate now, Pageable pageable);
+
 }

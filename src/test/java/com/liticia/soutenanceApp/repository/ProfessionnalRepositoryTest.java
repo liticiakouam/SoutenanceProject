@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:mysql://localhost:3306/soutenanceProTest?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC\n"
 })
-public class UserRepositoryTest {
+public class ProfessionnalRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private ProfessionnalRepository professionnalRepository;
 
     @Test
     void testShouldSearchUsers() {
-        List<User> searchResult = userRepository.searchUsers("douala",  "informatique", "liti");
+        List<User> searchResult = professionnalRepository.searchUsers("douala",  "informatique", "liti");
 
         assertEquals(5, searchResult.size());
     }
@@ -35,14 +35,14 @@ public class UserRepositoryTest {
     @Test
     void testShouldFindUsers() {
         Pageable pageable = PageRequest.of(1, 2);
-        Page<User> users = userRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,2);
+        Page<User> users = professionnalRepository.findAllByRolesIdOrderByCreatedAtDesc(pageable,2);
 
         assertEquals(1, users.getTotalPages());
     }
 
     @Test
     void testShouldFindUserById() {
-        Optional<User> user = userRepository.findById(3L);
+        Optional<User> user = professionnalRepository.findById(3L);
         assertTrue(user.isPresent());
     }
 }

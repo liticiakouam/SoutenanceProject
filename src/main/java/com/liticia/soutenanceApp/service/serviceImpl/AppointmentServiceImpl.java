@@ -8,7 +8,7 @@ import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.AppointmentRepository;
 import com.liticia.soutenanceApp.repository.AvailabilityRepository;
-import com.liticia.soutenanceApp.repository.UserRepository;
+import com.liticia.soutenanceApp.repository.ProfessionnalRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AppointmentService;
 import org.springframework.data.domain.Page;
@@ -29,31 +29,31 @@ import java.util.Optional;
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
 
-    private final UserRepository userRepository;
+    private final ProfessionnalRepository professionnalRepository;
 
     private final AvailabilityRepository availabilityRepository;
 
     public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/document";
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, UserRepository userRepository, AvailabilityRepository availabilityRepository) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, ProfessionnalRepository professionnalRepository, AvailabilityRepository availabilityRepository) {
         this.appointmentRepository = appointmentRepository;
-        this.userRepository = userRepository;
+        this.professionnalRepository = professionnalRepository;
         this.availabilityRepository = availabilityRepository;
     }
 
     @Override
     public void save(AppointmentCreate appointmentCreate, MultipartFile file, String document, long id) throws IOException {
         Optional<Availability> optionalAvailability = availabilityRepository.findById(id);
-        Optional<User> optionalUser = userRepository.findById(SecurityUtils.getCurrentUserId());
-        Optional<User> optionalUserPro = userRepository.findById(optionalAvailability.get().getUser().getId());
+        Optional<User> optionalUser = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> optionalUserPro = professionnalRepository.findById(optionalAvailability.get().getUser().getId());
         List<Appointment> appointments = appointmentRepository.findAppointmentByAvailabilityId(id);
 
         if (appointments.size() > 0) {
             throw new AvailabilityException();
         }
-//        if (optionalUser.isEmpty() !!optionalUserPro.isEmpty() ) {
-//            throw new UserNotFoundException();
-//        }
+        if (optionalUser.isEmpty() || optionalUserPro.isEmpty() ) {
+            throw new UserNotFoundException();
+        }
 
         Appointment appointment = new Appointment();
         appointment.setAvailability(optionalAvailability.get());
@@ -79,13 +79,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Optional<Appointment> findByUserCustomerAndCreatedAt() {
         Instant date = Instant.now();
-        Optional<User> userOptional = userRepository.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> userOptional = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
         return appointmentRepository.findByUserCustomerAndCreatedAt(userOptional.get(), date);
     }
 
     @Override
     public Page<Appointment> findPageByReportAndUser(Pageable pageable) {
-        Optional<User> userOptional = userRepository.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> userOptional = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -125,5 +129,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.save(appointment);
     }
 
+    @Override
+    public List<Appointment> findRecentAppointmentDate() {
+        LocalDate now = LocalDate.now();
+        LocalDate localDate = now.plusDays(3);
+        return appointmentRepository.findRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId());
+    }
 
 }
