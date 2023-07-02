@@ -89,7 +89,7 @@
       <div class="container-fluid">
         <div th:if="${appointmentNextSize > 0}">
           <div class="d-flex ">
-            <h5 class="p-2 text-dark">Prochain Rdv</h5>
+            <h5 class="p-2 text-dark" style="font-size:23px; font-weight: bold;">Prochain Rdv</h5>
           </div>
           <div class="card ">
             <div class="card-body">
@@ -104,13 +104,12 @@
                 <tbody>
                 <tr th:each="appointment : ${appointmentNext}">
                   <td th:text="${appointment.pattern}"></td>
-                  <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                  <td th:if="${roleId == 2}" th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                  <td th:unless="${roleId == 2}" th:text="${appointment.userCustomer.firstName} +' '+ ${appointment.userCustomer.lastName}"></td>
                   <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
                 </tr>
-
                 </tbody>
               </table>
-
             </div>
           </div>
         </div>
@@ -171,7 +170,7 @@
                 </table>
               </div>
               <div th:unless="${appointmentSize > 0}" class="tab-pane fade show active rdv-complete" id="rdvPasse">
-                <h3 class="text-dark text-center">Vous n'avez aucun rendez-vous Passer</h3>
+                <h3 class="text-dark text-center">Vous n'avez aucun rendez-vous passer</h3>
               </div>
 
             </div>

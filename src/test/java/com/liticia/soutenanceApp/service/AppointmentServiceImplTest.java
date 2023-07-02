@@ -106,7 +106,7 @@ public class AppointmentServiceImplTest {
                 Appointment.builder().id(3).build()
         );
         Role role = Role.builder().id(2).name("client").build();
-        when(appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
         when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
@@ -118,7 +118,7 @@ public class AppointmentServiceImplTest {
     void testShouldFindIncompletedAppointmentByUserCustomerReturnNull() {
         List<Appointment> list = List.of();
         Role role = Role.builder().id(2).name("client").build();
-        when(appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
         when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
@@ -133,7 +133,7 @@ public class AppointmentServiceImplTest {
                 Appointment.builder().id(3).build()
         );
         Role role = Role.builder().id(3).name("client").build();
-        when(appointmentRepository.findUserProIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserProIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
         when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
@@ -145,7 +145,7 @@ public class AppointmentServiceImplTest {
     void testShouldFindIncompletedAppointmentByUserProReturnNull() {
         List<Appointment> list = List.of();
         Role role = Role.builder().id(3).name("client").build();
-        when(appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
         when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();

@@ -21,9 +21,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Optional<Appointment> findByUserCustomerAndCreatedAt(User user, Instant dateTime);
 
     @Query("select a from Appointment a where a.availability.date < :now AND a.userCustomer.id=:userId AND a.report = null ORDER BY a.createdAt DESC")
-    List<Appointment> findUserCustomerIncompletedAppointementByDate(LocalDate now, long userId);
+    List<Appointment> findUserCustomerIncompletedAppointmentByDate(LocalDate now, long userId);
     @Query("select a from Appointment a where a.availability.date < :now AND a.userPro.id=:userId AND a.reportPro = null ORDER BY a.createdAt DESC")
-    List<Appointment> findUserProIncompletedAppointementByDate(LocalDate now, long userId);
+    List<Appointment> findUserProIncompletedAppointmentByDate(LocalDate now, long userId);
 
     Page<Appointment> findAllByUserCustomerAndReportOrderByCreatedAtDesc(User user, Report report, Pageable pageable);
 
