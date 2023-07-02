@@ -28,7 +28,6 @@ public class ReportServiceImpl implements ReportService {
     public void save(ReportCreate reportCreate, long id) {
         long roleId = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get().getId();
 
-
         Report report = new Report();
         report.setNote(reportCreate.getNote());
         report.setLevelOfVisibility(reportCreate.getLevelOfVisibility());

@@ -105,9 +105,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> findAllByReportAndUser() {
         Role role = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get();
         if (role.getId() == 2) {
-            return appointmentRepository.findUserCustomerIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
+            return appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
         }
-        return appointmentRepository.findUserProIncompletedAppointementByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
+        return appointmentRepository.findUserProIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId());
     }
 
     @Override

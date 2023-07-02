@@ -95,22 +95,21 @@
             <div class="card-body">
               <table class="table table-responsive">
                 <thead>
-                <tr class="">
+                <tr>
                   <th scope="col">Raison du rdv</th>
-                  <th scope="col">Nom du Professionnel</th>
+                  <th scope="col">Nom de l'hote</th>
                   <th scope="col">Date et heure</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="appointment : ${appointmentNext}">
                   <td th:text="${appointment.pattern}"></td>
-                  <td th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                  <td th:if="${roleId == 2}" th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
+                  <td th:unless="${roleId == 2}" th:text="${appointment.userCustomer.firstName} +' '+ ${appointment.userCustomer.lastName}"></td>
                   <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
                 </tr>
-
                 </tbody>
               </table>
-
             </div>
           </div>
         </div>
