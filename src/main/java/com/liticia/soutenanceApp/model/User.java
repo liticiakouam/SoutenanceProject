@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.*;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -25,7 +26,7 @@ public class User {
     private String details;
     private String image;
     private int phone;
-    private Date createdAt;
+    private Instant createdAt;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "speciality", referencedColumnName = "id")
@@ -39,5 +40,5 @@ public class User {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "id_role", referencedColumnName = "id"))
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 }

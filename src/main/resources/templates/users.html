@@ -29,29 +29,64 @@
       <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
     </a>
 
-    <hr th:if="${roleId == 2}" class="sidebar-divider d-md-block">
+    <div th:if="${roleId == 1}">
+      <hr class="sidebar-divider">
 
-    <li th:if="${roleId == 2}" class="nav-item active">
-      <a class="nav-link" th:href="@{/users?pageNumber=1}">
-        <i class="bi bi-house-fill"></i>
-        <span>Accueil</span></a>
-    </li>
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/admin/homePage}">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
+      <hr class="sidebar-divider">
 
-    <hr class="sidebar-divider">
+      <div class="sidebar-heading">
+        Gestion des utilisateurs
+      </div>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/admin/clients}">
+          <i class="bi bi-person"></i>
+          <span>Client</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/admin/professionals}">
+          <i class="bi bi-person"></i>
+          <span>Professionnel</span></a>
+      </li>
+    </div>
 
-    <li class="nav-item">
-      <a class="nav-link" th:href="@{/appointment/toComplete}">
-        <i class="bi bi-calendar2-check-fill"></i>
-        <span>Mes Rendez-vous</span></a>
-    </li>
-    <hr th:if="${roleId == 3}"  class="sidebar-divider">
+    <div th:if="${roleId == 2}">
+      <hr class="sidebar-divider d-md-block">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/users?pageNumber=1}">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
+      <hr class="sidebar-divider d-md-block">
 
-    <li th:if="${roleId == 3}" class="nav-item">
-      <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
-        <i class="bi bi-person-badge-fill"></i>
-        <span>Mes Disponibilités</span>
-      </a>
-    </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+    </div>
+
+    <div th:if="${roleId == 3}">
+      <hr  class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+      <hr class="sidebar-divider">
+
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
+          <i class="bi bi-person-badge-fill"></i>
+          <span>Mes Disponibilités</span>
+        </a>
+      </li>
+    </div>
 
     <hr class="sidebar-divider">
 
@@ -1316,6 +1351,14 @@ body {
   .sidebar-dark #sidebarToggle {
     background-color: rgba(255, 255, 255, 0.2);
   }
+
+
+.topbar .topbar-divider {
+  width: 0;
+  border-right: 1px solid #e3e6f0;
+  height: calc(4.375rem - 2rem);
+  margin: auto 1rem;
+}
 
 </style>
 
