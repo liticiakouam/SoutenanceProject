@@ -1,6 +1,7 @@
 package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
+import com.liticia.soutenanceApp.dto.ProfessionalCreate;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.Speciality;
@@ -15,6 +16,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -127,6 +130,30 @@ public class ProfessionnalController {
         }
 
         return "users";
+    }
+
+
+    @GetMapping("/admin/professionals")
+    public String getAllProfessionals(Model model) {
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
+        List<User> users = userService.findProfessionals();
+        List<Speciality> specialities = specialityService.findAll();
+        List<City> cities = cityService.findAll();
+
+        model.addAttribute("user", user);
+        model.addAttribute("professional", new ProfessionalCreate());
+        model.addAttribute("users", users);
+        model.addAttribute("specialities", specialities);
+        model.addAttribute("cities", cities);
+        model.addAttribute("roleId", roleId);
+        return "adminProList";
+    }
+
+    @PostMapping("/professional/add")
+    public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate) {
+        userService.saveProfessional(professionalCreate);
+        return "redirect:/admin/professionals";
     }
 
 }

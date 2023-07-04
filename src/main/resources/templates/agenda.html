@@ -22,54 +22,6 @@
   <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="bi bi-emoji-smile-fill"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
-      </a>
-
-      <hr th:if="${roleId == 2}" class="sidebar-divider d-md-block">
-
-      <li th:if="${roleId == 2}" class="nav-item active">
-        <a class="nav-link" th:href="@{/users?pageNumber=1}">
-          <i class="bi bi-house-fill"></i>
-          <span>Accueil</span></a>
-      </li>
-
-      <hr class="sidebar-divider">
-
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/appointment/toComplete}">
-          <i class="bi bi-calendar2-check-fill"></i>
-          <span>Mes Rendez-vous</span></a>
-      </li>
-      <hr th:if="${roleId == 3}"  class="sidebar-divider">
-
-      <li th:if="${roleId == 3}" class="nav-item">
-        <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
-          <i class="bi bi-person-badge-fill"></i>
-          <span>Mes Disponibilités</span>
-        </a>
-      </li>
-
-      <hr class="sidebar-divider">
-
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/user/profile}">
-          <i class="bi bi-person-fill"></i>
-          <span>Profile</span></a>
-      </li>
-
-      <hr class="sidebar-divider">
-
-      <li class="nav-item">
-        <a class="nav-link" href="login.html">
-          <i class="bi bi-box-arrow-up-right"></i>
-          <span>Se deconnecter</span></a>
-      </li>
-    </ul>
-
     <div id="content-wrapper" class="d-flex flex-column">
 
       <div id="content">

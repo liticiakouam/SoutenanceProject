@@ -1,11 +1,10 @@
 package com.liticia.soutenanceApp.service;
 
-import com.liticia.soutenanceApp.model.Role;
 import com.liticia.soutenanceApp.model.User;
-import com.liticia.soutenanceApp.repository.RoleRepository;
+import com.liticia.soutenanceApp.repository.CityRepository;
+import com.liticia.soutenanceApp.repository.SpecialityRepository;
 import com.liticia.soutenanceApp.repository.UserRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
-import com.liticia.soutenanceApp.service.serviceImpl.RoleServiceImpl;
 import com.liticia.soutenanceApp.service.serviceImpl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,8 +16,10 @@ import static org.mockito.Mockito.when;
 
 public class UserServiceImplTest {
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private final CityRepository cityRepository = Mockito.mock(CityRepository.class);
+    private final SpecialityRepository specialityRepository = Mockito.mock(SpecialityRepository.class);
 
-    private final UserService userService = new UserServiceImpl(userRepository);
+    private final UserService userService = new UserServiceImpl(userRepository, cityRepository, specialityRepository, roleRepository);
 
 
     @Test
