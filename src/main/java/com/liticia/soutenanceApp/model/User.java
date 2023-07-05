@@ -20,6 +20,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String domain;
     private String passWord;
     private String document;
     private String address;

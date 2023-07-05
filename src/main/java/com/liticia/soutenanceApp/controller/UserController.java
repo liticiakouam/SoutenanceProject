@@ -1,6 +1,8 @@
 package com.liticia.soutenanceApp.controller;
 
+import com.liticia.soutenanceApp.model.DemandeCompte;
 import com.liticia.soutenanceApp.model.User;
+import com.liticia.soutenanceApp.repository.DemandRepository;
 import com.liticia.soutenanceApp.service.CityService;
 import com.liticia.soutenanceApp.service.RoleService;
 import com.liticia.soutenanceApp.service.SpecialityService;
@@ -24,6 +26,8 @@ public class UserController {
     private SpecialityService specialityService;
     @Autowired
     private CityService cityService;
+    @Autowired
+    private DemandRepository demandRepository;
 
     @GetMapping("/user/profile")
     public String getUserInfo(Model model) {
@@ -43,9 +47,11 @@ public class UserController {
         int clients = userService.findClients().size();
         int cities = cityService.findAll().size();
         int specialities = specialityService.findAll().size();
+        int demands = demandRepository.findAll().size();
 
         model.addAttribute("user", user);
         model.addAttribute("professionals", professionals);
+        model.addAttribute("demands", demands);
         model.addAttribute("clients", clients);
         model.addAttribute("cities", cities);
         model.addAttribute("specialities", specialities);

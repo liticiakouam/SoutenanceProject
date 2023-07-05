@@ -3,11 +3,11 @@ package com.liticia.soutenanceApp.dto;
 import lombok.Data;
 
 @Data
-public class ProfessionalCreate {
+public class DemandeCreate {
     private String firstName;
     private String lastName;
-    private String domain;
     private String email;
-    private long cityId;
-    private long specialityId;
+    private String document;
+    private String city;
+    private String speciality;
 }
