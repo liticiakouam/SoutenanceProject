@@ -4,6 +4,7 @@ import com.liticia.soutenanceApp.dto.AvailabilityResponse;
 import com.liticia.soutenanceApp.dto.ProfessionalCreate;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.City;
+import com.liticia.soutenanceApp.model.DemandeCompte;
 import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.service.*;
@@ -42,6 +43,8 @@ public class ProfessionnalController {
 
     @Autowired
     private AvailabilityService availabilityService;
+    @Autowired
+    private DemandService demandService;
 
     @Autowired
     private RoleService roleService;
@@ -148,6 +151,23 @@ public class ProfessionnalController {
         model.addAttribute("cities", cities);
         model.addAttribute("roleId", roleId);
         return "adminProList";
+    }
+
+    @GetMapping("/admin/professionalDemands")
+    public String getAllProfessionalDemands(Model model) {
+        long roleId = roleService.findByUsersId().get().getId();
+        User user = userService.findById().get();
+        List<DemandeCompte> demands = demandService.findAll();
+        List<Speciality> specialities = specialityService.findAll();
+        List<City> cities = cityService.findAll();
+
+        model.addAttribute("user", user);
+        model.addAttribute("professional", new ProfessionalCreate());
+        model.addAttribute("demands", demands);
+        model.addAttribute("specialities", specialities);
+        model.addAttribute("cities", cities);
+        model.addAttribute("roleId", roleId);
+        return "adminProDemande";
     }
 
     @PostMapping("/professional/add")

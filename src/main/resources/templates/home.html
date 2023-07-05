@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Accueil</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <link href="assets/css/style.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-md fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-italic" >
+      <span class="">Nom</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav text-truncate fw-bolder">
+        <li class="nav-item">
+          <a class="text-decoration-none but">Se Connecter</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section id="hero" class="d-flex align-items-center">
+
+  <div class="container">
+    <div th:if="${message}" class="mx-autoX col-lg-6 alert alert-success alert-dismissible fade show pt-3" role="alert">
+      <span th:text="${message}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 d-lg-flex flex-lg-column justify-content-center align-items-stretch pt-5 pt-lg-0 order-2 order-lg-1" data-aos="fade-up">
+        <div>
+          <h1>A propos d'un professionnel</h1>
+          <h2>Vous etes un professionnel ou une entrepise et aimerez avoir un compte ? Pour celà cliquez sur le bouton ci-dessou et soumettez vos informations pour une analyse par l’equipe</h2>
+          <a href="#" class="download-btn text-decoration-none" data-bs-toggle="modal" data-bs-target="#largeModal"><i class="bx bxl-play-store"></i>Etes-vous professionnel ?</a>
+          <a href="#" class="download-btn text-decoration-none"><i class="bx bxl-apple"></i>Connexion</a>
+        </div>
+      </div>
+      <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hero-img" data-aos="fade-up">
+        <img src="hero.png" class="img-fluid" alt="">
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="largeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-primary">Demande de création de compte</h5>
+          <a class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+        </div>
+        <form th:action="@{/demandCompte/add}" method="POST" th:object="${demandCreate}" enctype="multipart/form-data">
+          <div class="modal-body">
+            <p>Votre demande sera acheminée à l'administrateur qui lui apres étude, créera votre compte et vous envera les identifiants</p>
+            <div class="row mt-4">
+              <div class="col-md-6 ">
+                <label class="text-dark">Nom</label>
+                <input class="form-control" type="text" th:field="*{firstName}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="text-dark">Prénom</label>
+                <input class="form-control" type="text" th:field="*{lastName}" required>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <label class="text-dark">Email</label>
+                <input class="form-control" type="text" th:field="*{email}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="text-dark">Document</label>
+                <input type="file" class="form-control" name="productImage" accept="pdf"  id="productImage">
+                <input type="hidden" name="document" th:value="${demandCreate.document}">
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <label class="text-dark">Ville</label>
+                <input class="form-control" type="text" th:field="*{city}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="text-dark">Spécialité</label>
+                <input class="form-control" type="text" th:field="*{speciality}" required>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Sauvegarder</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</body>
+
+<style>
+  #hero {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 140px 0 100px 0;
+}
+
+#hero::before {
+  content: "";
+  position: absolute;
+  right: -100%;
+  top: 20%;
+  width: 250%;
+  height: 200%;
+  z-index: -1;
+  background-color: #3e69cc;
+  transform: skewY(135deg);
+}
+
+#hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 56px;
+  color: #5777ba;
+  font-family: "Poppins", sans-serif;
+}
+
+#hero h2 {
+  font-family: "Raleway", sans-serif;
+  color: #515f7d;
+  margin-bottom: 50px;
+  font-size: 15px;
+}
+
+#hero .download-btn {
+  font-family: "Raleway", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  display: inline-block;
+  padding: 8px 24px 10px 35px;
+  border-radius: 3px;
+  transition: 0.5s;
+  color: #fff;
+  background: #3e69cc;
+  position: relative;
+}
+
+#hero .download-btn:hover {
+  background: #5777ba;
+}
+
+.but{
+  font-family: "Raleway", sans-serif;
+  font-weight: bolder;
+  font-size: 12px;
+  display: inline-block;
+  padding: 5px 4px 4px 15px;
+  border-radius: 50px;
+  transition: 0.5s;
+  color: #fff;
+  background: #f6f6f7;
+  position: relative;
+}
+
+
+
+</style>
+</html>

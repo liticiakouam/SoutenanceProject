@@ -127,7 +127,8 @@
             <h4 class="text-dark" style="font-weight: bold;">Liste Des Professionnels</h4>
           </div>
           <div class="col-md-6 d-flex justify-content-end">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">Ajouter</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#basicModal">Ajouter</button>
+            <a class="btn btn-info ms-2" th:href="@{/admin/professionalDemands}">Demandes</a>
           </div>
         </div>
         <div class="row pt-4">
@@ -182,6 +183,9 @@
                         <label class="text-dark"><strong>Email</strong></label>
                         <input class="form-control" type="text" th:field="*{email}" required>
                       </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Domaine</strong></label>
+                        <input class="form-control" type="text" th:field="*{domain}" required>
                       <div class="mt-4">
                         <label class="text-dark"><strong>Choisissez la ville</strong></label>
                         <select name="" class="form-control" th:field="*{cityId}" required>
