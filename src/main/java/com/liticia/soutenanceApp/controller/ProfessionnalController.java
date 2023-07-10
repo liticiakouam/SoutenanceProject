@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,8 +73,8 @@ public class ProfessionnalController {
 
         List<City> cityList = cityService.findAll();
         List<Speciality> specialityList = specialityService.findAll();
-        long roleId = roleService.findByUsersId().get().getId();
         User user = userService.findById().get();
+        long roleId = roleService.findByUsersId().get().getId();
 
         model.addAttribute("currentPage", pageNumber);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -87,6 +88,7 @@ public class ProfessionnalController {
     }
 
     @GetMapping("/user")
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     public String getProAvailabilities(@RequestParam("userId") long userId, @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model) {
 
         try {
@@ -103,8 +105,10 @@ public class ProfessionnalController {
             AvailabilityResponse availabilities = availabilityService.getAvailabilities(startDate, optionalUser.get());
             long[][] availabilityArray = availabilities.getAvailabilities();
             List<LocalDate> fullWeek = getFullWeek(startDate);
-
+            long roleId = roleService.findByUsersId().get().getId();
             User user = userService.findById().get();
+
+            model.addAttribute("roleId", roleId);
             model.addAttribute("user", optionalUser.get());
             model.addAttribute("userAuth", user);
             model.addAttribute("availabilities", availabilityArray);
@@ -133,47 +137,6 @@ public class ProfessionnalController {
         }
 
         return "users";
-    }
-
-
-    @GetMapping("/admin/professionals")
-    public String getAllProfessionals(Model model) {
-        long roleId = roleService.findByUsersId().get().getId();
-        User user = userService.findById().get();
-        List<User> users = userService.findProfessionals();
-        List<Speciality> specialities = specialityService.findAll();
-        List<City> cities = cityService.findAll();
-
-        model.addAttribute("user", user);
-        model.addAttribute("professional", new ProfessionalCreate());
-        model.addAttribute("users", users);
-        model.addAttribute("specialities", specialities);
-        model.addAttribute("cities", cities);
-        model.addAttribute("roleId", roleId);
-        return "adminProList";
-    }
-
-    @GetMapping("/admin/professionalDemands")
-    public String getAllProfessionalDemands(Model model) {
-        long roleId = roleService.findByUsersId().get().getId();
-        User user = userService.findById().get();
-        List<DemandeCompte> demands = demandService.findAll();
-        List<Speciality> specialities = specialityService.findAll();
-        List<City> cities = cityService.findAll();
-
-        model.addAttribute("user", user);
-        model.addAttribute("professional", new ProfessionalCreate());
-        model.addAttribute("demands", demands);
-        model.addAttribute("specialities", specialities);
-        model.addAttribute("cities", cities);
-        model.addAttribute("roleId", roleId);
-        return "adminProDemande";
-    }
-
-    @PostMapping("/professional/add")
-    public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate) {
-        userService.saveProfessional(professionalCreate);
-        return "redirect:/admin/professionals";
     }
 
 }

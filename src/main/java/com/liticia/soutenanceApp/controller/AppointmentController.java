@@ -8,6 +8,7 @@ import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,13 @@ public class AppointmentController {
         return "confirmrdv";
     }
 
+    @GetMapping("/messageConfirm")
+    public String confirm() {
+        return "confmsg.html";
+    }
+
     @GetMapping("/appointment/toComplete")
+    @PreAuthorize("hasRole('ROLE_PROFESSIONNEL')")
     public String findIncompletedAppointment(Model model) {
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();

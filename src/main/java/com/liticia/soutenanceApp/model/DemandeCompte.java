@@ -25,4 +25,5 @@ public class DemandeCompte {
     private Instant createdAt;
     private String speciality;
     private String city;
+    private String domain;
 }

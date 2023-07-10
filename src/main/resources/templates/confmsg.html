@@ -15,173 +15,100 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-  <link rel="stylesheet" th:href="@{style.css}">
 </head>
 
 <body>
-  <div id="wrapper">
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="bi bi-emoji-smile-fill"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">EASY APPOINTMENT</div>
-      </a>
+<div id="wrapper">
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <div th:if="${roleId == 1}">
-        <hr class="sidebar-divider">
-
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/admin/homePage}">
-            <i class="bi bi-house-fill"></i>
-            <span>Accueil</span></a>
-        </li>
-        <hr class="sidebar-divider">
-
-        <div class="sidebar-heading">
-          Gestion des utilisateurs
-        </div>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/admin/clients}">
-            <i class="bi bi-person"></i>
-            <span>Client</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/admin/professionals}">
-            <i class="bi bi-person"></i>
-            <span>Professionnel</span></a>
-        </li>
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <i class="bi bi-emoji-smile-fill"></i>
       </div>
+      <div class="sidebar-brand-text mx-3">EASY APPOINTMENT</div>
+    </a>
 
-      <div th:if="${roleId == 2}">
-        <hr class="sidebar-divider d-md-block">
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/users?pageNumber=1}">
-            <i class="bi bi-house-fill"></i>
-            <span>Accueil</span></a>
-        </li>
-        <hr class="sidebar-divider d-md-block">
-
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/appointment/toComplete}">
-            <i class="bi bi-calendar2-check-fill"></i>
-            <span>Mes Rendez-vous</span></a>
-        </li>
-      </div>
-
-      <div th:if="${roleId == 3}">
-        <hr  class="sidebar-divider">
-
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/appointment/toComplete}">
-            <i class="bi bi-calendar2-check-fill"></i>
-            <span>Mes Rendez-vous</span></a>
-        </li>
-        <hr class="sidebar-divider">
-
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
-            <i class="bi bi-person-badge-fill"></i>
-            <span>Mes Disponibilités</span>
-          </a>
-        </li>
-      </div>
-
+    <div th:if="${roleId == 1}">
       <hr class="sidebar-divider">
 
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/user/profile}">
-          <i class="bi bi-person-fill"></i>
-          <span>Profile</span></a>
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/admin/homePage}">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
       </li>
-
       <hr class="sidebar-divider">
 
-      <li class="nav-item">
-        <a class="nav-link" href="login.html">
-          <i class="bi bi-box-arrow-up-right"></i>
-          <span>Se deconnecter</span></a>
-      </li>
-    </ul>
-
-    <div id="content-wrapper" class="d-flex flex-column">
-
-      <div id="content">
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                 aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"
-                     height="70px" src="userImages/logo.png">
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-
-        <div class="container">
-        <h3 class="text-dark text-center" style="font-weight: bold; font-style: italic;">Enregistrement Des Informations</h3>
-          <div th:if="${message}" class="mx-auto align items-center row col-lg-10 alert alert-danger alert-dismissible fade show pt-3" role="alert">
-            <span th:text="${message}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        <div class="row justify-content-center">
-          <div class="card shadow col-xl-10 col-lg-12 col-md-9 mt-4">
-
-            <div class="row">
-              <div class="col-md-4 mr-auto">
-                <div class="d-flex p-2">
-                  <img th:src="@{${'/userImages/' + availability.user.image}}"  alt="profile" class="shadow rounded-circle m-2"
-                       width="60px" height="60px"  src=""/>
-
-                  <div class="mt-2 mb-2 p-2">
-                    <h5 class="text-dark" th:text="${availability.user.firstName} +' '+ ${availability.user.lastName}" style="font-weight:bold"></h5>
-                    <h6 class="text-dark" th:text="${availability.user.speciality.name}"><strong></strong></h6>
-                  </div>
-                </div>
-
-                <div class="">
-                  <h5 class="text-primary p-2" style="font-weight: bold;">Heure du rendez-vous</h5>
-                  <h6 class="p-2 text-sm text-dark" th:text="${availability.date}" style="font-weight:bold"></h6>
-                  <h6 class="p-2 mb-0 text-dark" th:text="${availability.startTime} +' - '+ ${availability.endTime}"  style="font-weight:bold"></h6>
-                </div>
-              </div>
-
-              <div class="col-md-6 mt-4" th:with="availabilityId=${availability.id}">
-                <form action="/appointment/add" method="POST" th:object="${appointment}" enctype="multipart/form-data">
-                  <div class="form-group col-md-10">
-                    <label class="text-dark">Raison de la visite</label>
-                    <input th:field="*{pattern}" type="text" class="form-control" required>
-                  </div>
-                  <div class="form-group col-md-10 mt-2">
-                    <label class="text-dark">Description de la visite</label>
-                    <textarea th:field="*{description}" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
-                  </div>
-                  <div class="form-group col-md-10 mt-2">
-                    <label class="text-dark">Document</label>
-                    <input type="file" class="form-control" name="productImage" accept="image/pdf"  id="productImage">
-                    <input type="hidden" name="document" th:value="${appointment.document}">
-                    <input type="hidden" name="id" th:value="${availabilityId}">
-                  </div>
-                  <br>
-                  <div class="align-self-end">
-                    <button class="btn btn-primary" type="submit">Continuer</button>
-                  </div>
-                  <br>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="sidebar-heading">
+        Gestion des utilisateurs
       </div>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/admin/clients}">
+          <i class="bi bi-person"></i>
+          <span>Client</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/admin/professionals}">
+          <i class="bi bi-person"></i>
+          <span>Professionnel</span></a>
+      </li>
     </div>
+
+    <div th:if="${roleId == 2}">
+      <hr class="sidebar-divider d-md-block">
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/users?pageNumber=1}">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
+      <hr class="sidebar-divider d-md-block">
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+    </div>
+
+    <div th:if="${roleId == 3}">
+      <hr  class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+      <hr class="sidebar-divider">
+
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
+          <i class="bi bi-person-badge-fill"></i>
+          <span>Mes Disponibilités</span>
+        </a>
+      </li>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/user/profile}">
+        <i class="bi bi-person-fill"></i>
+        <span>Profile</span></a>
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+      <a class="nav-link" href="login.html">
+        <i class="bi bi-box-arrow-up-right"></i>
+        <span>Se deconnecter</span></a>
+    </li>
+  </ul>
+
+  <div id="content-wrapper" class="d-flex flex-column">
+    <h1>MERCI RDV PRIS EN COMPTE</h1>
   </div>
-
 </div>
-
 </body>
 
 <style>
@@ -1320,4 +1247,6 @@ body {
   }
 
 </style>
+
+
 </html>

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DemandService {
    List<DemandeCompte> findAll();
+
+    void delete(long id);
 }

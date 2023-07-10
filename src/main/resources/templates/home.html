@@ -27,15 +27,13 @@
 <nav class="navbar navbar-expand-md fixed-top">
   <div class="container">
     <a class="navbar-brand fw-italic" >
-      <span class="">Nom</span>
+        <i class="bi bi-emoji-smile-fill rotate-n-15"></i>
+      <span class="">EASY APPOINTMENT</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav text-truncate fw-bolder">
         <li class="nav-item">
-          <a class="text-decoration-none but">Se Connecter</a>
+          <a class="text-decoration-none but text-primary" th:href="@{/login}">Se Connecter</a>
         </li>
       </ul>
     </div>
@@ -51,15 +49,15 @@
     </div>
     <div class="row">
       <div class="col-lg-6 d-lg-flex flex-lg-column justify-content-center align-items-stretch pt-5 pt-lg-0 order-2 order-lg-1" data-aos="fade-up">
-        <div>
+        <div style="margin-bottom:65px;">
           <h1>A propos d'un professionnel</h1>
           <h2>Vous etes un professionnel ou une entrepise et aimerez avoir un compte ? Pour celà cliquez sur le bouton ci-dessou et soumettez vos informations pour une analyse par l’equipe</h2>
           <a href="#" class="download-btn text-decoration-none" data-bs-toggle="modal" data-bs-target="#largeModal"><i class="bx bxl-play-store"></i>Etes-vous professionnel ?</a>
-          <a href="#" class="download-btn text-decoration-none"><i class="bx bxl-apple"></i>Connexion</a>
+          <a th:href="@{/login}" class="download-btn text-decoration-none"><i class="bx bxl-apple"></i>Connexion</a>
         </div>
       </div>
       <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hero-img" data-aos="fade-up">
-        <img src="hero.png" class="img-fluid" alt="">
+        <img src="sco.png" th:src="@{/userImages/hero.png}" class="img-fluid" alt="">
       </div>
     </div>
   </div>
@@ -96,16 +94,19 @@
               </div>
             </div>
             <div class="row mt-4">
-              <div class="col-md-6">
-                <label class="text-dark">Ville</label>
-                <input class="form-control" type="text" th:field="*{city}" required>
-              </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label class="text-dark">Spécialité</label>
                 <input class="form-control" type="text" th:field="*{speciality}" required>
               </div>
+              <div class="col-md-4">
+                <label class="text-dark">Domaine</label>
+                <input class="form-control" type="text" th:field="*{domain}" required>
+              </div>
             </div>
-
+            <div class="col-md-4">
+              <label class="text-dark">Ville</label>
+              <input class="form-control" type="text" th:field="*{city}" required>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Sauvegarder</button>
@@ -181,8 +182,8 @@
   padding: 5px 4px 4px 15px;
   border-radius: 50px;
   transition: 0.5s;
-  color: #fff;
-  background: #f6f6f7;
+  color: #f6f6f7;
+  background: #fff;
   position: relative;
 }
 

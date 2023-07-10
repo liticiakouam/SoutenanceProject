@@ -29,7 +29,7 @@
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="bi bi-emoji-smile-fill"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
+      <div class="sidebar-brand-text mx-3">EASY APPOINTMENT</div>
     </a>
 
     <div th:if="${roleId == 1}">
@@ -118,7 +118,7 @@
                aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
               <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"
-                   height="70px" src="userImages/logo.png">
+                   height="70px" src="">
             </a>
           </li>
         </ul>

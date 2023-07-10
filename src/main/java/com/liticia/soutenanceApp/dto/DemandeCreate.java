@@ -10,4 +10,5 @@ public class DemandeCreate {
     private String document;
     private String city;
     private String speciality;
+    private String domain;
 }

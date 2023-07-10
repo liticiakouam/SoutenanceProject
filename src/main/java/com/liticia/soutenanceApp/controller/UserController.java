@@ -39,36 +39,4 @@ public class UserController {
         return "profile";
     }
 
-    @GetMapping("/admin/homePage")
-    public String getAdminHomePage(Model model) {
-        long roleId = roleService.findByUsersId().get().getId();
-        User user = userService.findById().get();
-        int professionals = userService.findProfessionals().size();
-        int clients = userService.findClients().size();
-        int cities = cityService.findAll().size();
-        int specialities = specialityService.findAll().size();
-        int demands = demandRepository.findAll().size();
-
-        model.addAttribute("user", user);
-        model.addAttribute("professionals", professionals);
-        model.addAttribute("demands", demands);
-        model.addAttribute("clients", clients);
-        model.addAttribute("cities", cities);
-        model.addAttribute("specialities", specialities);
-        model.addAttribute("roleId", roleId);
-        return "adminHome";
-    }
-
-    @GetMapping("/admin/clients")
-    public String getAllClients(Model model) {
-        long roleId = roleService.findByUsersId().get().getId();
-        User user = userService.findById().get();
-        List<User> users = userService.findClients();
-
-        model.addAttribute("user", user);
-        model.addAttribute("users", users);
-        model.addAttribute("roleId", roleId);
-        return "adminClientList";
-    }
-
 }
