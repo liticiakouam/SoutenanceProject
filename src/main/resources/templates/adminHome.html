@@ -99,7 +99,7 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-      <a class="nav-link" href="login.html">
+      <a class="nav-link" th:href="@{/logout}">
         <i class="bi bi-box-arrow-up-right"></i>
         <span>Se deconnecter</span></a>
     </li>
@@ -130,7 +130,7 @@
                 <h5 class="card-title">Nombre de spécialité</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-clipboard-plus"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${specialitiesSize}"></h5>
@@ -146,7 +146,7 @@
                 <h5 class="card-title">Nombre de ville</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-building"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${citiesSize}"></h5>
@@ -162,7 +162,7 @@
                 <h5 class="card-title">Nombre de client</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person"></i>
+                    <i class="bi bi-person-square"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${clientsSize}"></h5>
@@ -175,14 +175,14 @@
           <div class="col-md-4">
             <div class="card info-card revenue-card">
               <div class="card-body">
-                <h5 class="card-title">Nombre de professionel</h5>
+                <h5 class="card-title">Nombre de professionnel</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-person-fill"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${professionals}"></h5>
-                    <span class="text-info small pt-1 fw-bold">professionel</span>
+                    <span class="text-info small pt-1 fw-bold">professionnel</span>
                   </div>
                 </div>
               </div>
@@ -194,7 +194,7 @@
                 <h5 class="card-title">Demande de création de compte</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-shield-fill-plus"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${demandsSize}"></h5>
@@ -210,7 +210,7 @@
                 <h5 class="card-title">Demande de création de compte</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-shield-fill-plus"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${demandsSize}"></h5>
