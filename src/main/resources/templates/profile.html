@@ -26,7 +26,7 @@
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="bi bi-emoji-smile-fill"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
+      <div class="sidebar-brand-text mx-3">EASY APPOINTMENT</div>
     </a>
 
     <div th:if="${roleId == 1}">
@@ -99,7 +99,7 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-      <a class="nav-link" href="login.html">
+      <a class="nav-link" th:href="@{/logout}">
         <i class="bi bi-box-arrow-up-right"></i>
         <span>Se deconnecter</span></a>
     </li>
@@ -131,7 +131,7 @@
                   <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle" width="100px"
                        height="100px">
                   <h4 class="text-dark " style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h4>
-                  <h6 th:text="${user.speciality.name}"></h6>
+                  <h6 th:if="${roleId == 3}" th:text="${user.speciality.name}"></h6>
                 </div>
               </div>
             </div>
@@ -175,22 +175,22 @@
                           <h6 th:text="${user.firstName} +' '+ ${user.lastName}"></h6>
                         </div>
                       </div>
-
-                      <div class="row" th:if="${roleId == 3}">
-                        <div class="col-lg-3 col-md-4 label">
-                          <h6 class="text-dark" style="font-weight: bold;">Specialite</h6>
+                      <div th:if="${roleId == 3}">
+                        <div class="row">
+                          <div class="col-lg-3 col-md-4 label">
+                            <h6 class="text-dark" style="font-weight: bold;">Specialite</h6>
+                          </div>
+                          <div class="col-lg-9 col-md-8">
+                            <h6 th:text="${user.speciality.name}"></h6>
+                          </div>
                         </div>
-                        <div class="col-lg-9 col-md-8">
-                          <h6 th:text="${user.speciality.name}"></h6>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-lg-3 col-md-4 label">
-                          <h6 class="text-dark" style="font-weight: bold;">Ville</h6>
-                        </div>
-                        <div class="col-lg-9 col-md-8">
-                          <h6 th:text="${user.city.name}"></h6>
+                        <div class="row">
+                          <div class="col-lg-3 col-md-4 label">
+                            <h6 class="text-dark" style="font-weight: bold;">Ville</h6>
+                          </div>
+                          <div class="col-lg-9 col-md-8">
+                            <h6 th:text="${user.city.name}"></h6>
+                          </div>
                         </div>
                       </div>
 
@@ -229,7 +229,7 @@
                         <div class="row mb-3">
                           <label class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                           <div class="col-md-8 col-lg-9">
-                            <img th:src="@{${'/userImages/' + user.image}}" width="80px" height="80px" alt="Profile">
+                            <img th:src="@{${'/userImages/' + user.image}}" width="80px" height="80px" alt="Profile" src="">
                             <div class="pt-2">
                               <a href="#" class="btn btn-primary btn-sm" title="Telecharger une image"><i
                                       class="bi bi-upload"></i></a>
@@ -274,7 +274,7 @@
                             <input name="company" type="text" class="form-control" th:value="${user.speciality.name}">
                           </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" th:if="${roleId == 3}">
                           <label class="col-md-4 col-lg-3 col-form-label">
                             <h6 class="text-dark" style="font-weight: bold;">Ville</h6>
                           </label>

@@ -26,7 +26,7 @@
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="bi bi-emoji-smile-fill"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">NomApp<sup>2</sup></div>
+      <div class="sidebar-brand-text mx-3">EASY APPOINTMENT</div>
     </a>
 
     <div th:if="${roleId == 1}">
@@ -99,7 +99,7 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-      <a class="nav-link" href="login.html">
+      <a class="nav-link" th:href="@{/logout}">
         <i class="bi bi-box-arrow-up-right"></i>
         <span>Se deconnecter</span></a>
     </li>
@@ -116,13 +116,13 @@
                aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
               <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="img-profile rounded-circle shadow" width="70px"
-                   height="70px" src="userImages/logo.png">
+                   height="70px" src="">
             </a>
           </li>
         </ul>
       </nav>
 
-      <div class="container-fluid">
+      <div class="container">
         <div class="row">
           <div class="col-md-4">
             <div class="card info-card revenue-card">
@@ -130,10 +130,10 @@
                 <h5 class="card-title">Nombre de spécialité</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-clipboard-plus"></i>
                   </div>
                   <div class="ps-3">
-                    <h5 th:text="${specialities}"></h5>
+                    <h5 th:text="${specialitiesSize}"></h5>
                     <span class="text-info small pt-1 fw-bold">spécialité</span>
                   </div>
                 </div>
@@ -146,10 +146,10 @@
                 <h5 class="card-title">Nombre de ville</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-building"></i>
                   </div>
                   <div class="ps-3">
-                    <h5 th:text="${cities}"></h5>
+                    <h5 th:text="${citiesSize}"></h5>
                     <span class="text-danger small pt-1 fw-bold">ville</span>
                   </div>
                 </div>
@@ -162,10 +162,10 @@
                 <h5 class="card-title">Nombre de client</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person"></i>
+                    <i class="bi bi-person-square"></i>
                   </div>
                   <div class="ps-3">
-                    <h5 th:text="${clients}"></h5>
+                    <h5 th:text="${clientsSize}"></h5>
                     <span class="text-warning small pt-1 fw-bold">client</span>
                   </div>
                 </div>
@@ -175,14 +175,14 @@
           <div class="col-md-4">
             <div class="card info-card revenue-card">
               <div class="card-body">
-                <h5 class="card-title">Nombre de professionel</h5>
+                <h5 class="card-title">Nombre de professionnel</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-person-fill"></i>
                   </div>
                   <div class="ps-3">
                     <h5 th:text="${professionals}"></h5>
-                    <span class="text-info small pt-1 fw-bold">professionel</span>
+                    <span class="text-info small pt-1 fw-bold">professionnel</span>
                   </div>
                 </div>
               </div>
@@ -194,17 +194,125 @@
                 <h5 class="card-title">Demande de création de compte</h5>
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-shield-fill-plus"></i>
                   </div>
                   <div class="ps-3">
-                    <h5 th:text="${demands}"></h5>
+                    <h5 th:text="${demandsSize}"></h5>
                     <span class="text-danger small pt-1 fw-bold">demandes</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title">Demande de création de compte</h5>
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-shield-fill-plus"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h5 th:text="${demandsSize}"></h5>
+                    <span class="text-warning small pt-1 fw-bold">demandes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div class="container pt-4">
+            <div class="row card top-selling overflow-auto">
+                <div class="row pt-4">
+                  <div class="col-md-8">
+                    <h4 class="text-dark me-2" style="font-weight: bold;">Demandes de création de compte pour professionnels</h4>
+                  </div>
+                  <div class="col-md-4 d-flex justify-content-end">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">Ajouter</button>
+                  </div>
+                </div>
+                <div class="card-body pt-4">
+
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th scope="col">Nom Complet</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Spécialité</th>
+                      <th scope="col">Ville</th>
+                      <th scope="col">Domaine</th>
+                      <th scope="col">Document</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="demand : ${demands}">
+                      <td th:text="${demand.firstName} +' '+ ${demand.lastName}"></td>
+                      <td th:text="${demand.email}"></td>
+                      <td th:text="${demand.speciality}"></td>
+                      <td th:text="${demand.city}"></td>
+                      <td th:text="${demand.domain}"></td>
+                      <td th:text="${demand.document}"></td>
+                      <td>
+                        <a th:href="@{/deleteDemand/{id}(id=${demand.id})}"
+                           class="text-decoration-none badge rounded-pill bg-danger float-end">Supprimer</a>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <div class="modal fade" id="basicModal" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-primary">Ajouter Un Professionnel</h5>
+                    <a class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+                  </div>
+                  <form th:action="@{/professional/add}" method="POST" th:object="${professional}">
+                    <div class="modal-body">
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Nom</strong></label>
+                        <input class="form-control" type="text" th:field="*{firstName}" required>
+                      </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Prénom</strong></label>
+                        <input class="form-control" type="text" th:field="*{lastName}" required>
+                      </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Email</strong></label>
+                        <input class="form-control" type="text" th:field="*{email}" required>
+                      </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Domaine</strong></label>
+                        <input class="form-control" type="text" th:field="*{domain}" required>
+                        <div class="mt-4">
+                          <label class="text-dark"><strong>Choisissez la ville</strong></label>
+                          <select name="" class="form-control" th:field="*{cityId}" required>
+                            <option th:each="city : ${cities}"
+                                    th:value="${city.id}"
+                                    th:text="${city.name}"></option>
+                          </select>
+                        </div>
+                        <div class="mt-4">
+                          <label class="text-dark"><strong>Choisissez une specialite</strong></label>
+                          <select name="" class="form-control" th:field="*{specialityId}" required>
+                            <option th:each="speciality : ${specialities}"
+                                    th:value="${speciality.id}"
+                                    th:text="${speciality.name}"></option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
 
@@ -1406,6 +1514,10 @@ body {
 .revenue-card .card-icon {
   color: #2eca6a;
   background: #e0f8e9;
+}
+.revenue-card .card-icon2 {
+  color: #2eca6a;
+  background: #red;
 }
 
 </style>

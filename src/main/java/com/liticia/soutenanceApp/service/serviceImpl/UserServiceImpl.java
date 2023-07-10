@@ -2,10 +2,12 @@ package com.liticia.soutenanceApp.service.serviceImpl;
 
 import com.liticia.soutenanceApp.dto.DemandeCreate;
 import com.liticia.soutenanceApp.dto.ProfessionalCreate;
+import com.liticia.soutenanceApp.dto.UserDto;
 import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.repository.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,14 +27,17 @@ public class UserServiceImpl implements UserService {
     private final SpecialityRepository specialityRepository;
     private final RoleRepository roleRepository;
     private final DemandRepository demandRepository;
+    private final PasswordEncoder passwordEncoder;
+
     public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/document";
 
-    public UserServiceImpl(UserRepository userRepository, CityRepository cityRepository, SpecialityRepository specialityRepository, RoleRepository roleRepository, DemandRepository demandRepository) {
+    public UserServiceImpl(UserRepository userRepository, CityRepository cityRepository, SpecialityRepository specialityRepository, RoleRepository roleRepository, DemandRepository demandRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.cityRepository = cityRepository;
         this.specialityRepository = specialityRepository;
         this.roleRepository = roleRepository;
         this.demandRepository = demandRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -80,6 +85,7 @@ public class UserServiceImpl implements UserService {
         demandeCompte.setCity(demandeCreate.getCity());
         demandeCompte.setSpeciality(demandeCreate.getSpeciality());
         demandeCompte.setCreatedAt(Instant.now());
+        demandeCompte.setDomain(demandeCreate.getDomain());
 
         String documentUUID;
         if (!file.isEmpty()) {
@@ -92,5 +98,27 @@ public class UserServiceImpl implements UserService {
         demandeCompte.setDocument(documentUUID);
 
         demandRepository.save(demandeCompte);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    @Override
+    public void saveUser(UserDto userDto) {
+        User user = new User();
+        Role role = roleRepository.findById(2L).get();
+
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        user.setLastName(userDto.getLastname());
+        user.setFirstName(userDto.getFirstname());
+        user.setEmail(userDto.getEmail());
+        user.setPassWord(passwordEncoder.encode(userDto.getPassword()));
+        user.setCreatedAt(Instant.now());
+        user.setRoles(roles);
+
+        userRepository.save(user);
     }
 }

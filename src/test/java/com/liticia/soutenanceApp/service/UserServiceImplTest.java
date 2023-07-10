@@ -1,12 +1,12 @@
 package com.liticia.soutenanceApp.service;
 
-import com.liticia.soutenanceApp.model.DemandeCompte;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.serviceImpl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ public class UserServiceImplTest {
 
     private final DemandRepository demandRepository = Mockito.mock(DemandRepository.class);
 
-    private final UserService userService = new UserServiceImpl(userRepository, cityRepository, specialityRepository, roleRepository, demandRepository);
+    private final UserService userService = new UserServiceImpl(userRepository, cityRepository, specialityRepository, roleRepository, demandRepository, passwordEncoder);
 
 
     @Test

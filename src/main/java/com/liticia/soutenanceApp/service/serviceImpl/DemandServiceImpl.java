@@ -20,4 +20,9 @@ public class DemandServiceImpl implements DemandService {
     public List<DemandeCompte> findAll() {
         return demandRepository.findAll();
     }
+
+    @Override
+    public void delete(long id) {
+        demandRepository.deleteById(id);
+    }
 }

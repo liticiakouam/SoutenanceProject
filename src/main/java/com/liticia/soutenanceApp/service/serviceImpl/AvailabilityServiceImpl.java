@@ -2,6 +2,7 @@ package com.liticia.soutenanceApp.service.serviceImpl;
 
 import com.liticia.soutenanceApp.dto.AvailabilityCreate;
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
+import com.liticia.soutenanceApp.exception.AvailabilityException;
 import com.liticia.soutenanceApp.exception.UnknownScheduleException;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.Availability;
@@ -140,7 +141,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public Optional<Availability> findById(long id) {
-        return availabilityRepository.findById(id);
+        Optional<Availability> optionalAvailability = availabilityRepository.findById(id);
+        LocalTime startTime = optionalAvailability.get().getStartTime();
+        if (LocalTime.now().isAfter(startTime)) {
+            throw new AvailabilityException();
+        }
+        return optionalAvailability;
     }
 
 }

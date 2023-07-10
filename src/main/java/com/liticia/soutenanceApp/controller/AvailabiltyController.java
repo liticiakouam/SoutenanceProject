@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
 import java.time.*;
@@ -61,8 +62,8 @@ public class AvailabiltyController {
         AvailabilityResponse availabilities = availabilityService.getAvailabilities(startDate, optionalUser.get());
         long[][] availabilityArray = availabilities.getAvailabilities();
         List<LocalDate> fullWeek = getFullWeek(startDate);
-        long roleId = roleService.findByUsersId().get().getId();
         User user = userService.findById().get();
+        long roleId = roleService.findByUsersId().get().getId();
 
         model.addAttribute("roleId", roleId);
         model.addAttribute("user", user);
@@ -91,17 +92,27 @@ public class AvailabiltyController {
     }
 
     @GetMapping("/availabilityId")
-    public String findAvailability(@RequestParam("id") long id, Model model) {
-        Optional<Availability> optionalAvailability = availabilityService.findById(id);
-        long roleId = roleService.findByUsersId().get().getId();
-        User user = userService.findById().get();
+    public String findAvailability(@RequestParam("id") long id, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            Optional<Availability> optionalAvailability = availabilityService.findById(id);
+            long roleId = roleService.findByUsersId().get().getId();
+            User user = userService.findById().get();
 
-        model.addAttribute("user", user);
-        model.addAttribute("roleId", roleId);
-        model.addAttribute("availability", optionalAvailability.get());
-        model.addAttribute("appointment", new AppointmentCreate());
+            model.addAttribute("user", user);
+            model.addAttribute("roleId", roleId);
+            model.addAttribute("availability", optionalAvailability.get());
+            model.addAttribute("appointment", new AppointmentCreate());
+        } catch (AvailabilityException ex) {
+            long roleId = roleService.findByUsersId().get().getId();
+            User user = userService.findById().get();
+
+            model.addAttribute("user", user);
+            model.addAttribute("roleId", roleId);
+            redirectAttributes.addFlashAttribute("message", "Désolé, vous ne pouvez plus prendre de rendez-vous à cet heure");
+            return "redirect:/user?userId=243&startDate=2023-01-01";
+        }
+
         return "motifrdv";
     }
-
 
 }

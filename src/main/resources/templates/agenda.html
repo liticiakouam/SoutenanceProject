@@ -8,141 +8,221 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Project</title>
+  <title>Agenda</title>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
-  <link rel="stylesheet" th:href="@{style.css}">
 </head>
 
 <body>
-  <div id="wrapper">
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<div id="wrapper">
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <i class="bi bi-emoji-smile-fill"></i>
+      </div>
+      <div class="sidebar-brand-text mx-3">EASY APPOINTMENT</div>
+    </a>
+
+    <div th:if="${roleId == 1}">
+      <hr class="sidebar-divider">
+
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/admin/homePage}">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
+      <hr class="sidebar-divider">
+
+      <div class="sidebar-heading">
+        Gestion des utilisateurs
+      </div>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/admin/clients}">
+          <i class="bi bi-person"></i>
+          <span>Client</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/admin/professionals}">
+          <i class="bi bi-person"></i>
+          <span>Professionnel</span></a>
+      </li>
+    </div>
+
+    <div th:if="${roleId == 2}">
+      <hr class="sidebar-divider d-md-block">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/users?pageNumber=1}">
+          <i class="bi bi-house-fill"></i>
+          <span>Accueil</span></a>
+      </li>
+      <hr class="sidebar-divider d-md-block">
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+    </div>
+
+    <div th:if="${roleId == 3}">
+      <hr  class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/appointment/toComplete}">
+          <i class="bi bi-calendar2-check-fill"></i>
+          <span>Mes Rendez-vous</span></a>
+      </li>
+      <hr class="sidebar-divider">
+
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
+          <i class="bi bi-person-badge-fill"></i>
+          <span>Mes Disponibilités</span>
+        </a>
+      </li>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/user/profile}">
+        <i class="bi bi-person-fill"></i>
+        <span>Profile</span></a>
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/logout}">
+        <i class="bi bi-box-arrow-up-right"></i>
+        <span>Se deconnecter</span></a>
+    </li>
+  </ul>
 
     <div id="content-wrapper" class="d-flex flex-column">
-
       <div id="content">
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                  aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"
-                     height="70px" src="userImages/logo.png">
+<!--                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${authUser.firstName} +' '+ ${authUser.lastName}"></span>-->
+<!--                <img th:src="@{${'/userImages/' + authUser.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"-->
+<!--                     height="70px" src="">-->
               </a>
             </li>
           </ul>
         </nav>
 
-        <div class="container-fluid"><br>
-        <div class="row">
-          <div class="col-md-3">
-            <div class="card bg-gradient-primary d-flex flex-column align-items-center">
-              <div class="d-flex justify-content-center">
-                <img th:src="@{${'/userImages/' + user.image}}" alt="profil" class="img-profile rounded-circle m-2" width="100px"
-                                     height="100px" />
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card bg-gradient-primary d-flex flex-column align-items-center">
+                <div class="d-flex justify-content-center">
+                  <img th:src="@{${'/userImages/' + user.image}}" alt="profile" class="img-profile rounded-circle m-2" width="100px"
+                                       height="100px" />
+                </div>
+                  <h5 class="text-white" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
+                  <h6 class="text-white"> <strong th:text="${user.speciality.name}"></strong> </h6>
               </div>
-                <h5 class="text-white" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                <h6 class="text-white"> <strong th:text="${user.speciality.name}"></strong> </h6>
-            </div>
-            <div class="card">
-              <div class="row">
-                <div class="col ms-2">
-                  <h6>Localisation :</h6>
-                </div>
-                <div class="col me-2">
-                  <h6 class="text-primary text-center" th:text="${user.city.name}+' '+${user.address}"></h6>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col ms-2">
-                  <h6>Email : </h6>
-                </div>
-                <div class="col me-2">
-                  <h6 class="text-primary text-center" th:text="${user.email}"></h6>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col ms-2">
-                  <h6>Téléphone : </h6>
-                </div>
-                <div class="col">
-                  <h6 class="text-center text-primary pb-3" th:text="${user.phone}"></h6>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-md-9">
-            <div class="card">
-              <div class="bd-example">
-                <table class="table">
-                  <div aria-label="...">
-                    <ul class="pagination pagination-sm d-flex justify-content-end">
-
-                      <li class="page-item active">
-                        <a th:href="@{'/user?userId=' + ${user.id} + '&startDate=' + ${startDate.minusWeeks(1)}}" class="page-link" href="#" tabindex="-1">Previous</a>
-                      </li>
-                      <li class="page-item">
-                        <a th:href="@{'/user?userId=' + ${user.id} + '&startDate=' + ${startDate.plusWeeks(1)}}"  class="page-link" href="#">Next</a>
-                      </li>
-                    </ul>
+              <div class="card">
+                <div class="row">
+                  <div class="col ms-2">
+                    <h6>Localisation :</h6>
                   </div>
-                  <thead class="table-light">
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Lundi</th>
-                    <th scope="col">Mardi</th>
-                    <th scope="col">Mercredi</th>
-                    <th scope="col">Jeudi</th>
-                    <th scope="col">Vendredi</th>
-                    <th scope="col">Samedi</th>
-                    <th scope="col">Dimanche</th>
-                  </tr>
-                  <tr>
-                    <td>Heure</td>
-                    <td th:each="day, i : ${fullWeek}" th:text="${#temporals.format(i.current, 'dd/MM/yyyy')}" style="font-size:14px;"></td>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    <th scope="col">
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">O8 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">O9 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">10 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">11 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">12 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">13 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">14 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">15 : 00</a></div>
-                    <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">16 : 00</a></div>
+                  <div class="col me-2">
+                    <h6 class="text-primary text-center" th:text="${user.city.name}+' '+${user.address}"></h6>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col ms-2">
+                    <h6>Email : </h6>
+                  </div>
+                  <div class="col me-2">
+                    <h6 class="text-primary text-center" th:text="${user.email}"></h6>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col ms-2">
+                    <h6>Téléphone : </h6>
+                  </div>
+                  <div class="col">
+                    <h6 class="text-center text-primary pb-3" th:text="${user.phone}"></h6>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                  </th>
+            <div class="col-md-9">
+              <div class="card">
+                <div class="bd-example">
+                  <table class="table">
+                    <div th:if="${message}" class="mx-auto align items-center row col-lg-12 alert alert-danger alert-dismissible fade show pt-3" role="alert">
+                      <span th:text="${message}"></span>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div aria-label="...">
+                      <ul class="pagination pagination-sm d-flex justify-content-end">
 
-                    <th th:each="availability, i: ${availabilities}">
-                      <div class="" th:each="id : ${availability}">
-                        <li th:if="${id == 0}" class="btn btn-light btn-sm disabled" style="margin-top:10px;">--:--</li>
-                        <a  th:unless="${id == 0}" th:href="@{/availabilityId(id=${id})}" class="btn btn-success btn-sm" style="margin-top:10px;">disponible</a>
-                      </div>
+                        <li class="page-item active">
+                          <a th:href="@{'/user?userId=' + ${user.id} + '&startDate=' + ${startDate.minusWeeks(1)}}" class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item">
+                          <a th:href="@{'/user?userId=' + ${user.id} + '&startDate=' + ${startDate.plusWeeks(1)}}"  class="page-link" href="#">Next</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <thead class="table-light">
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Lundi</th>
+                      <th scope="col">Mardi</th>
+                      <th scope="col">Mercredi</th>
+                      <th scope="col">Jeudi</th>
+                      <th scope="col">Vendredi</th>
+                      <th scope="col">Samedi</th>
+                      <th scope="col">Dimanche</th>
+                    </tr>
+                    <tr>
+                      <td>Heure</td>
+                      <td th:each="day, i : ${fullWeek}" th:text="${#temporals.format(i.current, 'dd/MM/yyyy')}" style="font-size:14px;"></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <th scope="col">
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">O8 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">O9 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">10 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">11 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">12 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">13 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">14 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">15 : 00</a></div>
+                      <div><a class="btn btn-primary btn-sm disabled" style="margin-top:10px;">16 : 00</a></div>
+
                     </th>
-                  </tbody>
-                </table>
+
+                      <th th:each="availability, i: ${availabilities}">
+                        <div class="" th:each="id : ${availability}">
+                          <li th:if="${id == 0}" class="btn btn-light btn-sm disabled" style="margin-top:10px;">--:--</li>
+                          <a  th:unless="${id == 0}" th:href="@{/availabilityId(id=${id})}" class="btn btn-success btn-sm" style="margin-top:10px;">disponible</a>
+                        </div>
+                      </th>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-
         </div>
-      </div>
       </div>
 
     </div>
-
-  </div>
-
+</div>
 </body>
 
 <style>
@@ -1280,5 +1360,14 @@ body {
     background-color: rgba(255, 255, 255, 0.2);
   }
 
+
+.topbar .topbar-divider {
+  width: 0;
+  border-right: 1px solid #e3e6f0;
+  height: calc(4.375rem - 2rem);
+  margin: auto 1rem;
+}
+
 </style>
+
 </html>

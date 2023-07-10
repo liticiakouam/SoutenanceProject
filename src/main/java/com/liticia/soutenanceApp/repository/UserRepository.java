@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRolesIdOrderByCreatedAtDesc(long id);
+
+    User findUserByEmail(String email);
 }
