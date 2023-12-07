@@ -169,6 +169,7 @@
                     <div class="card-body d-flex flex-column align-items-center">
                       <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
                       <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
+                      <h6 class="text-dark text-center" th:text="${user.domain}"></h6>
                       <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
                       <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{/user(userId=${user.id})&startDate=2023-01-01}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
                         rdv</a>

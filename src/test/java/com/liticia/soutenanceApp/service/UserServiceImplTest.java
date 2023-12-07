@@ -20,6 +20,7 @@ public class UserServiceImplTest {
     private final RoleRepository roleRepository = Mockito.mock(RoleRepository.class);
 
     private final DemandRepository demandRepository = Mockito.mock(DemandRepository.class);
+    private final PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
 
     private final UserService userService = new UserServiceImpl(userRepository, cityRepository, specialityRepository, roleRepository, demandRepository, passwordEncoder);
 

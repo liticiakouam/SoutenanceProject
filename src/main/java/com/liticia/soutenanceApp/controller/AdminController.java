@@ -2,6 +2,8 @@ package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.DemandeCreate;
 import com.liticia.soutenanceApp.dto.ProfessionalCreate;
+import com.liticia.soutenanceApp.exception.EmailAlreadyExistException;
+import com.liticia.soutenanceApp.exception.EmailSendException;
 import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.DemandeCompte;
 import com.liticia.soutenanceApp.model.Speciality;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,6 +35,8 @@ public class AdminController {
 
     @Autowired
     private DemandService demandService;
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/demandCompte/add")
     public String save(@ModelAttribute("demandCreate") DemandeCreate demandeCreate,
@@ -101,9 +106,22 @@ public class AdminController {
     }
 
     @PostMapping("/professional/add")
-    public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate) {
+    public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate, BindingResult result, RedirectAttributes redirectAttributes) {
         userService.saveProfessional(professionalCreate);
-        return "redirect:/admin/professionals";
+        User existingUser = userService.findUserByEmail(professionalCreate.getEmail());
+
+        if(existingUser != null){
+            result.rejectValue("email", null,
+                    "Il existe déjà un compte avec cet adresse email.");
+        }
+        try {
+            notificationService.sendSuccessfulRegistrationEmail(professionalCreate);
+            redirectAttributes.addFlashAttribute("timeOutMessage", "Veuillez patienter le mail est encours d'envoie. Merci");
+            return "redirect:/admin/professionals";
+
+        } catch (EmailSendException e) {
+            return "redirect:/admin/homePage";
+        }
     }
 
     @GetMapping("/deleteDemand/{id}")

@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentService {
-    void save(AppointmentCreate appointmentCreate, MultipartFile file, String document, long id) throws IOException;
-
-    Optional<Appointment> findByUserCustomerAndCreatedAt();
+    Appointment save(AppointmentCreate appointmentCreate, MultipartFile file, String document, long id) throws IOException;
 
     Page<Appointment> findPageByReportAndUser(Pageable pageable);
 

@@ -2,7 +2,9 @@ package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
 import com.liticia.soutenanceApp.dto.ReportCreate;
+import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.exception.AvailabilityException;
+import com.liticia.soutenanceApp.exception.EmailSendException;
 import com.liticia.soutenanceApp.model.Appointment;
 import com.liticia.soutenanceApp.model.Availability;
 import com.liticia.soutenanceApp.model.User;
@@ -33,43 +35,52 @@ public class AppointmentController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/appointment/add")
     public String save(@ModelAttribute("appointment") AppointmentCreate appointmentCreate,
                        @RequestParam("productImage")MultipartFile file,
                        @RequestParam("document")String document,
-                       @RequestParam("id") long id, RedirectAttributes redirectAttributes, Model model) throws IOException {
+                       @RequestParam("id") long id,
+                       RedirectAttributes redirectAttributes,
+                       Model model) throws IOException {
+        Appointment appointment = null;
         try {
-            appointmentService.save(appointmentCreate, file, document, id);
+            appointment = appointmentService.save(appointmentCreate, file, document, id);
+            notificationService.sendConfirmationEmail(appointment);
+
+            return "redirect:/appointment/info?id="+appointment.getId();
         } catch (AvailabilityException ex) {
-            redirectAttributes.addFlashAttribute("message", "Désolé, désolé cet plage n'est plus disponible. Veuillez en choisir une nouvelle");
+                redirectAttributes.addFlashAttribute("message", "Désolé, désolé cet plage n'est plus disponible. Veuillez en choisir une nouvelle");
             Optional<Availability> optionalAvailability = availabilityService.findById(id);
             model.addAttribute("availability", optionalAvailability.get());
 
             return "redirect:/availabilityId?id="+id;
+        } catch (EmailSendException e) {
+            assert appointment != null;
+            return "redirect:/appointment/info?id="+appointment.getId();
         }
-        return "redirect:/appointment/info";
     }
 
     @GetMapping("/appointment/info")
-    public String findAppointment(Model model) {
-        Optional<Appointment> optionalAppointment = appointmentService.findByUserCustomerAndCreatedAt();
-        long roleId = roleService.findByUsersId().get().getId();
-        User user = userService.findById().get();
+    public String findAppointment(@RequestParam("id") long id, Model model,  RedirectAttributes redirectAttributes) {
+        try {
+            Optional<Appointment> optionalAppointment = appointmentService.findById(id);
+            long roleId = roleService.findByUsersId().get().getId();
+            User user = userService.findById().get();
 
-        model.addAttribute("roleId", roleId);
-        model.addAttribute("user", user);
-        model.addAttribute("appointment", optionalAppointment.get());
-        return "confirmrdv";
-    }
+            model.addAttribute("roleId", roleId);
+            model.addAttribute("user", user);
+            model.addAttribute("appointment", optionalAppointment.get());
+            return "confirmrdv";
 
-    @GetMapping("/messageConfirm")
-    public String confirm() {
-        return "confmsg.html";
+        } catch (AppointmenNotFoundException ex) {
+            return "serverError";
+        }
     }
 
     @GetMapping("/appointment/toComplete")
-    @PreAuthorize("hasRole('ROLE_PROFESSIONNEL')")
     public String findIncompletedAppointment(Model model) {
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         List<Appointment> appointmentPasser = appointmentService.findAppointmentByOldDate();
@@ -88,16 +99,6 @@ public class AppointmentController {
         model.addAttribute("appointmentToCome", appointmentToCome.size());
         model.addAttribute("report", new ReportCreate());
 
-        return "rdv";
-    }
-
-    @GetMapping("/appointment/{id}")
-    public String findById(@PathVariable(value = "id") long id, Model model) {
-        Optional<Appointment> appointment = appointmentService.findById(id);
-        User user = userService.findById().get();
-
-        model.addAttribute("user", user);
-        model.addAttribute("appointment", appointment);
         return "rdv";
     }
 

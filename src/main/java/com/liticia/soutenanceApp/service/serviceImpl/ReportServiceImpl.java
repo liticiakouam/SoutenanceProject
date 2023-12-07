@@ -19,19 +19,17 @@ public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
     private final AppointmentRepository appointmentRepository;
     private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
 
     public ReportServiceImpl(ReportRepository reportRepository, AppointmentRepository appointmentRepository, RoleRepository roleRepository, UserRepository userRepository) {
         this.reportRepository = reportRepository;
         this.appointmentRepository = appointmentRepository;
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
     public void save(ReportCreate reportCreate, long id) {
         long roleId = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get().getId();
-        Appointment appointment1 = appointmentRepository.findById(id).get();
+        Appointment appointment = appointmentRepository.findById(id).get();
 
         Report report = new Report();
         report.setNote(reportCreate.getNote());
@@ -40,8 +38,7 @@ public class ReportServiceImpl implements ReportService {
 
         reportRepository.save(report);
 
-        Appointment appointment = new Appointment();
-        appointment.setId(appointment1.getId());
+        appointment.setId(id);
         if (roleId == 2) {
             appointment.setReport(report);
         } else if (roleId == 3) {

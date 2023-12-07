@@ -116,7 +116,7 @@
                aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
               <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="img-profile rounded-circle shadow" width="70px"
-                   height="70px" src="userImages/logo.png">
+                   height="70px" src="">
             </a>
           </li>
         </ul>
@@ -185,6 +185,14 @@
                         <input class="form-control" type="text" th:field="*{email}" required>
                       </div>
                       <div class="mt-4">
+                        <label class="text-dark"><strong>Choisissez une specialite</strong></label>
+                        <select name="" class="form-control" th:field="*{specialityId}" required>
+                          <option th:each="speciality : ${specialities}"
+                                  th:value="${speciality.id}"
+                                  th:text="${speciality.name}"></option>
+                        </select>
+                      </div>
+                      <div class="mt-4">
                         <label class="text-dark"><strong>Domaine</strong></label>
                         <input class="form-control" type="text" th:field="*{domain}" required>
                       <div class="mt-4">
@@ -195,14 +203,7 @@
                                     th:text="${city.name}"></option>
                         </select>
                       </div>
-                      <div class="mt-4">
-                        <label class="text-dark"><strong>Choisissez une specialite</strong></label>
-                        <select name="" class="form-control" th:field="*{specialityId}" required>
-                          <option th:each="speciality : ${specialities}"
-                                  th:value="${speciality.id}"
-                                  th:text="${speciality.name}"></option>
-                        </select>
-                      </div>
+
                     </div>
                     <div class="modal-footer">
                       <button type="submit" class="btn btn-primary">Sauvegarder</button>
