@@ -5,16 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-    private String firstname;
-    private String lastname;
+public class EmailDto {
+    private String pattern;
+    private String description;
     private String email;
-    private String password;
 
 }

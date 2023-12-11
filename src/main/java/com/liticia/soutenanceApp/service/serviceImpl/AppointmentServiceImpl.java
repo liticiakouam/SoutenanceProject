@@ -1,6 +1,7 @@
 package com.liticia.soutenanceApp.service.serviceImpl;
 
 import com.liticia.soutenanceApp.dto.AppointmentCreate;
+import com.liticia.soutenanceApp.exception.AppointmenNotFoundException;
 import com.liticia.soutenanceApp.exception.AvailabilityException;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
 import com.liticia.soutenanceApp.model.Appointment;
@@ -46,7 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void save(AppointmentCreate appointmentCreate, MultipartFile file, String document, long id) throws IOException {
+    public Appointment save(AppointmentCreate appointmentCreate, MultipartFile file, String document, long id) throws IOException {
         Optional<Availability> optionalAvailability = availabilityRepository.findById(id);
         Optional<User> optionalUser = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
         Optional<User> optionalUserPro = professionnalRepository.findById(optionalAvailability.get().getUser().getId());
@@ -78,17 +79,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDocument(documentUUID);
 
         appointmentRepository.save(appointment);
-    }
-
-    @Override
-    public Optional<Appointment> findByUserCustomerAndCreatedAt() {
-        Instant date = Instant.now();
-        Optional<User> userOptional = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException();
-        }
-
-        return appointmentRepository.findByUserCustomerAndCreatedAt(userOptional.get(), date);
+        return appointment;
     }
 
     @Override
@@ -112,7 +103,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Optional<Appointment> findById(long id) {
-        return appointmentRepository.findById(id);
+        try {
+            return appointmentRepository.findById(id);
+        } catch (RuntimeException ex) {
+            throw new AppointmenNotFoundException();
+        }
     }
 
     @Override

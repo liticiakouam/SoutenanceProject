@@ -223,6 +223,10 @@
         </div>
 
         <div class="container pt-4">
+          <div th:if="${timeOutMessage}" class="mx-auto align items-center row col-lg-12 alert alert-danger alert-dismissible fade show pt-3" role="alert">
+            <span th:text="${timeOutMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
             <div class="row card top-selling overflow-auto">
                 <div class="row pt-4">
                   <div class="col-md-8">
@@ -283,26 +287,27 @@
                       <div class="mt-4">
                         <label class="text-dark"><strong>Email</strong></label>
                         <input class="form-control" type="text" th:field="*{email}" required>
+                        <p th:errors = "*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
+                      </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Choisissez une specialite</strong></label>
+                        <select name="" class="form-control" th:field="*{specialityId}" required>
+                          <option th:each="speciality : ${specialities}"
+                                  th:value="${speciality.id}"
+                                  th:text="${speciality.name}"></option>
+                        </select>
                       </div>
                       <div class="mt-4">
                         <label class="text-dark"><strong>Domaine</strong></label>
                         <input class="form-control" type="text" th:field="*{domain}" required>
-                        <div class="mt-4">
-                          <label class="text-dark"><strong>Choisissez la ville</strong></label>
-                          <select name="" class="form-control" th:field="*{cityId}" required>
-                            <option th:each="city : ${cities}"
-                                    th:value="${city.id}"
-                                    th:text="${city.name}"></option>
-                          </select>
-                        </div>
-                        <div class="mt-4">
-                          <label class="text-dark"><strong>Choisissez une specialite</strong></label>
-                          <select name="" class="form-control" th:field="*{specialityId}" required>
-                            <option th:each="speciality : ${specialities}"
-                                    th:value="${speciality.id}"
-                                    th:text="${speciality.name}"></option>
-                          </select>
-                        </div>
+                      </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Choisissez la ville</strong></label>
+                        <select name="" class="form-control" th:field="*{cityId}" required>
+                          <option th:each="city : ${cities}"
+                                  th:value="${city.id}"
+                                  th:text="${city.name}"></option>
+                        </select>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Sauvegarder</button>

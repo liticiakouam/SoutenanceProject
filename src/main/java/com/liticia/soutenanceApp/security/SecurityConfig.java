@@ -1,16 +1,13 @@
 package com.liticia.soutenanceApp.security;
 
-import com.liticia.soutenanceApp.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -31,6 +28,10 @@ public class SecurityConfig {
                         authorize.antMatchers( "/").permitAll()
                                 .antMatchers("/login").permitAll()
                                 .antMatchers("/register").permitAll()
+                                .antMatchers("/forgot-password").permitAll()
+                                .antMatchers("/forgot-password/number").permitAll()
+                                .antMatchers("/reset-password").permitAll()
+                                .antMatchers("/demandCompte/add").permitAll()
                                 .antMatchers("/userImages/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -38,7 +39,6 @@ public class SecurityConfig {
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-//                                .defaultSuccessUrl("/admin/homePage")
                                 .defaultSuccessUrl("/after-login")
                                 .permitAll()
                 ).logout(

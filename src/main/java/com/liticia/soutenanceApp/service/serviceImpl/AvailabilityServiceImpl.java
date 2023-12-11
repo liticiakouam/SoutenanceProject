@@ -142,8 +142,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     @Override
     public Optional<Availability> findById(long id) {
         Optional<Availability> optionalAvailability = availabilityRepository.findById(id);
+        LocalDate date = optionalAvailability.get().getDate();
         LocalTime startTime = optionalAvailability.get().getStartTime();
-        if (LocalTime.now().isAfter(startTime)) {
+
+        if (date.isEqual(LocalDate.now()) && LocalTime.now().isAfter(startTime) || date.isBefore(LocalDate.now()) ) {
             throw new AvailabilityException();
         }
         return optionalAvailability;
