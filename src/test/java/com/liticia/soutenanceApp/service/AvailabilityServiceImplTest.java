@@ -28,8 +28,8 @@ import static org.mockito.Mockito.*;
 public class AvailabilityServiceImplTest {
     private final ProfessionnalRepository professionnalRepository = Mockito.mock(ProfessionnalRepository.class);
     private final AvailabilityRepository availabilityRepository = Mockito.mock(AvailabilityRepository.class);
-
-    private final AvailabilityService availabilityService = new AvailabilityServiceImpl(availabilityRepository, professionnalRepository);
+    private final SecurityUtils securityUtils = Mockito.mock(SecurityUtils.class);
+    private final AvailabilityService availabilityService = new AvailabilityServiceImpl(availabilityRepository, professionnalRepository, securityUtils);
 
     @Test
     void testShouldSaveAvailabilities() throws ParseException {
@@ -40,12 +40,12 @@ public class AvailabilityServiceImplTest {
         );
         AvailabilityCreate availabilityCreate= AvailabilityCreate.builder().schedule(Schedule.AFTERNOON).build();
 
-        when(professionnalRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(professionnalRepository.findById(securityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
         when(availabilityRepository.saveAll(availabilities)).thenReturn(availabilities);
 
         availabilityService.saveAvailabilities(availabilityCreate);
 
-        verify(professionnalRepository, times(1)).findById(SecurityUtils.getCurrentUserId());
+        verify(professionnalRepository, times(1)).findById(securityUtils.getCurrentUserId());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AvailabilityServiceImplTest {
         when(availabilityRepository.saveAll(availabilities)).thenReturn(availabilities);
 
         assertThrows(UserNotFoundException.class, ()->availabilityService.saveAvailabilities(availabilityCreate));
-        verify(professionnalRepository, times(1)).findById(SecurityUtils.getCurrentUserId());
+        verify(professionnalRepository, times(1)).findById(securityUtils.getCurrentUserId());
     }
 
     @Test
@@ -118,10 +118,10 @@ public class AvailabilityServiceImplTest {
 
     @Test
     void testShouldFindAvailabilityId() {
-        Availability availabilityBuil = Availability.builder().id(1).build();
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availabilityBuil));
+        Availability availabilityBuil = Availability.builder().date(LocalDate.of(2024, 12, 12)).id(1).build();
+        when(availabilityRepository.findById(73L)).thenReturn(Optional.of(availabilityBuil));
 
-        Optional<Availability> availability = availabilityService.findById(1L);
+        Optional<Availability> availability = availabilityService.findById(73L);
         assertEquals(1, availability.get().getId());
     }
 

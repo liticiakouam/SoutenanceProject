@@ -32,7 +32,11 @@ public class SecurityConfig {
                                 .antMatchers("/forgot-password/number").permitAll()
                                 .antMatchers("/reset-password").permitAll()
                                 .antMatchers("/demandCompte/add").permitAll()
+                                .antMatchers("/static/**").permitAll()
                                 .antMatchers("/userImages/**").permitAll()
+                                .antMatchers("/client/**").hasAuthority("CLIENT")
+                                .antMatchers("/professional/**").hasAuthority("PROFESSIONAL")
+                                .antMatchers("/admin/**").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).formLogin(

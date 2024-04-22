@@ -10,25 +10,22 @@ import com.liticia.soutenanceApp.repository.RoleRepository;
 import com.liticia.soutenanceApp.repository.UserRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.ReportService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 @Service
+@AllArgsConstructor
 public class ReportServiceImpl implements ReportService {
-    private final ReportRepository reportRepository;
-    private final AppointmentRepository appointmentRepository;
-    private final RoleRepository roleRepository;
-
-    public ReportServiceImpl(ReportRepository reportRepository, AppointmentRepository appointmentRepository, RoleRepository roleRepository, UserRepository userRepository) {
-        this.reportRepository = reportRepository;
-        this.appointmentRepository = appointmentRepository;
-        this.roleRepository = roleRepository;
-    }
+    private ReportRepository reportRepository;
+    private AppointmentRepository appointmentRepository;
+    private RoleRepository roleRepository;
+    private SecurityUtils securityUtils;
 
     @Override
     public void save(ReportCreate reportCreate, long id) {
-        long roleId = roleRepository.findByUsersId(SecurityUtils.getCurrentUserId()).get().getId();
+        long roleId = roleRepository.findByUsersId(securityUtils.getCurrentUserId()).get().getId();
         Appointment appointment = appointmentRepository.findById(id).get();
 
         Report report = new Report();

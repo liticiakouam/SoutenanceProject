@@ -26,7 +26,7 @@
 <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="bi bi-emoji-smile-fill"></i>
             </div>
@@ -121,9 +121,10 @@
                            aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                            <img th:src="@{${'/userImages/' + user.image}}" alt="Profile"
-                                 class="shadow img-profile rounded-circle" width="70px"
-                                 height="70px" src="userImages/logo.png">
+                            <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px" src="">
+                            <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px">
                         </a>
                     </li>
                 </ul>
@@ -135,14 +136,13 @@
                         <div class="col-xl-4">
                             <div class="card shadow">
                                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-                                    <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle"
-                                         width="100px"
+                                    <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
                                          height="100px" src="">
+                                    <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="100px"
+                                         height="100px">
                                     <h4 class="text-dark " style="font-weight: bold;"
                                         th:text="${user.firstName} +' '+ ${user.lastName}"></h4>
                                     <h6 th:if="${roleId == 3}" th:text="${user.speciality.name}"></h6>
-                                    <h6 th:if="${roleId == 3}" th:text="${user.domain}"></h6>
                                 </div>
                             </div>
                             <br><br>
@@ -159,21 +159,6 @@
                                                th:href="@{/user/profile}">Information
                                             </a>
                                         </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-bs-toggle="tab"
-                                                    data-bs-target="#profile-edit">Modifier Son
-                                                Profile
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <button class="nav-link" data-bs-toggle="tab"
-                                                    data-bs-target="#profile-change-password">Mot De
-                                                Passe
-                                            </button>
-                                        </li>
-
                                     </ul>
 
                                     <div class="tab-content pt-2">
@@ -248,49 +233,6 @@
 
                                                 <button class="btn btn-primary" type="submit">Sauvegarder</button>
                                             </form>
-                                        </div>
-
-                                        <div class="tab-pane fade pt-3" id="profile-change-password">
-                                            <form>
-
-                                                <div class="row mb-3">
-                                                    <label for="currentPassword"
-                                                           class="col-md-4 col-lg-3 col-form-label text-dark"
-                                                           style="font-weight: bold;">Ancien mot de passe</h6>
-                                                    </label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="password" type="password" class="form-control"
-                                                               id="currentPassword">
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">
-                                                        <h6 class="text-dark" style="font-weight: bold;">Nouveau mot de
-                                                            passe</h6>
-                                                    </label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="newpassword" type="password" class="form-control"
-                                                               id="newPassword">
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">
-                                                        <h6 class="text-dark" style="font-weight: bold;">Reconfirmer le
-                                                            mot de passe</h6>
-                                                    </label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="renewpassword" type="password" class="form-control"
-                                                               id="renewPassword">
-                                                    </div>
-                                                </div>
-
-                                                <div class="text-center">
-                                                    <button type="submit" class="btn btn-primary">Confirmer</button>
-                                                </div>
-                                            </form>
-
                                         </div>
 
                                     </div>

@@ -15,15 +15,16 @@ import static org.mockito.Mockito.when;
 
 public class RoleServiceImplTest {
     private final RoleRepository roleRepository = Mockito.mock(RoleRepository.class);
+    private final SecurityUtils securityUtils = Mockito.mock(SecurityUtils.class);
 
-    private final RoleService cityService = new RoleServiceImpl(roleRepository);
+    private final RoleService cityService = new RoleServiceImpl(roleRepository, securityUtils);
 
 
     @Test
     void testShouldFindCities() {
         Role role = Role.builder().id(1).name("client").build();
 
-        when(roleRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(roleRepository.findById(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
         Optional<Role> optionalRole = cityService.findByUsersId();
         assertTrue(optionalRole.isEmpty());
     }

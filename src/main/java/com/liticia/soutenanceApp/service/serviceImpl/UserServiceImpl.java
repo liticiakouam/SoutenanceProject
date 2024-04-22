@@ -9,7 +9,8 @@ import com.liticia.soutenanceApp.model.*;
 import com.liticia.soutenanceApp.repository.*;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,30 +26,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final CityRepository cityRepository;
-    private final SpecialityRepository specialityRepository;
-    private final RoleRepository roleRepository;
-    private final DemandRepository demandRepository;
-    private final PasswordEncoder passwordEncoder;
-    @Autowired
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private DemandRepository demandRepository;
+    private PasswordEncoder passwordEncoder;
     private PasswordResetTokenRepository passwordResetTokenRepository;
+    private SecurityUtils securityUtils;
 
     public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/document";
 
-    public UserServiceImpl(UserRepository userRepository, CityRepository cityRepository, SpecialityRepository specialityRepository, RoleRepository roleRepository, DemandRepository demandRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.cityRepository = cityRepository;
-        this.specialityRepository = specialityRepository;
-        this.roleRepository = roleRepository;
-        this.demandRepository = demandRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Override
     public Optional<User> findById() {
-        return userRepository.findById(SecurityUtils.getCurrentUserId());
+        return userRepository.findById(securityUtils.getCurrentUserId());
     }
 
     @Override
@@ -63,22 +54,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveProfessional(ProfessionalCreate professionalCreate) {
-        City city = cityRepository.findById(professionalCreate.getCityId()).get();
-        Speciality speciality = specialityRepository.findById(professionalCreate.getSpecialityId()).get();
-        Role role = roleRepository.findById(3L).get();
+        Role pro = roleRepository.findById(3L).get();
         String password = UUID.randomUUID().toString();
+        User userByEmail = userRepository.findUserByEmail(professionalCreate.getEmail());
+        if (userByEmail != null) {
+            throw new EmailAlreadyExistException();
+        }
 
         List<Role> roles = new ArrayList<>();
-        roles.add(role);
+        roles.add(pro);
         User user = new User();
         user.setEmail(professionalCreate.getEmail());
         user.setFirstName(professionalCreate.getFirstName());
         user.setLastName(professionalCreate.getLastName());
         user.setDomain(professionalCreate.getDomain());
-        user.setCity(city);
-        user.setImage("defaultImage.png");
+        user.setCity(professionalCreate.getCity());
         user.setPassWord(passwordEncoder.encode(password));
-        user.setSpeciality(speciality);
+        user.setSpeciality(professionalCreate.getSpeciality());
         user.setRoles(roles);
         user.setCreatedAt(Instant.now());
 
@@ -134,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserInformations(UpdateUserDto updateUserDto) {
-        User user = userRepository.findById(SecurityUtils.getCurrentUserId()).get();
+        User user = userRepository.findById(securityUtils.getCurrentUserId()).get();
 
         user.setDetails(updateUserDto.getDetails());
         user.setFirstName(updateUserDto.getFirstName());

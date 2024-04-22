@@ -21,7 +21,7 @@
   <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="bi bi-emoji-smile-fill"></i>
         </div>
@@ -31,7 +31,7 @@
       <div th:if="${roleId == 1}">
         <hr class="sidebar-divider">
 
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" th:href="@{/admin/homePage}">
             <i class="bi bi-house-fill"></i>
             <span>Accueil</span></a>
@@ -55,8 +55,8 @@
 
       <div th:if="${roleId == 2}">
         <hr class="sidebar-divider d-md-block">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/users?pageNumber=1}">
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
             <i class="bi bi-house-fill"></i>
             <span>Accueil</span></a>
         </li>
@@ -113,9 +113,10 @@
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                  aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="shadow img-profile rounded-circle" width="70px"
-                     height="70px" src="userImages/logo.png">
-              </a>
+                <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                     height="40px" src="">
+                <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                     height="40px">
               </a>
             </li>
           </ul>
@@ -191,8 +192,8 @@
                     <td th:text="${appointment.pattern}"></td>
                       <td th:if="${roleId == 2}" th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></td>
                       <td th:unless="${roleId == 2}" th:text="${appointment.userCustomer.firstName} +' '+ ${appointment.userCustomer.lastName}"></td>
-                    <td th:if="${roleId == 2}" th:text="${appointment.userPro.speciality.name}"></td>
-                    <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+'-'+ ${appointment.availability.endTime}"></td>
+                    <td th:if="${roleId == 2}" th:text="${appointment.userPro.speciality}"></td>
+                    <td th:text="${appointment.availability.date} +' / '+ ${appointment.availability.startTime}+' - '+ ${appointment.availability.endTime}"></td>
                     <td>
                       <a type="button" th:href="@{/appointment/{id}(id=${appointment.id})}" data-bs-toggle="modal" data-bs-target="#largeModal" class="btn btn-info btn-sm">Details</a>
                       <a type="button" th:href="@{/appointment/{id}(id=${appointment.id})}" data-bs-toggle="modal" data-bs-target="#smallModal" class="btn btn-danger btn-sm">Annuler</a>
@@ -210,12 +211,12 @@
                                 <div class="col-xl-8 col-lg-12 col-md-8 mt-4">
                                   <div class="col-6 align-self-center">
                                     <div class="d-flex">
-                                      <img th:src="@{${'/userImages/' + appointment.userPro.image}}" alt="profile"
-                                           class="shadow rounded-circle m-2 mt-2" width="60px" height="60px" />
+                                      <img th:if="${appointment.userPro.image != null}" th:src="@{${'/userImages/' + appointment.userPro.image}}" alt="Profile" class="rounded-circle shadow m-2 mt-2" width="60px" height="60px" src="">
+                                      <img th:unless="${appointment.userPro.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow m-2 mt-2" width="60px" height="60px">
 
                                       <div class="mt-2 mb-2 p-2">
                                         <h6 class="text-dark"><strong th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></strong></h6>
-                                        <h6 class="text-dark"><strong th:text="${appointment.userPro.speciality.name}"></strong></h6>
+                                        <h6 class="text-dark"><strong th:text="${appointment.userPro.speciality}"></strong></h6>
                                       </div>
                                     </div>
                                   </div>

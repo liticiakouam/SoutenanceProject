@@ -38,7 +38,7 @@ public class AppointmentController {
     @Autowired
     private NotificationService notificationService;
 
-    @PostMapping("/appointment/add")
+    @PostMapping("/client/appointment/add")
     public String save(@ModelAttribute("appointment") AppointmentCreate appointmentCreate,
                        @RequestParam("productImage")MultipartFile file,
                        @RequestParam("document")String document,
@@ -50,20 +50,20 @@ public class AppointmentController {
             appointment = appointmentService.save(appointmentCreate, file, document, id);
             notificationService.sendConfirmationEmail(appointment);
 
-            return "redirect:/appointment/info?id="+appointment.getId();
+            return "redirect:/client/appointment/info?id="+appointment.getId();
         } catch (AvailabilityException ex) {
                 redirectAttributes.addFlashAttribute("message", "Désolé, désolé cet plage n'est plus disponible. Veuillez en choisir une nouvelle");
             Optional<Availability> optionalAvailability = availabilityService.findById(id);
             model.addAttribute("availability", optionalAvailability.get());
 
-            return "redirect:/availabilityId?id="+id;
+            return "redirect:/client/availabilityId?id="+id;
         } catch (EmailSendException e) {
             assert appointment != null;
-            return "redirect:/appointment/info?id="+appointment.getId();
+            return "redirect:/client/appointment/info?id="+appointment.getId();
         }
     }
 
-    @GetMapping("/appointment/info")
+    @GetMapping("/client/appointment/info")
     public String findAppointment(@RequestParam("id") long id, Model model,  RedirectAttributes redirectAttributes) {
         try {
             Optional<Appointment> optionalAppointment = appointmentService.findById(id);

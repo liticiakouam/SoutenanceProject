@@ -32,7 +32,7 @@
     <div th:if="${roleId == 1}">
       <hr class="sidebar-divider">
 
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" th:href="@{/admin/homePage}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
@@ -56,8 +56,8 @@
 
     <div th:if="${roleId == 2}">
       <hr class="sidebar-divider d-md-block">
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/users?pageNumber=1}">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
       </li>

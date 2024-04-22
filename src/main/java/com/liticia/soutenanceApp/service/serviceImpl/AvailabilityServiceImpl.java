@@ -12,8 +12,7 @@ import com.liticia.soutenanceApp.repository.AvailabilityRepository;
 import com.liticia.soutenanceApp.repository.ProfessionnalRepository;
 import com.liticia.soutenanceApp.security.SecurityUtils;
 import com.liticia.soutenanceApp.service.AvailabilityService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import lombok.AllArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +21,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AvailabilityServiceImpl implements AvailabilityService {
-    private final AvailabilityRepository availabilityRepository;
-    private final ProfessionnalRepository professionnalRepository;
-
-    public AvailabilityServiceImpl(AvailabilityRepository availabilityRepository, ProfessionnalRepository professionnalRepository) {
-        this.availabilityRepository = availabilityRepository;
-        this.professionnalRepository = professionnalRepository;
-    }
+    private AvailabilityRepository availabilityRepository;
+    private ProfessionnalRepository professionnalRepository;
+    private SecurityUtils securityUtils;
 
     @Override
     public void saveAvailabilities(AvailabilityCreate availabilityCreate) {
-        Optional<User> optionalUser = professionnalRepository.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> optionalUser = professionnalRepository.findById(securityUtils.getCurrentUserId());
         if(optionalUser.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -50,6 +46,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             availability.setEndTime(time.getSecond());
             availability.setUser(optionalUser.get());
             availability.setCreatedAt(Instant.now());
+            availability.setAvailable(availability.isAvailable());
             availabilities.add(availability);
         }
 

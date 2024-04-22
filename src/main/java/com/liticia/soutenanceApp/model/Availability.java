@@ -21,7 +21,7 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "user", referencedColumnName = "id")
     private User user;
 
@@ -33,4 +33,5 @@ public class Availability {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Instant createdAt;
+    boolean available = true;
 }

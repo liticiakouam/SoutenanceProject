@@ -25,7 +25,7 @@
 <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="bi bi-emoji-smile-fill"></i>
             </div>
@@ -35,7 +35,7 @@
         <div th:if="${roleId == 1}">
             <hr class="sidebar-divider">
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" th:href="@{/admin/homePage}">
                     <i class="bi bi-house-fill"></i>
                     <span>Accueil</span></a>
@@ -60,7 +60,7 @@
         <div th:if="${roleId == 2}">
             <hr class="sidebar-divider d-md-block">
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/users?pageNumber=1}">
+                <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
                     <i class="bi bi-house-fill"></i>
                     <span>Accueil</span></a>
             </li>
@@ -74,7 +74,7 @@
         </div>
 
         <div th:if="${roleId == 3}">
-            <hr class="sidebar-divider">
+            <hr  class="sidebar-divider">
 
             <li class="nav-item active">
                 <a class="nav-link" th:href="@{/appointment/toComplete}">
@@ -119,9 +119,10 @@
                            aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                            <img th:src="@{${'/userImages/' + user.image}}" alt="Profile"
-                                 class="shadow img-profile rounded-circle" width="70px"
-                                 height="70px" src="userImages/logo.png">
+                            <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px" src="">
+                            <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px">
                         </a>
                     </li>
                 </ul>
@@ -267,7 +268,7 @@
                                 </table>
                             </div>
                             <div th:unless="${appointmentSize > 0}" class="tab-pane fade show active rdv-complete"
-                                 id="rdv-complete">
+                                 id="">
                                 <h3 class="text-dark text-center">Vous n'avez aucun rendez-vous à completer</h3>
                             </div>
 

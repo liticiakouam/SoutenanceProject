@@ -68,6 +68,7 @@
         <form th:action="@{/demandCompte/add}" method="POST" th:object="${demandCreate}" enctype="multipart/form-data">
           <div class="modal-body">
             <p>Votre demande sera acheminée à l'administrateur qui lui apres étude, créera votre compte et vous envera les identifiants</p>
+            <p>Exemple : domaine = Medecine; specialité = Chirurgie</p>
             <div class="row mt-4">
               <div class="col-md-6 ">
                 <label class="text-dark">Nom</label>
@@ -84,19 +85,19 @@
                 <input class="form-control" type="text" th:field="*{email}" required>
               </div>
               <div class="col-md-6">
-                <label class="text-dark">Document</label>
-                <input type="file" class="form-control" name="productImage" accept="pdf"  id="productImage">
+                <label class="text-dark">Document (Attestation)</label>
+                <input type="file" class="form-control" name="productImage" accept="application/pdf"  id="productImage">
                 <input type="hidden" name="document" th:value="${demandCreate.document}">
               </div>
             </div>
             <div class="row mt-4">
               <div class="col-md-4">
-                <label class="text-dark">Spécialité</label>
-                <input class="form-control" type="text" th:field="*{speciality}" required>
+                <label class="text-dark">Domaine exercez</label>
+                <input class="form-control" type="text" th:field="*{domain}" required>
               </div>
               <div class="col-md-4">
-                <label class="text-dark">Domaine <p>(La branche dans laquel vous exercez)</p></label>
-                <input class="form-control" type="text" th:field="*{domain}" required>
+                <label class="text-dark">Spécialité</label>
+                <input class="form-control" type="text" th:field="*{speciality}" required>
               </div>
               <div class="col-md-4">
                 <label class="text-dark">Ville</label>
