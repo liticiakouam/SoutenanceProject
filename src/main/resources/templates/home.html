@@ -85,9 +85,18 @@
                 <input class="form-control" type="text" th:field="*{email}" required>
               </div>
               <div class="col-md-6">
-                <label class="text-dark">Document (Attestation)</label>
-                <input type="file" class="form-control" name="productImage" accept="application/pdf"  id="productImage">
-                <input type="hidden" name="document" th:value="${demandCreate.document}">
+                <label class="text-dark">Télephone</label>
+                <input  type="number" class="form-control"  th:field="*{phone}">
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-md-6 ">
+                <label class="text-dark">Ville</label>
+                <input class="form-control" type="text" th:field="*{city}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="text-dark">Adresse</label>
+                <input class="form-control" type="text" th:field="*{address}" required>
               </div>
             </div>
             <div class="row mt-4">
@@ -100,12 +109,13 @@
                 <input class="form-control" type="text" th:field="*{speciality}" required>
               </div>
               <div class="col-md-4">
-                <label class="text-dark">Ville</label>
-                <input class="form-control" type="text" th:field="*{city}" required>
+                <label class="text-dark">Document (Attestation)</label>
+                <input type="file" class="form-control" name="productImage" accept="application/pdf"  id="productImage">
+                <input type="hidden" name="document" th:value="${demandCreate.document}">
+              </div>
               </div>
             </div>
 
-          </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Sauvegarder</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

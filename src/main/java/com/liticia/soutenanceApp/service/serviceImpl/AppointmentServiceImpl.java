@@ -72,9 +72,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         appointment.setDocument(documentUUID);
 
-        availability.setAvailable(!availability.isAvailable());
         appointmentRepository.save(appointment);
-        availabilityRepository.save(availability);
         return appointment;
     }
 
@@ -135,9 +133,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentRepository.save(appointment);
 
-        Availability availability = availabilityRepository.findById(appointment.getAvailability().getId()).get();
-        availability.setAvailable(availability.isAvailable());
-        availabilityRepository.save(availability);
     }
 
     @Override

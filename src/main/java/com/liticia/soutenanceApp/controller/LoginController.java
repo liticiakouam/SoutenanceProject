@@ -60,7 +60,10 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(@RequestParam(required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("errorLogin", "Identifiants invalides");
+        }
         return "login";
     }
 

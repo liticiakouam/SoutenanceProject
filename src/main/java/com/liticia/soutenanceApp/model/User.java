@@ -12,6 +12,7 @@ import java.util.*;
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -30,7 +31,6 @@ public class User {
     private Instant createdAt;
     private String speciality;
     private String city;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",

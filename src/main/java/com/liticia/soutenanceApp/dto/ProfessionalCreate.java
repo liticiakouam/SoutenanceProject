@@ -10,4 +10,7 @@ public class ProfessionalCreate {
     private String email;
     private String city;
     private String speciality;
+    private int phone;
+    private String address;
+
 }

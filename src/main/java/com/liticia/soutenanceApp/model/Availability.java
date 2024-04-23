@@ -21,8 +21,8 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     private LocalDate date;
@@ -33,5 +33,4 @@ public class Availability {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Instant createdAt;
-    boolean available = true;
 }

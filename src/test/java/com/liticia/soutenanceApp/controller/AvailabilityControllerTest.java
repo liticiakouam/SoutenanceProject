@@ -10,6 +10,8 @@ import com.liticia.soutenanceApp.service.AvailabilityService;
 import com.liticia.soutenanceApp.service.ProfessionnalService;
 import com.liticia.soutenanceApp.service.RoleService;
 import com.liticia.soutenanceApp.service.UserService;
+import lombok.Data;
+import org.hibernate.mapping.Any;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -65,7 +67,8 @@ public class AvailabilityControllerTest {
 
     @Test
     public void testShouldSaveAvailability() throws Exception {
-        AvailabilityCreate availabilityCreate= AvailabilityCreate.builder().schedule(Schedule.AFTERNOON).build();
+        AvailabilityCreate availabilityCreate= AvailabilityCreate.builder().date(LocalDate.now()).schedule(Schedule.AFTERNOON).build();
+//        when(availabilityCreate.getDate()).thenReturn(LocalDate.now());
 
         doNothing().when(availabilityService).saveAvailabilities(availabilityCreate);
         mockMvc.perform(post("/professional/availability/add"))
@@ -96,7 +99,7 @@ public class AvailabilityControllerTest {
         when(userService.findById()).thenReturn(Optional.of(user));
         when(roleService.findByUsersId()).thenReturn(Optional.of(role));
         when(availabilityService.findById(1L)).thenReturn(Optional.ofNullable(availability));
-        mockMvc.perform(get("/availabilityId?id=1"))
+        mockMvc.perform(get("/client/availabilityId?id=1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("motifrdv"))
                 .andReturn();

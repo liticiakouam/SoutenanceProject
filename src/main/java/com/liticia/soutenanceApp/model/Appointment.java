@@ -21,7 +21,7 @@ public class Appointment {
     private long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "availability", referencedColumnName = "id")
+    @JoinColumn(name = "availabilityId", referencedColumnName = "id")
     private Availability availability;
 
     @ManyToOne(cascade = CascadeType.MERGE)

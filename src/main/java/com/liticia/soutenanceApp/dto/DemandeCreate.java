@@ -11,4 +11,6 @@ public class DemandeCreate {
     private String city;
     private String speciality;
     private String domain;
+    private int phone;
+    private String address;
 }

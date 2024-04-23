@@ -73,6 +73,8 @@ public class UserServiceImpl implements UserService {
         user.setSpeciality(professionalCreate.getSpeciality());
         user.setRoles(roles);
         user.setCreatedAt(Instant.now());
+        user.setPhone(professionalCreate.getPhone());
+        user.setAddress(professionalCreate.getAddress());
 
         userRepository.save(user);
     }
@@ -87,6 +89,8 @@ public class UserServiceImpl implements UserService {
         demandeCompte.setSpeciality(demandeCreate.getSpeciality());
         demandeCompte.setCreatedAt(Instant.now());
         demandeCompte.setDomain(demandeCreate.getDomain());
+        demandeCompte.setAddress(demandeCreate.getAddress());
+        demandeCompte.setPhone(demandeCompte.getPhone());
 
         String documentUUID;
         if (!file.isEmpty()) {

@@ -46,7 +46,6 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             availability.setEndTime(time.getSecond());
             availability.setUser(optionalUser.get());
             availability.setCreatedAt(Instant.now());
-            availability.setAvailable(availability.isAvailable());
             availabilities.add(availability);
         }
 
