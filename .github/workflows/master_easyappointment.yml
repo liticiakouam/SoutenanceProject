@@ -19,10 +19,10 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v1
         with:
-          java-version: '11'
+          java-version: '17'
 
       - name: Build with Maven
-        run:  mvn package -DskipTests=true -Djava.version=11 -Dmaven.compiler.target=11 -Dmaven.compiler.source=11
+        run:  mvn clean install -Dmaven.test.skip=true
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
