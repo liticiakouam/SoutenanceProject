@@ -60,20 +60,23 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(@RequestParam(required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("errorLogin", "Identifiants invalides");
+        }
         return "login";
     }
 
     @GetMapping("/after-login")
     public String afterLogin(Authentication authentication) {
         if (authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
             return "redirect:/admin/homePage";
         } else if (authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"))) {
-            return "redirect:/users?pageNumber=1";
+                .anyMatch(a -> a.getAuthority().equals("CLIENT"))) {
+            return "redirect:/client/users?pageNumber=1";
         } else if (authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_PROFESSIONNEL"))) {
+                .anyMatch(a -> a.getAuthority().equals("PROFESSIONAL"))) {
             return "redirect:/appointment/toComplete";
         } else {
             return "redirect:/after-login";

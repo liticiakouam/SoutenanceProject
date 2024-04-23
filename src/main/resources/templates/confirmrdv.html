@@ -25,7 +25,7 @@
 <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="bi bi-emoji-smile-fill"></i>
             </div>
@@ -34,12 +34,14 @@
 
         <div th:if="${roleId == 1}">
             <hr class="sidebar-divider">
-            <li class="nav-item active">
+
+            <li class="nav-item">
                 <a class="nav-link" th:href="@{/admin/homePage}">
                     <i class="bi bi-house-fill"></i>
                     <span>Accueil</span></a>
             </li>
             <hr class="sidebar-divider">
+
             <div class="sidebar-heading">
                 Gestion des utilisateurs
             </div>
@@ -57,12 +59,13 @@
 
         <div th:if="${roleId == 2}">
             <hr class="sidebar-divider d-md-block">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/users?pageNumber=1}">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
                     <i class="bi bi-house-fill"></i>
                     <span>Accueil</span></a>
             </li>
             <hr class="sidebar-divider d-md-block">
+
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/appointment/toComplete}">
                     <i class="bi bi-calendar2-check-fill"></i>
@@ -71,27 +74,33 @@
         </div>
 
         <div th:if="${roleId == 3}">
-            <hr class="sidebar-divider">
+            <hr  class="sidebar-divider">
+
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/appointment/toComplete}">
                     <i class="bi bi-calendar2-check-fill"></i>
                     <span>Mes Rendez-vous</span></a>
             </li>
             <hr class="sidebar-divider">
-            <li class="nav-item active">
+
+            <li class="nav-item">
                 <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
                     <i class="bi bi-person-badge-fill"></i>
                     <span>Mes Disponibilités</span>
                 </a>
             </li>
         </div>
+
         <hr class="sidebar-divider">
+
         <li class="nav-item">
             <a class="nav-link" th:href="@{/user/profile}">
                 <i class="bi bi-person-fill"></i>
                 <span>Profile</span></a>
         </li>
+
         <hr class="sidebar-divider">
+
         <li class="nav-item">
             <a class="nav-link" th:href="@{/logout}">
                 <i class="bi bi-box-arrow-up-right"></i>
@@ -110,17 +119,16 @@
                            aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                            <img th:src="@{${'/userImages/' + user.image}}" alt="Profile"
-                                 class="shadow img-profile rounded-circle" width="70px"
-                                 height="70px" src="userImages/logo.png">
+                            <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px" src="">
+                            <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px">
                         </a>
                     </li>
                 </ul>
             </nav>
 
             <div class="container">
-                <h3 class="text-dark text-center" style="font-weight: bold; font-style: italic;">Confirmez votre rendez-vous</h3>
-
                 <div class="row justify-content-center">
                     <div class="card shadow col-xl-8 col-lg-12 col-md-8 mt-4">
                         <h4 class="text-primary text-center p-2" style="font-weight: bold;">Detail du rendez-vous</h4>
@@ -132,15 +140,15 @@
                         <div class="row flex-column">
                             <div class="col-6 align-self-center">
                                 <div class="d-flex">
-                                    <img th:src="@{${'/userImages/' + appointment.userPro.image}}" alt="profile"
-                                         class="shadow rounded-circle m-2 mt-2" width="70px" height="70px" src=""/>
+                                    <img th:if="${appointment.userPro.image != null}" th:src="@{${'/userImages/' + appointment.userPro.image}}" alt="Profile" class="rounded-circle shadow" width="70px" height="70px" src="">
+                                    <img th:unless="${appointment.userPro.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="70px" height="70px">
 
                                     <div class="mt-2 mb-2 p-2">
                                         <h6 class="text-dark"><strong
                                                 th:text="${appointment.userPro.firstName} +' '+ ${appointment.userPro.lastName}"></strong>
                                         </h6>
                                         <h6 class="text-dark"><strong
-                                                th:text="${appointment.userPro.speciality.name}"></strong></h6>
+                                                th:text="${appointment.userPro.speciality}"></strong></h6>
                                     </div>
                                 </div>
                             </div>

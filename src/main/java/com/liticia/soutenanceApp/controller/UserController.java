@@ -1,27 +1,16 @@
 package com.liticia.soutenanceApp.controller;
 
-import com.liticia.soutenanceApp.dto.ForgotPasswordForm;
 import com.liticia.soutenanceApp.dto.UpdateUserDto;
-import com.liticia.soutenanceApp.exception.EmailSendException;
-import com.liticia.soutenanceApp.model.DemandeCompte;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.DemandRepository;
-import com.liticia.soutenanceApp.service.*;
-import com.liticia.soutenanceApp.utils.TokenGenerator;
+import com.liticia.soutenanceApp.service.RoleService;
+import com.liticia.soutenanceApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
-import java.util.UUID;
-
-import static com.liticia.soutenanceApp.utils.TokenGenerator.generateToken;
 
 @Controller
 public class UserController {
@@ -30,10 +19,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private SpecialityService specialityService;
-    @Autowired
-    private CityService cityService;
     @Autowired
     private DemandRepository demandRepository;
 

@@ -12,6 +12,7 @@ import com.liticia.soutenanceApp.service.ProfessionnalService;
 import com.liticia.soutenanceApp.service.RoleService;
 import com.liticia.soutenanceApp.service.UserService;
 import com.liticia.soutenanceApp.utils.StartDayOfWeek;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -27,16 +28,13 @@ import static com.liticia.soutenanceApp.utils.StartDayOfWeek.getStartOfWeekDay;
 import static com.liticia.soutenanceApp.utils.Week.getFullWeek;
 
 @Controller
+@AllArgsConstructor
 public class AvailabiltyController {
-    @Autowired
     private AvailabilityService availabilityService;
-    @Autowired
     private ProfessionnalService professionnalService;
-
-    @Autowired
     private RoleService roleService;
-    @Autowired
     private UserService userService;
+    private SecurityUtils securityUtils;
 
     @GetMapping("/professional/availability")
     public String availability(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, Model model){
@@ -54,7 +52,7 @@ public class AvailabiltyController {
             startDate = startOfWeek;
         }
 
-        Optional<User> optionalUser = professionnalService.findById(SecurityUtils.getCurrentUserId());
+        Optional<User> optionalUser = professionnalService.findById(securityUtils.getCurrentUserId());
         if(optionalUser.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -86,12 +84,22 @@ public class AvailabiltyController {
     }
 
     @PostMapping("/professional/availability/add")
-    public String save(@ModelAttribute("availability") AvailabilityCreate availabilityCreate) throws ParseException {
+    public String save(@ModelAttribute("availability") AvailabilityCreate availabilityCreate, RedirectAttributes model) throws ParseException {
+        if (availabilityCreate.getDate().isBefore(LocalDate.now())) {
+            model.addFlashAttribute("date", "Vous ne pouvez choisir une date passée");
+            return "redirect:/professional/availabilityShowAdd";
+        }
+
+        if (availabilityCreate.getSchedule() == null) {
+               model.addFlashAttribute("schedule", "Choisissez une plage horaire s'il-vous-plait");
+               return "redirect:/professional/availabilityShowAdd";
+        }
+
         availabilityService.saveAvailabilities(availabilityCreate);
         return "redirect:/professional/availability?startDate=2023-01-01";
     }
 
-    @GetMapping("/availabilityId")
+    @GetMapping("/client/availabilityId")
     public String findAvailability(@RequestParam("id") long id, RedirectAttributes redirectAttributes, Model model) {
         try {
             Optional<Availability> optionalAvailability = availabilityService.findById(id);
@@ -109,7 +117,7 @@ public class AvailabiltyController {
             model.addAttribute("user", user);
             model.addAttribute("roleId", roleId);
             redirectAttributes.addFlashAttribute("message", "Désolé, vous ne pouvez plus prendre de rendez-vous à cet heure");
-            return "redirect:/user?userId=243&startDate=2023-01-01";
+            return "redirect:/client/user?userId="+user.getId()+ "&startDate=2023-01-01";
         }
 
         return "motifrdv";

@@ -3,6 +3,7 @@ package com.liticia.soutenanceApp.service.serviceImpl;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.repository.ProfessionnalRepository;
 import com.liticia.soutenanceApp.service.ProfessionnalService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProfessionnalServiceImpl implements ProfessionnalService {
-    private final ProfessionnalRepository professionnalRepository;
+    private ProfessionnalRepository professionnalRepository;
 
-    public ProfessionnalServiceImpl(ProfessionnalRepository professionnalRepository) {
-        this.professionnalRepository = professionnalRepository;
-    }
 
     @Override
     public Page<User> findAll(Pageable pageable) {

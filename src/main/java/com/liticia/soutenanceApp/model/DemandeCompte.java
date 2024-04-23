@@ -26,4 +26,6 @@ public class DemandeCompte {
     private String speciality;
     private String city;
     private String domain;
+    private String address;
+    private int phone;
 }

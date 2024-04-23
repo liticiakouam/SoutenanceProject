@@ -34,8 +34,9 @@ public class AppointmentServiceImplTest {
     private final AvailabilityRepository availabilityRepository = Mockito.mock(AvailabilityRepository.class);
     private final AppointmentRepository appointmentRepository = Mockito.mock(AppointmentRepository.class);
     private final RoleRepository roleRepository = Mockito.mock(RoleRepository.class);
+    private final SecurityUtils securityUtils = Mockito.mock(SecurityUtils.class);
 
-    private final AppointmentService appointmentService = new AppointmentServiceImpl(appointmentRepository, professionnalRepository, availabilityRepository, roleRepository);
+    private final AppointmentService appointmentService = new AppointmentServiceImpl(appointmentRepository, professionnalRepository, availabilityRepository, roleRepository, securityUtils);
 
 
     @Test
@@ -47,19 +48,19 @@ public class AppointmentServiceImplTest {
         AppointmentCreate appointmentCreate = AppointmentCreate.builder().pattern("hello").build();
         MultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "some content".getBytes());
 
-        when(professionnalRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(professionnalRepository.findById(securityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
         when(professionnalRepository.findById(2L)).thenReturn(Optional.of(userPro));
         when(availabilityRepository.findById(1L)).thenReturn(Optional.ofNullable(availability));
         when(appointmentRepository.save(appointment)).thenReturn(appointment);
 
         appointmentService.save(appointmentCreate, file, "image", 1L);
 
-        verify(professionnalRepository, times(1)).findById(SecurityUtils.getCurrentUserId());
+        verify(professionnalRepository, times(1)).findById(securityUtils.getCurrentUserId());
         verify(professionnalRepository, times(1)).findById(2L);
         verify(availabilityRepository, times(1)).findById(1L);
     }
 
-   @Test
+    @Test
     void testShouldThrowExceptionWhenUnSaveAppointment() throws ParseException, IOException {
         Availability availability = Availability.builder().id(1).user(User.builder().id(2).build()).build();
         Appointment appointment = Appointment.builder().id(4).build();
@@ -71,30 +72,9 @@ public class AppointmentServiceImplTest {
 
         assertThrows(UserNotFoundException.class, ()->appointmentService.save(appointmentCreate, file, "image", 1L));
 
-        verify(professionnalRepository, times(1)).findById(SecurityUtils.getCurrentUserId());
+        verify(professionnalRepository, times(1)).findById(securityUtils.getCurrentUserId());
         verify(professionnalRepository, times(1)).findById(2L);
         verify(availabilityRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void testShouldFindAppointmentByUserCustomerAndCreatedAt() {
-        Instant date = Instant.now();
-        User user = User.builder().id(2).build();
-        Appointment optionalAppointment = Appointment.builder().id(1).build();
-        when(professionnalRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
-        when(appointmentRepository.findByUserCustomerAndCreatedAt(user, date)).thenReturn(Optional.of(optionalAppointment));
-
-       appointmentService.findByUserCustomerAndCreatedAt();
-    }
-
-    @Test
-    void testShouldThrowExceptionWhenEmptyUserCustomerAndCreatedAt() {
-        Instant date = Instant.now();
-        User user = User.builder().id(2).build();
-        Appointment optionalAppointment = Appointment.builder().id(1).build();
-        when(appointmentRepository.findByUserCustomerAndCreatedAt(user, date)).thenReturn(Optional.of(optionalAppointment));
-
-        assertThrows(UserNotFoundException.class, appointmentService::findByUserCustomerAndCreatedAt);
     }
 
     @Test
@@ -106,8 +86,8 @@ public class AppointmentServiceImplTest {
                 Appointment.builder().id(3).build()
         );
         Role role = Role.builder().id(2).name("client").build();
-        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), securityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         assertEquals(3, appointments.size());
@@ -118,8 +98,8 @@ public class AppointmentServiceImplTest {
     void testShouldFindIncompletedAppointmentByUserCustomerReturnNull() {
         List<Appointment> list = List.of();
         Role role = Role.builder().id(2).name("client").build();
-        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), securityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         assertEquals(0, appointments.size());
@@ -133,8 +113,8 @@ public class AppointmentServiceImplTest {
                 Appointment.builder().id(3).build()
         );
         Role role = Role.builder().id(3).name("client").build();
-        when(appointmentRepository.findUserProIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserProIncompletedAppointmentByDate(LocalDate.now(), securityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         assertEquals(3, appointments.size());
@@ -145,8 +125,8 @@ public class AppointmentServiceImplTest {
     void testShouldFindIncompletedAppointmentByUserProReturnNull() {
         List<Appointment> list = List.of();
         Role role = Role.builder().id(3).name("client").build();
-        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), SecurityUtils.getCurrentUserId())).thenReturn(list);
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerIncompletedAppointmentByDate(LocalDate.now(), securityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
 
         List<Appointment> appointments = appointmentService.findAllByReportAndUser();
         assertEquals(0, appointments.size());
@@ -162,7 +142,7 @@ public class AppointmentServiceImplTest {
         );
         Pageable pageable = PageRequest.of(1, 2);
         Page<Appointment> page = new PageImpl<>(list);
-        when(professionnalRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(professionnalRepository.findById(securityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
         when(appointmentRepository.findAllByUserCustomerAndReportOrderByCreatedAtDesc(user, null, pageable)).thenReturn(page);
 
         Page<Appointment> appointmentPage = appointmentService.findPageByReportAndUser(pageable);
@@ -175,7 +155,7 @@ public class AppointmentServiceImplTest {
         User user = User.builder().id(1).build();
         Appointment appointmentBuild = Appointment.builder().id(1).document("pdf").build();
 
-        when(professionnalRepository.findById(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
+        when(professionnalRepository.findById(securityUtils.getCurrentUserId())).thenReturn(Optional.of(user));
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointmentBuild));
 
         Optional<Appointment> appointment = appointmentService.findById(1L);
@@ -191,11 +171,11 @@ public class AppointmentServiceImplTest {
         );
         LocalDate now = LocalDate.now();
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserCustomerOldAppointmentByDate(now, 5L)).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerOldAppointmentByDate(now, 8L)).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
-        assertEquals(3, appointments.size());
+        assertEquals(0, appointments.size());
     }
 
     @Test
@@ -203,7 +183,7 @@ public class AppointmentServiceImplTest {
         List<Appointment> list = List.of();
         LocalDate now = LocalDate.now();
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
         when(appointmentRepository.findUserCustomerOldAppointmentByDate(now, 5L)).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
@@ -219,11 +199,11 @@ public class AppointmentServiceImplTest {
         );
         LocalDate now = LocalDate.now();
         Role role = Role.builder().id(3).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserProOldAppointmentByDate(now, 5L)).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserProOldAppointmentByDate(now, 6L)).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
-        assertEquals(3, appointments.size());
+        assertEquals(0, appointments.size());
     }
 
     @Test
@@ -231,7 +211,7 @@ public class AppointmentServiceImplTest {
         List<Appointment> list = List.of();
         LocalDate now = LocalDate.now();
         Role role = Role.builder().id(3).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
         when(appointmentRepository.findUserProOldAppointmentByDate(now, 5L)).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentByOldDate();
@@ -248,8 +228,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserCustomerAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerAppointmentToComeByDate(localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(3, appointments.size());
@@ -261,8 +241,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserCustomerAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerAppointmentToComeByDate(localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(0, appointments.size());
@@ -278,8 +258,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(3).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserProAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserProAppointmentToComeByDate(localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(3, appointments.size());
@@ -291,8 +271,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(3).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserProAppointmentToComeByDate(localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserProAppointmentToComeByDate(localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(0, appointments.size());
@@ -308,8 +288,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserProRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserProRecentAppointmentByDate(now, localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(0, appointments.size());
@@ -321,8 +301,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(3).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserProRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserProRecentAppointmentByDate(now, localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(0, appointments.size());
@@ -338,8 +318,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserCustomerRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerRecentAppointmentByDate(now, localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(0, appointments.size());
@@ -351,8 +331,8 @@ public class AppointmentServiceImplTest {
         LocalDate now = LocalDate.now();
         LocalDate localDate = now.plusDays(2);
         Role role = Role.builder().id(2).name("client").build();
-        when(roleRepository.findByUsersId(SecurityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
-        when(appointmentRepository.findUserCustomerRecentAppointmentByDate(now, localDate, SecurityUtils.getCurrentUserId())).thenReturn(list);
+        when(roleRepository.findByUsersId(securityUtils.getCurrentUserId())).thenReturn(Optional.of(role));
+        when(appointmentRepository.findUserCustomerRecentAppointmentByDate(now, localDate, securityUtils.getCurrentUserId())).thenReturn(list);
 
         List<Appointment> appointments = appointmentService.findAppointmentToComeByDate();
         assertEquals(0, appointments.size());

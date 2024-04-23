@@ -3,7 +3,9 @@ package com.liticia.soutenanceApp.utils;
 import java.time.*;
 
 public class StartDayOfWeek {
+
     public static LocalDate getStartOfWeekDay(LocalDate date) {
+
         ZoneId zone = ZoneId.systemDefault();
 
         LocalTime time = LocalTime.MIDNIGHT;

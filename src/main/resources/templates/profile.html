@@ -26,7 +26,7 @@
 <div id="wrapper">
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="bi bi-emoji-smile-fill"></i>
             </div>
@@ -60,8 +60,8 @@
 
         <div th:if="${roleId == 2}">
             <hr class="sidebar-divider d-md-block">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/users?pageNumber=1}">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
                     <i class="bi bi-house-fill"></i>
                     <span>Accueil</span></a>
             </li>
@@ -75,7 +75,7 @@
         </div>
 
         <div th:if="${roleId == 3}">
-            <hr class="sidebar-divider">
+            <hr  class="sidebar-divider">
 
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/appointment/toComplete}">
@@ -84,7 +84,7 @@
             </li>
             <hr class="sidebar-divider">
 
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" th:href="@{/professional/availability?startDate=2023-01-01}">
                     <i class="bi bi-person-badge-fill"></i>
                     <span>Mes Disponibilités</span>
@@ -94,7 +94,7 @@
 
         <hr class="sidebar-divider">
 
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" th:href="@{/user/profile}">
                 <i class="bi bi-person-fill"></i>
                 <span>Profile</span></a>
@@ -121,9 +121,10 @@
                            aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small"
                                   th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-                            <img th:src="@{${'/userImages/' + user.image}}" alt="Profile"
-                                 class="shadow img-profile rounded-circle" width="70px"
-                                 height="70px" src="userImages/logo.png">
+                            <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px" src="">
+                            <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                                 height="40px">
                         </a>
                     </li>
                 </ul>
@@ -136,12 +137,13 @@
                             <div class="card shadow">
                                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-                                    <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle"
-                                         width="100px"
-                                         height="100px" src="">
-                                    <h4 class="text-dark " style="font-weight: bold;"
+                                    <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="70px"
+                                         height="70px" src="">
+                                    <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="70px"
+                                         height="70px">
+                                    <h4 class="text-dark pt-2" style="font-weight: bold;"
                                         th:text="${user.firstName} +' '+ ${user.lastName}"></h4>
-                                    <h6 th:if="${roleId == 3}" th:text="${user.speciality.name}"></h6>
+                                    <h6 th:if="${roleId == 3}" th:text="${user.speciality}"></h6>
                                     <h6 th:if="${roleId == 3}" th:text="${user.domain}"></h6>
                                 </div>
                             </div>
@@ -149,7 +151,6 @@
                         </div>
 
                         <div class="col-xl-8">
-
                             <div class="card shadow">
                                 <div class="card-body pt-3">
                                     <ul class="nav nav-tabs nav-tabs-bordered">
@@ -159,28 +160,13 @@
                                                     data-bs-target="#profile-overview">Information
                                             </button>
                                         </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" th:href="@{/user/updateProfile}">Modifier Son Profile
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <button class="nav-link" data-bs-toggle="tab"
-                                                    data-bs-target="#profile-change-password">Mot De
-                                                Passe
-                                            </button>
-                                        </li>
-
                                     </ul>
 
                                     <div class="tab-content pt-2">
-
                                         <div class="tab-pane fade show active profile-overview " id="profile-overview">
                                             <h6 class="text-primary">Biographie</h6>
                                             <p class="small" th:text="${user.details}"></p><br>
 
-                                            <h6 class="text-primary">Details Profile</h6>
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 ">
                                                     <h6 class="text-dark" style="font-weight: bold;">Nom Complet</h6>
@@ -196,15 +182,7 @@
                                                         <h6 class="text-dark" style="font-weight: bold;">Specialite</h6>
                                                     </div>
                                                     <div class="col-lg-9 col-md-8">
-                                                        <h6 th:text="${user.speciality.name}"></h6>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-3 col-md-4 label">
-                                                        <h6 class="text-dark" style="font-weight: bold;">Domaine</h6>
-                                                    </div>
-                                                    <div class="col-lg-9 col-md-8">
-                                                        <h6 th:text="${user.domain}"></h6>
+                                                        <h6 th:text="${user.speciality}"></h6>
                                                     </div>
                                                 </div>
                                                 <br>
@@ -213,7 +191,7 @@
                                                         <h6 class="text-dark" style="font-weight: bold;">Ville</h6>
                                                     </div>
                                                     <div class="col-lg-9 col-md-8">
-                                                        <h6 th:text="${user.city.name}"></h6>
+                                                        <h6 th:text="${user.city}"></h6>
                                                     </div>
                                                 </div>
                                                 <br>
@@ -249,132 +227,6 @@
                                             </div>
                                             <br>
                                         </div>
-
-<!--                                        <div class="tab-pane fade profile-edit pt-3" id="profile-edit">-->
-
-<!--                                            <form th:action="@{/user/updateProfile" method="post" enctype="multipart/form-data">-->
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">Profile-->
-<!--                                                        Image</label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                                                        <img th:src="@{${'/userImages/' + user.image}}" width="80px"-->
-<!--                                                             height="80px" alt="Profile" src="">-->
-<!--                                                        <div class="pt-2">-->
-<!--                                                            <a href="#" class="btn btn-primary btn-sm"-->
-<!--                                                               title="Telecharger une image"><i-->
-<!--                                                                    class="bi bi-upload"></i></a>-->
-<!--                                                            <a href="#" class="btn btn-danger btn-sm"-->
-<!--                                                               title="Supprimer l'image"><i-->
-<!--                                                                    class="bi bi-trash"></i></a>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">-->
-<!--                                                        <h6 class="text-dark" style="font-weight: bold;">Nom</h6>-->
-<!--                                                    </label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                                                        <input type="text" th:field="*{firstName}" class="form-control"-->
-<!--                                                               th:value="${user.firstName}">-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">-->
-<!--                                                        <h6 class="text-dark" style="font-weight: bold;">Prenom</h6>-->
-<!--                                                    </label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                                                        <input type="text" class="form-control"-->
-<!--                                                               th:value="${user.lastName}">-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">-->
-<!--                                                        <h6 class="text-dark" style="font-weight: bold;">Biographie</h6>-->
-<!--                                                    </label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                              <textarea name="about" class="form-control" th:value="${user.details}"-->
-<!--                                        style="height: 100px"></textarea>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">-->
-<!--                                                        <h6 class="text-dark" style="font-weight: bold;">Adresse</h6>-->
-<!--                                                    </label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                                                        <input name="address" type="text" class="form-control"-->
-<!--                                                               th:value="${user.address}">-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">-->
-<!--                                                        <h6 class="text-dark" style="font-weight: bold;">Téléphone</h6>-->
-<!--                                                    </label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                                                        <input name="phone" type="text" class="form-control"-->
-<!--                                                               th:value="${user.phone}">-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-
-<!--                                                <div class="row mb-3">-->
-<!--                                                    <label class="col-md-4 col-lg-3 col-form-label">-->
-<!--                                                        <h6 class="text-dark" style="font-weight: bold;">Email</h6>-->
-<!--                                                    </label>-->
-<!--                                                    <div class="col-md-8 col-lg-9">-->
-<!--                                                        <input name="email" type="email" class="form-control"-->
-<!--                                                               th:value="${user.email}">-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <button class="btn btn-primary" type="submit">Sauvegarder</button>-->
-<!--                                            </form>-->
-<!--                                        </div>-->
-
-                                        <div class="tab-pane fade pt-3" id="profile-change-password">
-                                            <form>
-
-                                                <div class="row mb-3">
-                                                    <label for="currentPassword"
-                                                           class="col-md-4 col-lg-3 col-form-label text-dark"
-                                                           style="font-weight: bold;">Ancien mot de passe</h6>
-                                                    </label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="password" type="password" class="form-control"
-                                                               id="currentPassword">
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">
-                                                        <h6 class="text-dark" style="font-weight: bold;">Nouveau mot de
-                                                            passe</h6>
-                                                    </label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="newpassword" type="password" class="form-control"
-                                                               id="newPassword">
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">
-                                                        <h6 class="text-dark" style="font-weight: bold;">Reconfirmer le
-                                                            mot de passe</h6>
-                                                    </label>
-                                                    <div class="col-md-8 col-lg-9">
-                                                        <input name="renewpassword" type="password" class="form-control"
-                                                               id="renewPassword">
-                                                    </div>
-                                                </div>
-
-                                                <div class="text-center">
-                                                    <button type="submit" class="btn btn-primary">Confirmer</button>
-                                                </div>
-                                            </form>
-
-                                        </div>
-
                                     </div>
 
                                 </div>

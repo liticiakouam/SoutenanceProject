@@ -4,11 +4,8 @@ import com.liticia.soutenanceApp.dto.DemandeCreate;
 import com.liticia.soutenanceApp.dto.ProfessionalCreate;
 import com.liticia.soutenanceApp.exception.EmailAlreadyExistException;
 import com.liticia.soutenanceApp.exception.EmailSendException;
-import com.liticia.soutenanceApp.model.City;
 import com.liticia.soutenanceApp.model.DemandeCompte;
-import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
-import com.liticia.soutenanceApp.repository.DemandRepository;
 import com.liticia.soutenanceApp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,10 +25,6 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private SpecialityService specialityService;
-    @Autowired
-    private CityService cityService;
 
     @Autowired
     private DemandService demandService;
@@ -55,9 +48,7 @@ public class AdminController {
         long roleId = roleService.findByUsersId().get().getId();
         User user = userService.findById().get();
         int professionals = userService.findProfessionals().size();
-        List<City> cities = cityService.findAll();
         List<User> clients = userService.findClients();
-        List<Speciality> specialities = specialityService.findAll();
         List<DemandeCompte> demands = demandService.findAll();
 
         model.addAttribute("user", user);
@@ -67,10 +58,6 @@ public class AdminController {
         model.addAttribute("demands", demands);
         model.addAttribute("clientsSize", clients.size());
         model.addAttribute("clients", clients);
-        model.addAttribute("citiesSize", cities.size());
-        model.addAttribute("cities", cities);
-        model.addAttribute("specialitiesSize", specialities.size());
-        model.addAttribute("specialities", specialities);
         model.addAttribute("roleId", roleId);
         return "adminHome";
     }
@@ -93,34 +80,32 @@ public class AdminController {
         long roleId = roleService.findByUsersId().get().getId();
         User user = userService.findById().get();
         List<User> users = userService.findProfessionals();
-        List<Speciality> specialities = specialityService.findAll();
-        List<City> cities = cityService.findAll();
 
         model.addAttribute("user", user);
         model.addAttribute("professional", new ProfessionalCreate());
         model.addAttribute("users", users);
-        model.addAttribute("specialities", specialities);
-        model.addAttribute("cities", cities);
         model.addAttribute("roleId", roleId);
         return "adminProList";
     }
 
-    @PostMapping("/professional/add")
+    @PostMapping("/admin/professional/add")
     public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate, BindingResult result, RedirectAttributes redirectAttributes) {
-        userService.saveProfessional(professionalCreate);
-        User existingUser = userService.findUserByEmail(professionalCreate.getEmail());
-
-        if(existingUser != null){
-            result.rejectValue("email", null,
-                    "Il existe déjà un compte avec cet adresse email.");
-        }
         try {
+            userService.saveProfessional(professionalCreate);
+
             notificationService.sendSuccessfulRegistrationEmail(professionalCreate);
             redirectAttributes.addFlashAttribute("timeOutMessage", "Veuillez patienter le mail est encours d'envoie. Merci");
             return "redirect:/admin/professionals";
 
         } catch (EmailSendException e) {
             return "redirect:/admin/homePage";
+        } catch (EmailAlreadyExistException e ) {
+            if(result.hasErrors()){
+                result.rejectValue("email", null,
+                        "Il existe déjà un compte avec cet adresse email.");
+            }
+            return "redirect:/admin/homePage";
+
         }
     }
 

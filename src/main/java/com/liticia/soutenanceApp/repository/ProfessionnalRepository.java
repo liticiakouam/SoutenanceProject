@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Optional;
 public interface ProfessionnalRepository extends JpaRepository<User, Long> {
     Page<User> findAllByRolesIdOrderByCreatedAtDesc(Pageable pageable, long id);
 
-    @Query("select u from User u where u.city.name=:city or u.speciality.name=:speciality or u.lastName=:keyword or u.firstName=:keyword")
-    List<User> searchUsers(String city, String speciality, String keyword);
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE (u.city = :city OR u.speciality = :speciality OR u.lastName = :keyword OR u.firstName = :keyword) AND r.id = 3")
+    List<User> searchUsers(@Param("city") String city, @Param("speciality") String speciality, @Param("keyword") String keyword);
 
 }

@@ -33,7 +33,6 @@ public class PasswordResetToken {
     }
 
     private LocalDateTime calculateExpiryDate() {
-        final int EXPIRATION = 60 * 24;
         LocalDateTime now = LocalDateTime.now();
         return now.plusMinutes(10);
     }

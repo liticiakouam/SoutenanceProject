@@ -1,11 +1,7 @@
 package com.liticia.soutenanceApp.controller;
 
 import com.liticia.soutenanceApp.dto.AvailabilityResponse;
-import com.liticia.soutenanceApp.dto.ProfessionalCreate;
 import com.liticia.soutenanceApp.exception.UserNotFoundException;
-import com.liticia.soutenanceApp.model.City;
-import com.liticia.soutenanceApp.model.DemandeCompte;
-import com.liticia.soutenanceApp.model.Speciality;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -31,16 +24,11 @@ import static com.liticia.soutenanceApp.utils.StartDayOfWeek.getStartOfWeekDay;
 import static com.liticia.soutenanceApp.utils.Week.getFullWeek;
 
 @Controller
-public class ProfessionnalController {
+@RequestMapping("client")
+public class ProfessionalController {
 
     @Autowired
     private ProfessionnalService professionnalService;
-
-    @Autowired
-    private SpecialityService specialityService;
-
-    @Autowired
-    private CityService cityService;
 
     @Autowired
     private AvailabilityService availabilityService;
@@ -58,6 +46,7 @@ public class ProfessionnalController {
             @RequestParam("pageNumber") int pageNumber,
             Model model
     ) {
+        model.addAttribute("userSize", 0);
         return findPaginated(pageNumber, model);
     }
 
@@ -71,8 +60,6 @@ public class ProfessionnalController {
         Page<User> page = professionnalService.findAll(pageable);
         List<User> users = page.getContent();
 
-        List<City> cityList = cityService.findAll();
-        List<Speciality> specialityList = specialityService.findAll();
         User user = userService.findById().get();
         long roleId = roleService.findByUsersId().get().getId();
 
@@ -82,8 +69,6 @@ public class ProfessionnalController {
         model.addAttribute("users", users);
         model.addAttribute("user", user);
         model.addAttribute("roleId", roleId);
-        model.addAttribute("cities", cityList);
-        model.addAttribute("specialities", specialityList);
         return "users";
     }
 
@@ -131,12 +116,13 @@ public class ProfessionnalController {
             model.addAttribute("user", user);
             model.addAttribute("userSearch", users);
             model.addAttribute("userSize", userSize);
+            findPaginated(1, model);
+            return "users";
+
         } else {
             redirectAttributes.addFlashAttribute("error", "Désolé, aucun utilisateur ne correspond à la recherche effectué" );
-            return "redirect:/users?pageNumber=1";
+            return "redirect:/client/users?pageNumber=1";
         }
-
-        return "users";
     }
 
 }

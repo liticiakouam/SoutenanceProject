@@ -12,6 +12,7 @@ import java.util.*;
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -28,19 +29,13 @@ public class User {
     private String image;
     private int phone;
     private Instant createdAt;
+    private String speciality;
+    private String city;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "speciality", referencedColumnName = "id")
-    private Speciality speciality;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "city", referencedColumnName = "id")
-    private City city;
-
-    @ManyToMany
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_role", referencedColumnName = "id"))
-    private List<Role> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private Collection<Role> roles;
 }
     

@@ -22,7 +22,7 @@
 <div id="wrapper">
   <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center">
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="bi bi-emoji-smile-fill"></i>
       </div>
@@ -32,7 +32,7 @@
     <div th:if="${roleId == 1}">
       <hr class="sidebar-divider">
 
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" th:href="@{/admin/homePage}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
@@ -57,9 +57,9 @@
     <div th:if="${roleId == 2}">
       <hr class="sidebar-divider d-md-block">
       <li class="nav-item active">
-        <a class="nav-link" th:href="@{/users?pageNumber=1}">
+        <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
           <i class="bi bi-house-fill"></i>
-          <span>Acceuil</span></a>
+          <span>Accueil</span></a>
       </li>
       <hr class="sidebar-divider d-md-block">
 
@@ -115,8 +115,10 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-              <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="img-profile rounded-circle shadow" width="70px"
-                   height="70px" src="">
+              <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                   height="40px" src="">
+              <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                   height="40px">
             </a>
           </li>
         </ul>
@@ -130,33 +132,21 @@
               <span th:text="${error}"></span>
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <form class="row pt-4" enctype="multipart/form-data" th:action="@{/user/search}" method="GET">
+            <form class="row pt-4" enctype="multipart/form-data" th:action="@{/client/user/search}" method="GET">
                 <div class="col-md-1 pt-1">
                   <h6 class="text-dark" style="font-weight: bold; font-size:20px;">Filtre</h6>
                 </div>
                 <div class="col-md-3">
-                  <input type="text" minlength="3" name="keyword" th:value="${keyword}" class="form-control" placeholder="Entrer le nom">
+                  <input type="text" minlength="3" name="keyword" th:value="${keyword}" class="form-control" placeholder="Entrez le nom" required>
                 </div>
                 <div class="col-md-3">
-                  <select class="form-control" name="city" th:value="${city}">
-                    <option value="">Select a city</option>
-                    <option th:each="city : ${cities}"
-                            th:value="${city.id}"
-                            th:text="${city.name}"
-                    >
-                  </select>
+                  <input type="text" minlength="3" name="city" th:value="${city}" class="form-control" placeholder="Entrez une ville" required>
                 </div>
               <div class="col-md-3">
-                <select class="form-control" name="speciality" th:value="${speciality}">
-                  <option value="">Select a speciality </option>
-                  <option th:each="speciality : ${specialities}"
-                          th:value="${speciality.id}"
-                          th:text="${speciality.name}"
-                  >
-                </select>
+                <input type="text" minlength="3" name="speciality" th:value="${speciality}" class="form-control" placeholder="Entrez une spécialité" required>
               </div>
                 <div class="col-md-2">
-                  <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i> Chercher</button>
+                  <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i> Chercher</button>
                 </div>
             </form>
 
@@ -164,14 +154,16 @@
               <div class="row">
                 <div class="col-xl-3 pt-3" th:each="user : ${userSearch}">
                   <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                    <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
+                    <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
                          height="100px" src="">
+                    <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="100px"
+                         height="100px">
                     <div class="card-body d-flex flex-column align-items-center">
                       <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                      <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
                       <h6 class="text-dark text-center" th:text="${user.domain}"></h6>
-                      <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                      <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{/user(userId=${user.id})&startDate=2023-01-01}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
+                      <h6 class="text-dark text-center" th:text="${user.speciality}"></h6>
+                      <h6 class="text-dark text-center" th:text="${user.city}"></h6>
+                      <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{'/client/user?userId='+ ${user.id} + '&startDate=2023-06-20'}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
                         rdv</a>
                     </div>
                   </div>
@@ -179,33 +171,39 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-xl-3 pt-3" th:each="user : ${users}">
-                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
-                  <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
-                       height="100px" src="">
-                  <div class="card-body d-flex flex-column align-items-center">
-                    <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
-                    <h6 class="text-dark text-center" th:text="${user.speciality.name}"></h6>
-                    <h6 class="text-dark text-center" th:text="${user.city.name}"></h6>
-                    <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{'/user?userId='+ ${user.id} + '&startDate=2023-06-20'}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
-                      rdv</a>
+            <div th:if="${userSize == 0}">
+              <div class="row">
+                <div class="col-xl-3 pt-3" th:each="user : ${users}">
+                  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center shadow">
+                    <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="100px"
+                         height="100px" src="">
+                    <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="100px"
+                         height="100px">
+                    <div class="card-body d-flex flex-column align-items-center">
+                      <h5 class="text-dark text-center" style="font-weight: bold;" th:text="${user.firstName} +' '+ ${user.lastName}"></h5>
+                      <h6 class="text-dark text-center" th:text="${user.domain}"></h6>
+                      <h6 class="text-dark text-center" th:text="${user.speciality}"></h6>
+                      <h6 class="text-dark text-center" th:text="${user.city}"></h6>
+                      <a class="btn btn-outline-primary rounded-pill btn-sm" th:href="@{'/client/user?userId='+ ${user.id} + '&startDate=2023-06-20'}"><i class="bi bi-calendar2-check-fill"></i> Prendre un
+                        rdv</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <div class="Page navigation example pt-3" th:if = "${totalPages > 1}" >
               <ul class="pagination pagination-sm">
                 <li class="page-item">
-                  <a th:if="${currentPage - 1 != 0}" th:href="@{'/users?pageNumber=' + ${currentPage - 1}}" class="page-link">Previous</a>
+                  <a th:if="${currentPage - 1 != 0}" th:href="@{'/client/users?pageNumber=' + ${currentPage - 1}}" class="page-link">Previous</a>
                   <span class="page-link" th:unless="${currentPage - 1 != 0}">Previous</span>
                 </li>
                 <li th:each="i: ${#numbers.sequence(1, totalPages)}" class="page-item ">
-                  <a th:if="${currentPage != i}" th:href="@{'/users?pageNumber=' + ${i}}" class="page-link" href="#">[[${i}]]</a>
+                  <a th:if="${currentPage != i}" th:href="@{'/client/users?pageNumber=' + ${i}}" class="page-link" href="#">[[${i}]]</a>
                   <a th:unless="${currentPage != i}" class="page-link" href="#">[[${i}]]</a>
                 </li>
                 <li class="page-item mr-2">
-                  <a th:if="${currentPage < totalPages}" th:href="@{'/users?pageNumber=' + ${currentPage + 1}}" class="page-link">Next</a>
+                  <a th:if="${currentPage < totalPages}" th:href="@{'/client/users?pageNumber=' + ${currentPage + 1}}" class="page-link">Next</a>
                   <span class="page-link" th:unless="${currentPage < totalPages}">Next</span>
                 </li>
               </ul>

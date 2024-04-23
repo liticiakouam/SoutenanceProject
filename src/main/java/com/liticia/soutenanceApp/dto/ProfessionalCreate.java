@@ -8,6 +8,9 @@ public class ProfessionalCreate {
     private String lastName;
     private String domain;
     private String email;
-    private long cityId;
-    private long specialityId;
+    private String city;
+    private String speciality;
+    private int phone;
+    private String address;
+
 }

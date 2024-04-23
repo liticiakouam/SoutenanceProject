@@ -54,7 +54,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendSuccessfulRegistrationEmail(ProfessionalCreate professionalCreate) {
         String subject = "Création de compte valider";
-        String text = professionalCreate.getFirstName()+ " "+ professionalCreate.getLastName()+ " bienvenue chez Easy Appointment, votre compte a été créer avec succès.\nVeuillez cliquer sur mot de passe oublié pour réinitialiser votre mot de passe et accéder à votre compte";
+        String text = professionalCreate.getFirstName()+ " "+ professionalCreate.getLastName()+ "\n\n Bienvenue chez Easy Appointment, votre compte a été créer avec succès.\n\nVeuillez cliquer pour réinitialiser votre mot de passe et accéder à votre compte" + " " +
+                "http://localhost:8080/"
+                ;
 
         try {
             emailService.sendEmail(professionalCreate.getEmail(), subject ,text);

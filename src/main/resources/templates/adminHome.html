@@ -22,7 +22,7 @@
 <div id="wrapper">
   <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center">
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="bi bi-emoji-smile-fill"></i>
       </div>
@@ -32,7 +32,7 @@
     <div th:if="${roleId == 1}">
       <hr class="sidebar-divider">
 
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" th:href="@{/admin/homePage}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
@@ -56,8 +56,8 @@
 
     <div th:if="${roleId == 2}">
       <hr class="sidebar-divider d-md-block">
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/users?pageNumber=1}">
+      <li class="nav-item active">
+        <a class="nav-link" th:href="@{/client/users?pageNumber=1}">
           <i class="bi bi-house-fill"></i>
           <span>Accueil</span></a>
       </li>
@@ -115,8 +115,10 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${user.firstName} +' '+ ${user.lastName}"></span>
-              <img th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="img-profile rounded-circle shadow" width="70px"
-                   height="70px" src="">
+              <img th:if="${user.image != null}" th:src="@{${'/userImages/' + user.image}}" alt="Profile" class="rounded-circle shadow" width="40px"
+                   height="40px" src="">
+              <img th:unless="${user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow" width="40px"
+                   height="40px">
             </a>
           </li>
         </ul>
@@ -124,38 +126,6 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-md-4">
-            <div class="card info-card revenue-card">
-              <div class="card-body">
-                <h5 class="card-title">Nombre de spécialité</h5>
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-clipboard-plus"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h5 th:text="${specialitiesSize}"></h5>
-                    <span class="text-info small pt-1 fw-bold">spécialité</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card info-card revenue-card">
-              <div class="card-body">
-                <h5 class="card-title">Nombre de ville</h5>
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-building"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h5 th:text="${citiesSize}"></h5>
-                    <span class="text-danger small pt-1 fw-bold">ville</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="col-md-4">
             <div class="card info-card revenue-card">
               <div class="card-body">
@@ -183,22 +153,6 @@
                   <div class="ps-3">
                     <h5 th:text="${professionals}"></h5>
                     <span class="text-info small pt-1 fw-bold">professionnel</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card info-card revenue-card">
-              <div class="card-body">
-                <h5 class="card-title">Demande de création de compte</h5>
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-shield-fill-plus"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h5 th:text="${demandsSize}"></h5>
-                    <span class="text-danger small pt-1 fw-bold">demandes</span>
                   </div>
                 </div>
               </div>
@@ -274,7 +228,7 @@
                     <h5 class="modal-title text-primary">Ajouter Un Professionnel</h5>
                     <a class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
                   </div>
-                  <form th:action="@{/professional/add}" method="POST" th:object="${professional}">
+                  <form th:action="@{/admin/professional/add}" method="POST" th:object="${professional}">
                     <div class="modal-body">
                       <div class="mt-4">
                         <label class="text-dark"><strong>Nom</strong></label>
@@ -290,12 +244,12 @@
                         <p th:errors = "*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
                       </div>
                       <div class="mt-4">
+                        <label class="text-dark"><strong>Téléphone</strong></label>
+                        <input class="form-control" type="text" th:field="*{phone}" required>
+                      </div>
+                      <div class="mt-4">
                         <label class="text-dark"><strong>Choisissez une specialite</strong></label>
-                        <select name="" class="form-control" th:field="*{specialityId}" required>
-                          <option th:each="speciality : ${specialities}"
-                                  th:value="${speciality.id}"
-                                  th:text="${speciality.name}"></option>
-                        </select>
+                        <input class="form-control" type="text" th:field="*{speciality}" required>
                       </div>
                       <div class="mt-4">
                         <label class="text-dark"><strong>Domaine</strong></label>
@@ -303,11 +257,11 @@
                       </div>
                       <div class="mt-4">
                         <label class="text-dark"><strong>Choisissez la ville</strong></label>
-                        <select name="" class="form-control" th:field="*{cityId}" required>
-                          <option th:each="city : ${cities}"
-                                  th:value="${city.id}"
-                                  th:text="${city.name}"></option>
-                        </select>
+                        <input class="form-control" type="text" th:field="*{city}" required>
+                      </div>
+                      <div class="mt-4">
+                        <label class="text-dark"><strong>Adresse</strong></label>
+                        <input class="form-control" type="text" th:field="*{address}" required>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Sauvegarder</button>
