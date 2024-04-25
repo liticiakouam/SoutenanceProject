@@ -140,12 +140,14 @@
             <div class="row">
               <div class="col-md-4 mr-auto">
                 <div class="d-flex p-2">
-                  <img th:if="${availability.user.image != null}" th:src="@{${'/userImages/' + availability.user.image}}" alt="Profile" class="rounded-circle shadow"
-                       width="60px" height="60px" src="">
-                  <img th:unless="${availability.user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow"
-                       width="60px" height="60px">
+                  <div class="mt-4">
+                    <img th:if="${availability.user.image != null}" th:src="@{${'/userImages/' + availability.user.image}}" alt="Profile" class="rounded-circle shadow"
+                         width="60px" height="60px" src="">
+                    <img th:unless="${availability.user.image != null}" src="/userImages/defaultImage.png" alt="Profile" class="rounded-circle shadow"
+                         width="60px" height="60px">
+                  </div>
 
-                  <div class="mt-2 mb-2 p-2">
+                  <div class="mt-4 mb-2 p-2">
                     <h5 class="text-dark" th:text="${availability.user.firstName} +' '+ ${availability.user.lastName}" style="font-weight:bold"></h5>
                     <h6 class="text-dark" th:text="${availability.user.speciality}"><strong></strong></h6>
                   </div>

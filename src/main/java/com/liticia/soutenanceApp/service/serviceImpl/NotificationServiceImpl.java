@@ -20,7 +20,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendConfirmationEmail(Appointment appointment) {
         String subject = "Confirmation de rendez-vous";
         String customerText = "Nouveau Rendez-vous\n\n" +
-                "M/Mme " + appointment.getUserCustomer().getFirstName() + " " + appointment.getUserCustomer().getLastName() + ", vous avez un rendez-vous avec " + appointment.getUserPro().getFirstName() + " " + appointment.getUserPro().getLastName() + ". Le" +
+                "M/Mme " + appointment.getUserCustomer().getFirstName() + " " + appointment.getUserCustomer().getLastName() + ", vous avez un rendez-vous avec " + appointment.getUserPro().getFirstName() + " " + appointment.getUserPro().getLastName() + ". \nLe" +
                 appointment.getAvailability().getDate() + " à " + appointment.getAvailability().getStartTime() + ".\n" +
                 "La raison est : " + appointment.getPattern() + "\n" +
                 "La description : " + appointment.getDescription();
