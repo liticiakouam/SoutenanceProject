@@ -32,6 +32,7 @@ public class UserController {
         model.addAttribute("roleId", roleId);
         return "profile";
     }
+
     @GetMapping("/user/updateProfile")
     public String getUserUpdateInfo(Model model) {
         long roleId = roleService.findByUsersId().get().getId();

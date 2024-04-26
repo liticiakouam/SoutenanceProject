@@ -188,6 +188,9 @@
                       <div class="mt-4">
                         <label class="text-dark"><strong>Email</strong></label>
                         <input class="form-control" type="text" th:field="*{email}" required>
+                        <div th:if="${email}">
+                          <p th:text="${email}" class="text-danger"></p>
+                        </div>
                       </div>
                       <div class="mt-4">
                         <label class="text-dark"><strong>Téléphone</strong></label>
