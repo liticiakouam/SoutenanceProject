@@ -48,13 +48,14 @@ public class LoginController {
 
         try {
             userService.saveCustomer(customerDto);
-            return "redirect:/login";
         } catch (EmailAlreadyExistException e) {
             attributes.addFlashAttribute("email",
                     "Il existe déjà un compte avec cet adresse email");
             model.addAttribute("user", customerDto);
             return "redirect:/register";
         }
+        return "redirect:/login";
+
     }
 
     @GetMapping("/login")
