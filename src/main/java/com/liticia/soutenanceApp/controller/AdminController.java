@@ -89,7 +89,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/professional/add")
-    public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String saveProfessionals(@ModelAttribute("professional")ProfessionalCreate professionalCreate, RedirectAttributes redirectAttributes, Model model) {
         try {
             userService.saveProfessional(professionalCreate);
 
@@ -100,10 +100,10 @@ public class AdminController {
         } catch (EmailSendException e) {
             return "redirect:/admin/homePage";
         } catch (EmailAlreadyExistException e ) {
-            if(result.hasErrors()){
-                result.rejectValue("email", null,
-                        "Il existe déjà un compte avec cet adresse email.");
-            }
+            redirectAttributes.addFlashAttribute("email",
+                    "Il existe déjà un compte avec cet adresse email");
+            model.addAttribute("professional", professionalCreate);
+
             return "redirect:/admin/homePage";
 
         }

@@ -3,6 +3,7 @@ package com.liticia.soutenanceApp.controller;
 import com.liticia.soutenanceApp.dto.DemandeCreate;
 import com.liticia.soutenanceApp.dto.CustomerDto;
 import com.liticia.soutenanceApp.dto.ForgotPasswordForm;
+import com.liticia.soutenanceApp.exception.EmailAlreadyExistException;
 import com.liticia.soutenanceApp.exception.EmailSendException;
 import com.liticia.soutenanceApp.model.User;
 import com.liticia.soutenanceApp.service.NotificationService;
@@ -42,21 +43,18 @@ public class LoginController {
 
     @PostMapping("/register")
     public String registration(@ModelAttribute("user") CustomerDto customerDto,
-                               BindingResult result,
+                               RedirectAttributes attributes,
                                Model model){
-        User existingUser = userService.findUserByEmail(customerDto.getEmail());
 
-        if(existingUser != null){
-            result.rejectValue("email", null,
-                    "Il existe déjà un compte avec cet adresse email.");
-        }
-
-        if(result.hasErrors()){
+        try {
+            userService.saveCustomer(customerDto);
+            return "redirect:/login";
+        } catch (EmailAlreadyExistException e) {
+            attributes.addFlashAttribute("email",
+                    "Il existe déjà un compte avec cet adresse email");
             model.addAttribute("user", customerDto);
-            return "/register";
+            return "redirect:/register";
         }
-        userService.saveCustomer(customerDto);
-        return "redirect:/login";
     }
 
     @GetMapping("/login")

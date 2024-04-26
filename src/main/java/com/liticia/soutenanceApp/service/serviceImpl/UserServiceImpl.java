@@ -112,6 +112,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveCustomer(CustomerDto customerDto) {
+        User existingUser = userRepository.findUserByEmail(customerDto.getEmail());
+        if (existingUser != null) {
+            throw new EmailAlreadyExistException();
+        }
         User user = new User();
         Role role = roleRepository.findById(2L).get();
 
@@ -120,7 +124,6 @@ public class UserServiceImpl implements UserService {
         user.setLastName(customerDto.getLastname());
         user.setFirstName(customerDto.getFirstname());
         user.setEmail(customerDto.getEmail());
-        user.setImage("defaultImage.png");
         user.setPassWord(passwordEncoder.encode(customerDto.getPassword()));
         user.setCreatedAt(Instant.now());
         user.setRoles(roles);
